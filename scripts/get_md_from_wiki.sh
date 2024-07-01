@@ -1,0 +1,1 @@
+wiki-tools --url http://72.219.66.194:80 get-md --page-id $1

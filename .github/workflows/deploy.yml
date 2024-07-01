@@ -1,0 +1,69 @@
+name: "Deploy Docs"
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  generate-docs:
+    name: Generate Docs
+    if: ${{ (github.event.pull_request.merged == true) }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ssh-key: ${{ secrets.ANIXBOT_DEPLOY_KEY }}
+    - uses: cachix/install-nix-action@v25
+      with:
+        nix_path: nixpkgs=channel:nixos-${{ env.NIXOS_VERSION }}
+    - run: |
+        git config user.name "goromal (bot)"
+        git config user.email "goromal.bot@gmail.com"
+        git checkout master
+        git pull origin master
+        python scripts/generate_docs.py
+        num_changes=$(git status --porcelain=v1 2>/dev/null | wc -l)
+        if [[ $num_changes -ge 1 ]]; then
+          echo "Committing changes to $num_changes docs"
+          git add .
+          git commit -m "Generate updated docs"
+          git push origin master
+        else
+          echo "No docs changes to commit"
+        fi
+  publish-docs:
+    name: Publish Docs
+    if: ${{ (github.event.pull_request.merged == true) }}
+    needs: generate-docs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # To push a branch 
+      pull-requests: write  # To create a PR from that branch
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Install latest mdbook
+      run: |
+        tag=$(curl 'https://api.github.com/repos/rust-lang/mdbook/releases/latest' | jq -r '.tag_name')
+        url="https://github.com/rust-lang/mdbook/releases/download/${tag}/mdbook-${tag}-x86_64-unknown-linux-gnu.tar.gz"
+        mkdir mdbook
+        curl -sSL $url | tar -xz --directory=./mdbook
+        echo `pwd`/mdbook >> $GITHUB_PATH
+    - name: Deploy GitHub Pages
+      run: |
+        git config user.name "goromal (bot)"
+        git config user.email "goromal.bot@gmail.com"
+        git checkout master
+        git pull origin master
+        cd docs
+        mdbook build
+        git worktree add gh-pages
+        cd gh-pages
+        # Delete the ref to avoid keeping history.
+        git update-ref -d refs/heads/gh-pages
+        rm -rf *
+        mv ../book/* .
+        git add .
+        git commit -m "Deploy $GITHUB_SHA to gh-pages"
+        git push --force --set-upstream origin gh-pages
