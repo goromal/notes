@@ -55,15 +55,17 @@
 
 *Single-person version: use 1 avocado.*
 
-<WRAP round box 50%>
+----
+
   * 3 ripe avocados
   * 1 lime
-  * $<1$ teaspoons of minced garlic
+  * \\(<1\\) teaspoons of minced garlic
   * 1 large pinch of salt
   * (little bit of) cilantro
   * (little bit of) chopped onion
   * 1 pinch of cumin
-</WRAP>
+
+----
 
   - Place peeled avocado into a medium-sized bowl.
   - Cut the lime in half and squeeze both halves into the bowl.
