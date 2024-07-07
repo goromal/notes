@@ -1,6 +1,6 @@
 # Andrew's Notes
 
-Publicly published notes and articles on technical and non-technical topics.
+I'm a bit of a meticulous note taker--in part because it helps me retain information that is meaningful to me, and also because it provides an avenue for fleshing out ideas. I like to keep my notes on a wiki-style website for ease-of-access on my computer and mobile devices. While the vast majority of these notes are password-protected, occasionally I polish some notes to make publicly available. Below are my publicly published notes and articles on technical and non-technical topics.
 
 [Return to main site](https://andrewtorgesen.com)
 
@@ -9,6 +9,10 @@ Publicly published notes and articles on technical and non-technical topics.
 - [Money Balancing Math](./Money_Balancing_Math.md)
 - [Tenet Timelines](./Tenet_Timelines.md)
 - [Recipes](./Recipes.md)
+- [Philosophy Essays](./Philosophy_Essays/Philosophy_Essays.md)
+  - [Realism vs Nominalism](./Philosophy_Essays/Realism_vs_Nominalism.md)
+  - [Aristotelian Science](./Philosophy_Essays/Aristotelian_Science.md)
+  - [Thomas Aquinas on Reason and Revelation](./Philosophy_Essays/Thomas_Aquinas_on_Reason_and_Revelation.md)
 - [Autonomy](./Autonomy/Autonomy.md)
   - [Systems Theory](./Autonomy/Systems_Theory/Systems_Theory.md)
     - [Signals](./Autonomy/Systems_Theory/Signals/Signals.md)
