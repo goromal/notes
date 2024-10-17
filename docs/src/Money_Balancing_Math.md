@@ -150,7 +150,7 @@ for i in range(m2):
             print(f"{party_names[source]} should pay {party_names[sink]} ${-amount:.2f}.")
 ```
 
-Here's an example run of the above program with user inputs from $n=5$:
+Here's an example run of the above program with user inputs from \\(n=5\\):
 
 ```bash
 Enter the name of Party 1 (ENTER to stop adding parties): Jerry
