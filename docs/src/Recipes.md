@@ -76,7 +76,8 @@
 
 *Add some additional excitement to your guacamole.*
 
-<WRAP round box 50%>
+----
+
   * Refried beans
   * Guacamole
   * Sour cream
@@ -84,7 +85,8 @@
   * Salsa
   * Shredded cheese
   * Chopped Cilantro
-</WRAP>
+
+----
 
   - Mix sour cream with taco seasoning.
   - In a 9-inch dish, layer bottom-to-top:
@@ -100,29 +102,33 @@
 
 *Makes enough for one oven-full of chicken.*
 
-<WRAP round box 50%>
-  * $\frac{1}{2}$ cup of mayo
-  * $\frac{1}{4}$ cup of ketchup
+----
+
+  * \\(\frac{1}{2}\\) cup of mayo
+  * \\(\frac{1}{4}\\) cup of ketchup
   * 1 tsp of worcestershire sauce
-  * $\frac{1}{2}$ tsp of black pepper
-  * $\frac{1}{2}$ tsp of garlic salt **OR** $\frac{3}{8}$ tsp of salt and $\frac{1}{8}$ tsp of garlic powder
-</WRAP>
+  * \\(\frac{1}{2}\\) tsp of black pepper
+  * \\(\frac{1}{2}\\) tsp of garlic salt **OR** \\(\frac{3}{8}\\) tsp of salt and \\(\frac{1}{8}\\) tsp of garlic powder
+
+----
 
   - Mix all the ingredients together.
 ### Garlic Parmesan Roasted Broccoli
 
 *Makes great dinner side. Makes 6 servings. Prep 5 min., cook 10 min.*
 
-<WRAP round box 50%>
+----
+
   * 5 Cups (24 oz) of Broccoli Florets
   * 3 Tablespoons of Olive Oil
   * 2 Teaspoons of Minced Garlic
   * Salt and Pepper
-  * $\frac{1}{4}$ Cup of Parmesan
+  * \\(\frac{1}{4}\\) Cup of Parmesan
   * Juice of 1 Lemon
-</WRAP>
 
-  - Preheat oven to 425$^\circ$ F. Lightly oil a baking sheet or coat with nonstick spray.
+----
+
+  - Preheat oven to 425\\(^\circ\\) F. Lightly oil a baking sheet or coat with nonstick spray.
   - Place broccoli florets in a single layer onto the prepared baking sheet. Add olive oil and garlic; season with salt and pepper, to taste. Gently toss to combine.
   - Place into oven and bake for 10-12 minutes, or until tender.
   - Serve immediately, sprinkled with Parmesan and lemon juice.
@@ -130,7 +136,8 @@
 
 ### Taco Soup (Chili)
 
-<WRAP round box 50%>
+----
+
   * 1 can of black beans
   * 1 can of kidney beans
   * 2 cans of petite diced tomatoes
@@ -138,7 +145,8 @@
   * 1 packet of ranch mix
   * 1 packet of taco mix
   * 1 pound of ground beef
-</WRAP>
+
+----
 
   - In the bottom of a large pot, cook the meat fully.
   - Drain all cans except for the tomatoes, and empty all cans in the pot.
@@ -147,18 +155,20 @@
 
 ### Mashed Potatoes (Instant Pot)
 
-<WRAP round box 50%>
+----
+
   * 1 pound of baby yellow, gold, **or** red potatoes (*gold preferred*)
-  * $\frac{1}{2}$ cup of water, **or** vegetable/chicken broth for more flavor
+  * \\(\frac{1}{2}\\) cup of water, **or** vegetable/chicken broth for more flavor
   * 2 tablespoons of butter
   * 1-2 cloves of minced garlic (*optional*)
-  * $\frac{1}{4}$ to $\frac{1}{2}$ teaspoons of salt
-  * $\frac{1}{4}$ to $\frac{1}{2}$ teaspoons of black pepper
+  * \\(\frac{1}{4}\\) to \\(\frac{1}{2}\\) teaspoons of salt
+  * \\(\frac{1}{4}\\) to \\(\frac{1}{2}\\) teaspoons of black pepper
   * 2-4 tablespoons of milk
   * fresh parsley (*optional*)
-</WRAP>
 
-  - Peel the potatoes and cut into $\approx$ 1-inch uniform chunks.
+----
+
+  - Peel the potatoes and cut into \\(\approx\\) 1-inch uniform chunks.
   - Place chunks and the water/broth in the instant pot and cook on HIGH pressure for 5 minutes. Release the pressure valve as soon as the 5 minutes are up.
   - Check on the potatoes to make sure they're soft and easy to mash. If not, then put the lid back on and "keep warm" for 5-10 minutes more.
   - With the water still in the pot, use a potato masher or large fork to mash the potatoes halfway to the consistency that you want.
@@ -169,8 +179,9 @@
 
 ### Beef Stew (Instant Pot)
 
-<WRAP round box 50%>
-  * $1 \frac{1}{2}$ Pounds of Beef Stew Meat
+----
+
+  * \\(1 \frac{1}{2}\\) Pounds of Beef Stew Meat
   * 1 Tablespoon of Olive Oil
   * 1 Teaspoon of Salt
   * 1 Teaspoon of Pepper
@@ -178,13 +189,14 @@
   * 2 Tablespoons of Worcestershire Sauce
   * 3 Cloves of Minced Garlic
   * 1 Large, Chopped Onion
-  * $1\times 16$-oz Bag of Baby Carrots (cut into slices)
+  * \\(1\times 16\\)-oz Bag of Baby Carrots (cut into slices)
   * 1 Pound of Cubed Potatoes
-  * $2 \frac{1}{2}$ Cups of Beef Broth
-  * $1\times 10$-oz Can of Tomato Sauce
+  * \\(2 \frac{1}{2}\\) Cups of Beef Broth
+  * \\(1\times 10\\)-oz Can of Tomato Sauce
   * 2 Tablespoons of Cornstarch
   * 2 Tablespoons of Water
-</WRAP>
+
+----
 
   - Add the olive oil to the instant pot and turn on the saute function. When the oil starts to sizzle, add the meat and season with the salt, pepper, and Italian seasoning.
   - Cook the meat until Browned on all sides.
@@ -195,7 +207,8 @@
   - Mix together the cornstarch and cold water in a small bowl and stir into the stew *while it's still piping hot* until thickened.
 ### Taco Soup
 
-<WRAP round box 50%>
+----
+
   * 1 can black beans
   * 1 can kidney beans
   * 2 cans petite diced tomatoes
@@ -203,7 +216,8 @@
   * 1 packet of ranch mix
   * 1 packet of taco mix
   * 1 lb of ground beef
-</WRAP>
+
+----
 
   - Cook the beef separately.
   - Drain all cans.
@@ -217,34 +231,38 @@
 
 ### Barbecue Chicken Pizza Bagels
 
-<WRAP round box 50%>
+----
+
   * Plain white bagels, sliced
   * 1 Chicken breast
   * BBQ sauce (like Sweet Baby Ray's)
   * Lots of grated mozzarella
   * Diced red onion
-</WRAP>
+
+----
 
   - Cook, then cube the chicken
-  - Preheat oven to 425$^\circ$
+  - Preheat oven to 425\\(^\circ\\)
   - Layer on each bagel slice in following order, starting from the bottom:
     - Chicken
     - BBQ sauce
     - Mozzarella
     - Onion
-  - Bake in oven for $\approx$ 10-15 minutes, until cheese is melted.
+  - Bake in oven for \\(\approx\\) 10-15 minutes, until cheese is melted.
 
 ### Buffalo Dip
 
-<WRAP round box 50%>
-  * $\frac{3}{4}$ cup of Frank buffalo hot sauce
+----
+
+  * \\(\frac{3}{4}\\) cup of Frank buffalo hot sauce
   * 1 cup of ranch dressing
   * 16-oz of softened cream cheese
   * 2 cans of canned chicken (drained)
   * 2 cups of shredded cheddar cheese
-</WRAP>
 
-  - Preheat oven to 350$^\circ$
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Drain chicken and mix with hot sauce
   - In a separate bowl, mix the ranch and cream cheese
   - Mix everything together
@@ -255,17 +273,19 @@
 
 *Single recipe serves 5+.*
 
-<WRAP round box 50%>
+----
+
   * 2 frozen (or fresh) boneless chicken breasts
   * 1 can of corn
   * 1 can of black beans
-  * $1\times 10$-oz can of “original” or “mild” Rotel tomatoes
+  * \\(1\times 10\\)-oz can of “original” or “mild” Rotel tomatoes
   * 1 package of Hidden Valley ranch dressing mix (1-oz size)
   * 1 teaspoon of cumin
   * 1 teaspoon of chili powder
   * 1 teaspoon of onion powder
-  * $1\times 8$-oz block of cream cheese
-</WRAP>
+  * \\(1\times 8\\)-oz block of cream cheese
+
+----
 
   - Get out your crockpot
   - Place the chicken at the bottom
@@ -278,18 +298,20 @@
 
 *Serves 8 people. 30 min prep + 20 min cook.*
 
-<WRAP round box 50%>
+----
+
   * 2 large *thawed* chicken breasts
   * 1 can of corn
   * 1 can of black beans
-  * $1\times 10$-oz can of “original” or “mild” Rotel tomatoes
+  * \\(1\times 10\\)-oz can of “original” or “mild” Rotel tomatoes
   * 1 package of Hidden Valley ranch dressing mix (1-oz size)
   * 1 teaspoon of cumin
   * 1 teaspoon of chili powder
   * 1 teaspoon of onion powder
-  * $1\times 8$-oz block of cream cheese
-  * $\frac{1}{2}$ cup of chicken broth or stock
-</WRAP>
+  * \\(1\times 8\\)-oz block of cream cheese
+  * \\(\frac{1}{2}\\) cup of chicken broth or stock
+
+----
 
   - Place ingredients in the instant pot bowl in this order:
     - chicken
@@ -308,69 +330,75 @@
 
 *Makes 6 servings. Prep 20 min., cook 15 min., bake 20 min.*
 
-<WRAP round box 50%>
+----
+
   * 1 (8-oz) package of elbow macaroni
-  * $\frac{1}{4}$ cup of butter or margarine
-  * $\frac{1}{4}$ cup of all-purpose flour
-  * $\frac{1}{4}$ teaspoon of salt
-  * $\frac{1}{4}$ teaspoon of ground black pepper
-  * $\frac{1}{8}$ teaspoon of ground red pepper
-  * $\frac{1}{8}$ teaspoon of granulated garlic
+  * \\(\frac{1}{4}\\) cup of butter or margarine
+  * \\(\frac{1}{4}\\) cup of all-purpose flour
+  * \\(\frac{1}{4}\\) teaspoon of salt
+  * \\(\frac{1}{4}\\) teaspoon of ground black pepper
+  * \\(\frac{1}{8}\\) teaspoon of ground red pepper
+  * \\(\frac{1}{8}\\) teaspoon of granulated garlic
   * 1 cup of half-and-half
   * 1 cup of milk
-  * $\frac{1}{2}$ (10-oz) block of extra-sharp Cheddar cheese, *shredded*
+  * \\(\frac{1}{2}\\) (10-oz) block of extra-sharp Cheddar cheese, *shredded*
   * 1 (10-oz) block of sharp Cheddar cheese, *shredded and divided*
-</WRAP>
+
+----
 
   - Prepare pasta according to package directions; drain and set aside
-  - Preheat oven to 375$^\circ$
+  - Preheat oven to 375\\(^\circ\\)
   - Melt butter in a large skillet over medium-high heat. Gradually whisk in flour until smooth; cook, whisking constantly, 2 minutes. Stir in salt and next 3 ingredients. Gradually whisk in half-and-half and milk; cook, whisking constantly, 8-10 minutes or until thickened.
   - Stir in extra-sharp cheese and *half* of sharp cheese until smooth. Remove from heat.
-  - Combine pasta and cheese mixture and pour into 6 lightly greased (6-oz) ramekins *or* 1 (8 in$^2$) baking dish. Sprinkle evenly with remaining sharp Cheddar cheese.
+  - Combine pasta and cheese mixture and pour into 6 lightly greased (6-oz) ramekins *or* 1 (8 in\\(^2\\)) baking dish. Sprinkle evenly with remaining sharp Cheddar cheese.
   - Bake for 20 minutes. Optionally add 15 minutes for a crusty top.
 ### Pasta Bolognese
 
 *4 servings*.
 
-<WRAP round box 50%>
+----
+
   * 2 tablespoons of butter
-  * $\frac{1}{4}$ pound of sliced bacon, cut crosswise into $\frac{1}{4}$-inch strips
+  * \\(\frac{1}{4}\\) pound of sliced bacon, cut crosswise into \\(\frac{1}{4}\\)-inch strips
   * 1 onion, finely chopped
   * 1 pound of ground beef
   * 1 cup of canned low-sodium beef or chicken broth
-  * $\frac{1}{2}$ cup of dry white wine (or apple cider vinegar)
+  * \\(\frac{1}{2}\\) cup of dry white wine (or apple cider vinegar)
   * 2 tablespoons of tomato paste
-  * $\frac{1}{2}$ teaspoon of dried oregano
-  * $\frac{3}{4}$ teaspoon of salt
-  * $\frac{1}{4}$ teaspoon of fresh-ground black pepper
-  * $\frac{1}{2}$ cup of heavy cream
+  * \\(\frac{1}{2}\\) teaspoon of dried oregano
+  * \\(\frac{3}{4}\\) teaspoon of salt
+  * \\(\frac{1}{4}\\) teaspoon of fresh-ground black pepper
+  * \\(\frac{1}{2}\\) cup of heavy cream
   * 1 pound of spaghetti 
   * 2 tablespoons of chopped fresh parsley (optional)
-</WRAP>
 
-  - In a large frying pan, heat butter and bacon over moderately low heat, until bacon renders some of its fat ($>3$ minutes)
-  - Add onion and stir occasionally until starting to soften ($>3$ minutes)
-  - Stir in ground beef and cook until meat no longer pink ($\approx 2$ minutes)
+----
+
+  - In a large frying pan, heat butter and bacon over moderately low heat, until bacon renders some of its fat (\\(>3\\) minutes)
+  - Add onion and stir occasionally until starting to soften (\\(>3\\) minutes)
+  - Stir in ground beef and cook until meat no longer pink (\\(\approx 2\\) minutes)
   - Add broth, wine, tomato paste, oregano, salt, pepper
-  - Simmer on very low heat, stirring occasionally, until sauce thickens ($\approx 1$ hour)
+  - Simmer on very low heat, stirring occasionally, until sauce thickens (\\(\approx 1\\) hour)
   - When ready to serve, stir in cream and remove from heat
 
 
 ----
 
-  - In large pot of boiling, salted water, cook spaghetti until just done ($\approx 12$ minutes)
+  - In large pot of boiling, salted water, cook spaghetti until just done (\\(\approx 12\\) minutes)
   - Drain and toss with sauce and parsley
 
 ### Super Simple Salmon
 
-<WRAP round box 50%>
+----
+
   * 1 tablespoon of garlic powder
   * 1 tablespoon of dried basil leaves
-  * $\frac{1}{2}$ teaspoon of table salt
-  * $4\times 6$-oz salmon
+  * \\(\frac{1}{2}\\) teaspoon of table salt
+  * \\(4\times 6\\)-oz salmon
   * 2 tablespoons of salted butter
   * 4 raw lemon wedges
-</WRAP>
+
+----
 
   - Stir garlic powder, basil, and salt in a small bowl
   - Rub the powder mix in equal amounts onto the salmon fillets
@@ -380,21 +408,23 @@
 
 ### Filet Mignon
 
-<WRAP round box 50%>
+----
+
 For *one* piece of meat:
-  * $1\times 6$-oz filet mignon
+  * \\(1\times 6\\)-oz filet mignon
   * coarse salt to taste
   * freshly ground black pepper to taste
-  * 1 tablespoon of grapeseed oil$^*$
+  * 1 tablespoon of grapeseed oil\\(^*\\)
   * 2 tablespoons of unsalted butter
   * 2 sprigs of fresh rosemary
   * 1 clove of garlic
 
-$^*$You can substitute in another high-heat, neutral oil of choice.
-</WRAP>
+\\(^*\\)You can substitute in another high-heat, neutral oil of choice.
+
+----
 
   - On a cutting board, pat the filet dry with paper towels and let sit at room temperature for 20-30 minutes
-  - Preheat oven to 450$^\circ$
+  - Preheat oven to 450\\(^\circ\\)
   - Generously season all sides of the filet with salt and pepper
   - Heat a medium, oven-safe stainless steel or cast iron skillet over high heat for 5 minutes and add the oil
   - Once the oil begins to smoke, add the filet to the pan. Cook without moving for 2–3 minutes, until a crust has formed
@@ -405,25 +435,27 @@ $^*$You can substitute in another high-heat, neutral oil of choice.
 
 ### Fish Tacos
 
-<WRAP round box 50%>
+----
+
   * 1 pound of lean white fish fillets (like tilapia)
   * Salt
   * Black pepper
   * Lime juice
   * 2 tablespoons of vegetable or canola oil
   * 1 clove of minced garlic
-  * 1 $\frac{1}{2}$ teaspoons of chili powder
-  * 1 $\frac{1}{2}$ teaspoons of ground cumin
-  * $\frac{1}{2}$ teaspoon of paprika
+  * 1 \\(\frac{1}{2}\\) teaspoons of chili powder
+  * 1 \\(\frac{1}{2}\\) teaspoons of ground cumin
+  * \\(\frac{1}{2}\\) teaspoon of paprika
   * Flour tortillas
-  * $\frac{1}{2}$ cup of sour cream
-  * $\frac{1}{3}$ cup of mayonnaise
-  * $\frac{1}{2}$ teaspoon of garlic powder
+  * \\(\frac{1}{2}\\) cup of sour cream
+  * \\(\frac{1}{3}\\) cup of mayonnaise
+  * \\(\frac{1}{2}\\) teaspoon of garlic powder
   * 1 teaspoon of buffalo sauce
   * shredded cheese
   * shredded lettuce
   * avocado
-</WRAP>
+
+----
 
   - Season the fish with a little salt and pepper on both sides
   - In a mixing bowl, whisk together the oil, some lime juice, garlic, chili powder, cumin (1 teaspoon), and paprika
@@ -434,21 +466,23 @@ $^*$You can substitute in another high-heat, neutral oil of choice.
 ## Dessert
 ### Chocolate Chip Cookies
 
-<WRAP round box 50%>
+----
+
   * 1 cup of softened butter
   * 1 cup of white sugar
   * 1 cup of brown sugar
   * 2 eggs
   * 2 teaspoons of vanilla
-  * $2~\frac{1}{2}$ cups of flour$^*$
+  * \\(2~\frac{1}{2}\\) cups of flour\\(^*\\)
   * 1 teaspoon of baking soda
   * 1 teaspoon of salt
   * 2 cups of chocolate chips
 
-$^*$ If you don’t double the recipe, a little bit of extra flour (like a couple of tablespoons) might be needed if the cookies seem too thin.
-</WRAP>
+\\(^*\\) If you don’t double the recipe, a little bit of extra flour (like a couple of tablespoons) might be needed if the cookies seem too thin.
 
-  - Preheat oven to 350$^\circ$
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Mix the butter, white sugar, and brown sugar in a large bowl
   - Mix in eggs and vanilla
   - Mix in flour, baking soda, and salt
@@ -460,25 +494,29 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
 
 [Inspired by TikTok](https://vm.tiktok.com/JjGvhJ3/).
 
-<WRAP round box 50%>
+----
+
   * 1 package of 8-count Pillsbury “Crescents” croissants
   * 1 package of oreos
   * Powdered sugar
-</WRAP>
+
+----
 
   - Cut croissant rolls (laid flat) in half so they form squares
   - Wrap oreos on croissant squares
-  - Place oreos in air fryer: 5-6 minutes at 320$^\circ$ (until they are golden brown)
+  - Place oreos in air fryer: 5-6 minutes at 320\\(^\circ\\) (until they are golden brown)
   - Sprinkle powdered sugar on your now beignet-like oreos!
 ### Super Simple Peanut Butter Cookies
 
-<WRAP round box 50%>
+----
+
   * 1 cup of peanut butter
   * 1 cup of sugar
   * 1 egg
-</WRAP>
 
-  - Preheat oven to 350$^\circ$
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Mix all ingredients in bowl
   - Bake for :::6-8 minutes?:::
 
@@ -486,34 +524,38 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
 
 *Yield: 24 cookies. Prep: 15 min. **+ 1 hr.** Cook: 10 min.*
 
-<WRAP round box 50%>
+----
+
   * 1 cup of butter
   * 1 cup of peanut butter
   * 1 cup of white sugar
   * 1 cup of brown sugar
   * 2 eggs
-  * $2\frac{1}{2}$ cups of flour
+  * \\(2\frac{1}{2}\\) cups of flour
   * 1 teaspoon of baking powder
-  * $\frac{1}{2}$ teaspoon of salt
-  * $1\frac{1}{2}$ teaspoons of baking soda
-</WRAP>
+  * \\(\frac{1}{2}\\) teaspoon of salt
+  * \\(1\frac{1}{2}\\) teaspoons of baking soda
+
+----
 
   - In a bowl, cream the butter, peanut butter, and sugars. Beat in eggs.
   - In a separate bowl, sift flour, baking powder, baking soda, and salt.
   - Stir the two bowl contents into each other, then place in the fridge **for 1 hour**.
-  - Preheat oven to $375^\circ$.
+  - Preheat oven to \\(375^\circ\\).
   - Place refrigerated dough balls on cookie sheets and bake **for about 10 minutes** or until they start to brown.
 ### Brazo Gitano (Swiss Roll)
 
-<WRAP round box 50%>
+----
+
   * 1 cup of sugar
   * 1 cup of flour (i.e. *harina presto*)
   * 3 eggs
   * 3 tablespoons of water
-  * $\frac{1}{2}$ can of dulce de leche
-</WRAP>
+  * \\(\frac{1}{2}\\) can of dulce de leche
 
-  - Preheat oven to 350$^\circ$
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Separate egg yolks from egg whites into separate bowls
   - Whisk egg whites to the point of foaming
   - Add sugar to the yolk, then mix together
@@ -531,11 +573,12 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
 
 ### Tres Leches Cake
 
-<WRAP round box 50%>
+----
+
 **Cake**
   * 1 box of Pillsbury (1 lb 2.25-oz) yellow cake mix with pudding
   * 1 cup of water
-  * $\frac{1}{3}$ cup of vegetable oil
+  * \\(\frac{1}{3}\\) cup of vegetable oil
   * 3 eggs
 **Sauce**
   * 1 cup of whipping cream
@@ -543,12 +586,13 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
   * 1 (12-oz) can of evaporated milk
 **Topping**
   * 1 cup of whipping cream
-  * $\frac{1}{4}$ teaspoon of vanilla extract
-</WRAP>
+  * \\(\frac{1}{4}\\) teaspoon of vanilla extract
 
-  - Preheat oven to 350$^\circ$
-  - Grease a $13\times 9$ in. (3-quart) glass baking dish
-  - In a large bowl, beat cake mix, water, oil, and eggs with electric mixer on low speed ($\approx 30$ seconds) until blended. Then beat on medium speed for 2 minutes.
+----
+
+  - Preheat oven to 350\\(^\circ\\)
+  - Grease a \\(13\times 9\\) in. (3-quart) glass baking dish
+  - In a large bowl, beat cake mix, water, oil, and eggs with electric mixer on low speed (\\(\approx 30\\) seconds) until blended. Then beat on medium speed for 2 minutes.
   - Pour batter into baking dish
   - Bake 20 minutes or until toothpick inserted in center comes out with crumbs
 
@@ -571,21 +615,23 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
   - Cover and refrigerate
 ### Turtles
 
-<WRAP round box 50%>
-  * 48 caramels
-  * $\frac{1}{2}$ cup of cream (heavy or whipping)
-  * $1~\frac{1}{2}$ cups of flour 
-  * $1~\frac{1}{4}$ cups of brown sugar
-  * $1~\frac{1}{4}$ cups of *melted* butter
-  * $\frac{1}{4}$ teaspoon of salt
-  * $\frac{2}{3}$ teaspoon of baking soda
-  * $1~\frac{1}{2}$ cup of oatmeal
-  * A 6-oz package of chocolate chips
-</WRAP>
+----
 
-  - Preheat oven to 350$^\circ$
+  * 48 caramels
+  * \\(\frac{1}{2}\\) cup of cream (heavy or whipping)
+  * \\(1~\frac{1}{2}\\) cups of flour 
+  * \\(1~\frac{1}{4}\\) cups of brown sugar
+  * \\(1~\frac{1}{4}\\) cups of *melted* butter
+  * \\(\frac{1}{4}\\) teaspoon of salt
+  * \\(\frac{2}{3}\\) teaspoon of baking soda
+  * \\(1~\frac{1}{2}\\) cup of oatmeal
+  * A 6-oz package of chocolate chips
+
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Melt caramels and cream in a double broiler
-  - Separately combine remaining ingredients (except chocolate chips) and press half of the mixture into a $13\times9$ cake pan
+  - Separately combine remaining ingredients (except chocolate chips) and press half of the mixture into a \\(13\times9\\) cake pan
   - Bake for 10 minutes
   - Remove from oven and sprinkle chocolate chips over it
   - Pour hot caramel sauce over chips
@@ -595,7 +641,8 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
 
 ### Cowboy Cookies
 
-<WRAP round box 50%>
+----
+
   * 2 cups of brown sugar
   * 2 cups of sugar
   * 2 cups of shortening/butter
@@ -607,9 +654,10 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
   * 1 teaspoon of salt
   * 1 teaspoon of baking powder
   * 2 teaspoons of baking soda
-</WRAP>
 
-  - Preheat oven to 350$^\circ$
+----
+
+  - Preheat oven to 350\\(^\circ\\)
   - Mix all ingredients together in Bosch mixer
   - Drop by spoonfuls on a greased cookie sheet
   - Bake for 10 minutes
@@ -620,14 +668,16 @@ $^*$ If you don’t double the recipe, a little bit of extra flour (like a coupl
 
 *Creamy and refreshing. Makes 6 cups.*
 
-<WRAP round box 50%>
+----
+
   * 1 cup of pineapple chunks
   * 1 can of coconut cream
   * 1 cup of pineapple juice
-  * $\frac{1}{2}$ cup of sweetened condensed milk
+  * \\(\frac{1}{2}\\) cup of sweetened condensed milk
   * Ice
   * (Optional) Whipped cream and cherries
-</WRAP>
+
+----
 
   - Blend all the required ingredients together to get a slushy-like consistency
   - Top with whipped cream and cherries if desired!
