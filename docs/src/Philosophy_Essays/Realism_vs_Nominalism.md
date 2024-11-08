@@ -1,6 +1,6 @@
 # Realism vs Nominalism
 
-I've been interested in epistemological questions, and the question of Realism (the notion that logical notions possess a kind of "physical existence") versus Nominalism (that logical notions do not exist physically) gets down to several fundamental questions in both epistemology and ontology.
+I've been interested in epistemological questions, and the question of Realism (the notion that logical ideas possess a kind of "physical existence") versus Nominalism (that logical ideas do not exist physically) gets down to several fundamental questions in both epistemology and ontology.
 
 ----
 
