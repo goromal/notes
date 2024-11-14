@@ -1,31 +1,18 @@
 # Implementing Rotations: A Robotics Field Guide
 
-++++ Why? |
+*Why?*
+
 My aim here is to elucidate the complex machinery that constitutes the hard part of working with transforms and frames in robotics: rotations and rotational representations. 
 
 Even when working with a pre-existing software library that provides rotational representations for you, there are so many different conventions (and the implications of those conventions, often mixed together, so ingrained in the math) that without thorough documentation on the part of the library (good luck), you're bound to be banging your head against the wall at some point. Sometimes, even understanding exactly what the functions are giving you can give you pause. 
 
 *This guide is meant to be a one-stop-shop for concisely clarifying the possibilities and helping you recognize which ones you're working with and their implications. Some convenient calculators that conform to your chosen conventions are also provided.*
-++++
 
-***Note***: The FIXME symbols indicate missing information that I'll be filling in as my free time allows.
 
-I've implemented many of these concepts in a [Python script](https://github.com/goromal/manif-geom-cpp|C$++$ library]] with corresponding [[https://github.com/goromal/geometry|Python bindings]]. There's also a [[https://gist.github.com/goromal/fb15f44150ca4e0951acaee443f72d3e) that implements the checks laid out in this guide for deducing the rotational conventions used by a particular library. /*http://docs.ros.org/en/melodic/api/tf_conversions/html/python/*/
+***Note***: The FIXME keywords indicate missing information that I'll be filling in as my free time allows.
 
-/*
-FIXME
+I've implemented many of these concepts in a [C++ library](https://github.com/goromal/manif-geom-cpp) with corresponding [Python bindings](https://github.com/goromal/geometry). There's also a [Python script](https://gist.github.com/goromal/fb15f44150ca4e0951acaee443f72d3e) that implements the checks laid out in this guide for deducing the rotational conventions used by a particular library.
 
-The sections below tabulate...choose your own adventure with the conventions 
-
-Move the intro notion of distance section
-
-Link to representational trade offs comparison study page at beginning of intro:
-- composition FLOPS (and other operations, put in bar chart) 28 quat 2*3^3 rot mat comp
-- slerp (show gifs from smoothly modifying parameters)
-- storage/memory requirements
-
-FIXME
-*/
 ## Introduction: Conventions
 
 Often ignored or omitted from documentation are the hidden conventions associated with a rotation representation implementation--particularly implementations that allow for converting between different representations. But conventions are very important to get right in order to ensure consistency and correctness, as well as prevent needless hours of debugging. This guide attempts to aggregate most, if not all, possible conventions for the various representations in one place. Here are the types of conventions relevant to rotational representations:
@@ -33,138 +20,73 @@ Often ignored or omitted from documentation are the hidden conventions associate
   * **Ordering:** Pure semantics--in what order are the components stored in memory and notationally?
   * **Handedness:** This convention is a catch-all for intrinsic properties that determine the geometry of compositions.
   * **Function:** Does the rotation serve to change the reference frame of a vector (Passive) or *move* the vector (Active) by its action? Note that in computer graphics, active functions are more common, whereas in robotics rotations almost always are meant to be passive. The one nuance is when library definitions associate quaternions with rotation matrices in such a way that it looks like the quaternion is acting as an active counterpart to its corresponding passive rotation matrix--more on that later.
-  * **Directionality:** A rotation is relative--the rotation of frame $A$ relative to frame $B$. Directionality determines which of $A$ or $B$ is the frame being rotated *from* and *to*. In robotics, the canonical $A$ and $B$ frames are often labeled as $W$ (the "World" frame) and $B$ (the "Body" frame). The “World” and “Body” frames are only semi-arbitrary. Regardless of conventions, it is natural to think of a rotation intuitively as going from some “static (World)” frame to some “transformed (Body)” frame.
-  * **Perturbation:** Only relevant for representations that have defined addition $\oplus$ and subtraction $\ominus$ operators and thus tangent-space vector aliases. Perturbation convention determines which tangent space (or "frame") the vector belongs to. The convention is largely up to your preference, and isn't specifically tied to the other conventions used--you just have to be consistent within your algorithm!
+  * **Directionality:** A rotation is relative--the rotation of frame \\(A\\) relative to frame \\(B\\). Directionality determines which of \\(A\\) or \\(B\\) is the frame being rotated *from* and *to*. In robotics, the canonical \\(A\\) and \\(B\\) frames are often labeled as \\(W\\) (the "World" frame) and \\(B\\) (the "Body" frame). The “World” and “Body” frames are only semi-arbitrary. Regardless of conventions, it is natural to think of a rotation intuitively as going from some “static (World)” frame to some “transformed (Body)” frame.
+  * **Perturbation:** Only relevant for representations that have defined addition \\(\oplus\\) and subtraction \\(\ominus\\) operators and thus tangent-space vector aliases. Perturbation convention determines which tangent space (or "frame") the vector belongs to. The convention is largely up to your preference, and isn't specifically tied to the other conventions used--you just have to be consistent within your algorithm!
 
 The table below gives most, if not all, of the possible convention combinations for the rotational representations used in this guide.
 
-^ ^ Ordering (**O**) ^ Handedness (**H**) ^ Function (**F**) ^ Directionality (**D**) ^ Perturbation (**P**) ^
-| Rotation Matrix | | | <WRAP>
-  - Active
-  - Passive
+|                        | Ordering (**O**)                 | Handedness (**H**)      | Function (**F**) | Directionality (**D**) | Perturbation (**P**) |
+| ---------------------- | -------------------------------- | ----------------------- | ---------------- | ---------------------- | -------------------- |
+| Rotation Matrix        |                                  |                         | Active / Passive | B2W / W2B              | Local / Global       |
+| Euler Angles           | 3-2-1 / 3-2-3 / 3-1-3\\(^{*}\\)  | Successive / Fixed Axes | Active / Passive | B2W / W2B              |                      |
+| Rodrigues / Axis-Angle |                                  |                         | Active / Passive | B2W / W2B              |                      |
+| Quaternion             | \\(q_w\\) first / \\(q_w\\) last | Right / Left            | Active / Passive | B2W / W2B              | Local / Global       |
 
-</WRAP> | <WRAP>
-  - B2W
-  - W2B
-
-</WRAP> | <WRAP>
-  - Local
-  - Global
-
-</WRAP> |
-| Euler Angles$^{*}$ | <WRAP>
-  - 3-2-1
-  - 3-2-3
-  - 3-1-3
-
-</WRAP> | <WRAP>
-  - Successive Axes
-  - Fixed Axes
-
-</WRAP> | <WRAP>
-  - Active
-  - Passive
-
-</WRAP> | <WRAP>
-  - B2W
-  - W2B
-
-</WRAP> | |
-| Rodrigues/Axis-Angle | | | <WRAP>
-  - Active
-  - Passive
-
-</WRAP> | <WRAP>
-  - B2W
-  - W2B
-
-</WRAP> | |
-| Quaternion | <WRAP>
-  - $q_w$ first
-  - $q_w$ last
-
-</WRAP> | <WRAP>
-  - Right
-  - Left
-
-</WRAP> | <WRAP>
-  - Active
-  - Passive
-
-</WRAP> | <WRAP>
-  - B2W
-  - W2B
-
-</WRAP> | <WRAP>
-  - Local
-  - Global
-
-</WRAP> |
-
-$^{*}$ There are really $3^3$ possible orderings of Euler Angles, though a good portion of those are redundant. The three chosen conventions in the table were chosen as (1) NASA standard airplane, (2) NASA standard aerospace, and (3) historically significant.
+\\(^{*}\\) There are really \\(3^3\\) possible orderings of Euler Angles, though a good portion of those are redundant. The three chosen conventions in the table were chosen as (1) NASA standard airplane, (2) NASA standard aerospace, and (3) historically significant.
 
 Two very popular convention groups for quaternions are called the **Hamilton** and **Shuster/JPL** conventions. This table will also include the conventions used by some members of my lab:
 
-^ ^ Ordering (**O**) ^ Handedness (**H**) ^ Function (**F**) ^ Directionality (**D**) ^
-| Hamilton | $q_w$ first/last | Right | Passive | B2W |
-| Shuster/JPL | $q_w$ last | Left | Passive | W2B |
-| My Lab | $q_w$ first | Right | Active | W2B |
+|               | Ordering (**O**)       | Handedness (**H**) | Function (**F**) | Directionality (**D**) |
+| ------------- | ---------------------- | ------------------ | ---------------- | ---------------------- |
+| Hamilton      | \\(q_w\\) first / last | Right              | Passive          | B2W                    |
+| Shuster / JPL | \\(q_w\\) last         | Left               | Passive          | W2B                    |
+| My Lab        | \\(q_w\\) first        | Right              | Active           | W2B                    |
 
-See Table 1 of the Flipped Quaternion Paper(([Why and How to Avoid the Flipped Quaternion Multiplication](https://arxiv.org/abs/1801.07478))) for an overview of literature and software that use the Hamilton and Shuster/JPL conventions.
+See Table 1 of the [Flipped Quaternion Paper](https://arxiv.org/abs/1801.07478) for an overview of literature and software that use the Hamilton and Shuster / JPL conventions.
 
 ## Introduction: Notions of Distance
 
-A distance metric $\text{dist}(a,b)$ must satisfy the following properties:
+A distance metric \\(\text{dist}(a,b)\\) must satisfy the following properties:
 
-  * *non-negativity*: $\text{dist}(a,b) \geq 0$
-  * *identity*: $\text{dist}(a,b)=0 \iff a=b$
-  * *symmetry*: $\text{dist}(a,b) \geq \text{dist}(b,a)$
-  * *triangle inequality*: $\text{dist}(a,c) \leq \text{dist}(a,b) + \text{dist}(b,c)$
+  * *non-negativity*: \\(\text{dist}(a,b) \geq 0\\)
+  * *identity*: \\(\text{dist}(a,b)=0 \iff a=b\\)
+  * *symmetry*: \\(\text{dist}(a,b) \geq \text{dist}(b,a)\\)
+  * *triangle inequality*: \\(\text{dist}(a,c) \leq \text{dist}(a,b) + \text{dist}(b,c)\\)
 
-There are many possible choices depending on analytical/computational convenience, particularly for rotations. A good review of metrics can be found in ((R. Hartley, J. Trumpf, Y. Dai, and H. Li. Rotation averaging. IJCV, 103(3):267-305, 2013.)).
+There are many possible choices depending on analytical/computational convenience, particularly for rotations. A good review of metrics can be found in *R. Hartley, J. Trumpf, Y. Dai, and H. Li. Rotation averaging. IJCV, 103(3):267-305, 2013.*.
 
-/*
-## Constructions and Conversions Calculator
-
-This calculator aggregates most of the construction and conversion rules detailed in the guides below. Be sure to select the right conventions for each representation involved in your calculation.
-
-FIXME [CALCULATOR](https://www.andre-gaschler.com/rotationconverter/) (replace with internal project once page goes public...place within HTML tags...add convention radio buttons next to each representation)
-*/
 ## Rotation Matrix
 
 ### Construction Techniques
 
-**From Frame Axes $A$ & $B$**
+**From Frame Axes \\(A\\) & \\(B\\)**
 
-<tabbox F = passive>
+> F = Passive:
 
 $$\mathbf{R}_A^B=\begin{bmatrix}^B\mathbf{x}_A & ^B\mathbf{y}_A & ^B\mathbf{z}_A\end{bmatrix}$$
 
-<tabbox F = active>
+> F = Active:
 
-See *F = passive*, where $A$ is the source frame and $B$ is the destination frame.
+See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destination frame.
 
-</tabbox>
-
-**From Rotation $\theta$ about n-Axis from World to Body**
+**From Rotation \\(\theta\\) about n-Axis from World to Body**
 
   * 1 and 0's on the n-dimension
   * Cosines on the diagonal
   * Sines everywhere else...
 
-<tabbox D = B2W>
+> D = B2W:
 
   * ...Negative sine **underneath** the 1
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive:
 
   * ...Negative sine **above** the 1
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active:
 
   * ...Negative sine **underneath** the 1
 
-</tabbox>
 ### Conversions (To...)
 
 **Euler Angles**
@@ -175,11 +97,11 @@ FIXME
 
 *i.e., the SO(3) logarithmic map*.
 
-<tabbox D = B2W>
+> D = B2W:
 
 $$\theta=\cos^{-1}\left(\frac{\text{trace}(\mathbf{R})-1}{2}\right)$$ 
 
-if $\theta\neq 0$:
+if \\(\theta\neq 0\\):
 
 $$\theta\mathbf{u} = Log(\mathbf{R}) = \frac{\theta(\mathbf{R}-\mathbf{R}^T)^\vee}{2\sin(\theta)}$$ 
 
@@ -187,91 +109,80 @@ else:
 
 $$\theta\mathbf{u} = Log(\mathbf{R}) = \mathbf{0}$$
 
-Alternatively, $\mathbf{u}$ can be thought of as the eigenvector of $\mathbf{R}$ that corresponds to the eigenvalue $1$.
+Alternatively, \\(\mathbf{u}\\) can be thought of as the eigenvector of \\(\mathbf{R}\\) that corresponds to the eigenvalue $1$.
 
-<tabbox D = W2B, F = Passive>
-
-FIXME
-
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Passive:
 
 FIXME
 
-</tabbox>
+> D = W2B, F = Active:
+
+FIXME
 
 **Quaternion**
 
-<tabbox D = B2W>
+> D = B2W:
 
-$\delta=\text{trace}(\boldsymbol{R})$
+\\(\delta=\text{trace}(\boldsymbol{R})\\)
 
-if $\delta>0$ then
+if \\(\delta>0\\) then
 
-<WRAP indent>
-$s=2\sqrt{\delta+1}$
+\\(s=2\sqrt{\delta+1}\\)
 
-$q_w=\frac{s}{4}$
+\\(q_w=\frac{s}{4}\\)
 
-$q_x=\frac{1}{s}(R_{32}-R_{23})$
+\\(q_x=\frac{1}{s}(R_{32}-R_{23})\\)
 
-$q_y=\frac{1}{s}(R_{13}-R_{31})$
+\\(q_y=\frac{1}{s}(R_{13}-R_{31})\\)
 
-$q_z=\frac{1}{s}(R_{21}-R_{12})$
-</WRAP>
+\\(q_z=\frac{1}{s}(R_{21}-R_{12})\\)
 
-else if $R_{11}>R_{22}$ and $R_{11}>R_{33}$ then
+else if \\(R_{11}>R_{22}\\) and \\(R_{11}>R_{33}\\) then
 
-<WRAP indent>
-$s=2\sqrt{1+R_{11}-R_{22}-R_{33}}$
+\\(s=2\sqrt{1+R_{11}-R_{22}-R_{33}}\\)
 
-$q_w=\frac{1}{s}(R_{32}-R_{23})$
+\\(q_w=\frac{1}{s}(R_{32}-R_{23})\\)
 
-$q_x=\frac{s}{4}$
+\\(q_x=\frac{s}{4}\\)
 
-$q_y=\frac{1}{s}(R_{21}+R_{12})$
+\\(q_y=\frac{1}{s}(R_{21}+R_{12})\\)
 
-$q_z=\frac{1}{s}(R_{31}+R_{13})$
-</WRAP>
+\\(q_z=\frac{1}{s}(R_{31}+R_{13})\\)
 
-else if $R_{22}>R_{33}$ then
+else if \\(R_{22}>R_{33}\\) then
 
-<WRAP indent>
-$s=2\sqrt{1+R_{22}-R_{11}-R_{33}}$
+\\(s=2\sqrt{1+R_{22}-R_{11}-R_{33}}\\)
 
-$q_w=\frac{1}{s}(R_{13}-R_{31})$
+\\(q_w=\frac{1}{s}(R_{13}-R_{31})\\)
 
-$q_x=\frac{1}{s}(R_{21}+R_{12})$
+\\(q_x=\frac{1}{s}(R_{21}+R_{12})\\)
 
-$q_y=\frac{s}{4}$
+\\(q_y=\frac{s}{4}\\)
 
-$q_z=\frac{1}{s}(R_{32}+R_{23})$
-</WRAP>
+\\(q_z=\frac{1}{s}(R_{32}+R_{23})\\)
 
 else
 
-<WRAP indent>
-$s=2\sqrt{1+R_{33}-R_{11}-R_{22}}$
+\\(s=2\sqrt{1+R_{33}-R_{11}-R_{22}}\\)
 
-$q_w=\frac{1}{s}(R_{21}-R_{12})$
+\\(q_w=\frac{1}{s}(R_{21}-R_{12})\\)
 
-$q_x=\frac{1}{s}(R_{31}+R_{13})$
+\\(q_x=\frac{1}{s}(R_{31}+R_{13})\\)
 
-$q_y=\frac{1}{s}(R_{32}+R_{23})$
+\\(q_y=\frac{1}{s}(R_{32}+R_{23})\\)
 
-$q_z=\frac{s}{4}$
-</WRAP>
+\\(q_z=\frac{s}{4}\\)
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive:
 
 FIXME
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active:
 
 $\delta=\text{trace}(\boldsymbol{R})$
 
 if $\delta>0$ then
 
-<WRAP indent>
 $s=2\sqrt{\delta+1}$
 
 $q_w=\frac{s}{4}$
@@ -281,11 +192,9 @@ $q_x=\frac{1}{s}(R_{23}-R_{32})$
 $q_y=\frac{1}{s}(R_{31}-R_{13})$
 
 $q_z=\frac{1}{s}(R_{12}-R_{21})$
-</WRAP>
 
 else if $R_{11}>R_{22}$ and $R_{11}>R_{33}$ then
 
-<WRAP indent>
 $s=2\sqrt{1+R_{11}-R_{22}-R_{33}}$
 
 $q_w=\frac{1}{s}(R_{23}-R_{32})$
@@ -295,11 +204,9 @@ $q_x=\frac{s}{4}$
 $q_y=\frac{1}{s}(R_{21}+R_{12})$
 
 $q_z=\frac{1}{s}(R_{31}+R_{13})$
-</WRAP>
 
 else if $R_{22}>R_{33}$ then
 
-<WRAP indent>
 $s=2\sqrt{1+R_{22}-R_{11}-R_{33}}$
 
 $q_w=\frac{1}{s}(R_{31}-R_{13})$
@@ -309,11 +216,9 @@ $q_x=\frac{1}{s}(R_{21}+R_{12})$
 $q_y=\frac{s}{4}$
 
 $q_z=\frac{1}{s}(R_{32}+R_{23})$
-</WRAP>
 
 else
 
-<WRAP indent>
 $s=2\sqrt{1+R_{33}-R_{11}-R_{22}}$
 
 $q_w=\frac{1}{s}(R_{12}-R_{21})$
@@ -323,9 +228,7 @@ $q_x=\frac{1}{s}(R_{31}+R_{13})$
 $q_y=\frac{1}{s}(R_{32}+R_{23})$
 
 $q_z=\frac{s}{4}$
-</WRAP>
 
-</tabbox>
 ### Action
 
 <tabbox F = passive>
@@ -533,8 +436,6 @@ $$\approx \boldsymbol{I}+\lfloor \boldsymbol{\theta} \rfloor_{\times}$$
 
 FIXME
 
-/*(whatever the inverse of the other tab is ::::*::::)*/
-
 <tabbox D = W2B, F = Active>
 
 FIXME
@@ -611,8 +512,6 @@ $$\mathbf{R}=\mathbf{C}_H=(q_w^2-1)\boldsymbol{I}+2q_w\lfloor\boldsymbol{q}_v\rf
 
 <tabbox D = W2B, F = Passive>
 
-/*::::see flipped quaternion paper::::
-
 $$\mathbf{R}=\mathbf{C}_H=$$*/
 
 FIXME
@@ -627,14 +526,7 @@ $$\mathbf{R}=\mathbf{C}_S=(q_w^2-1)\boldsymbol{I}-2q_w\lfloor\boldsymbol{q}_v\rf
 
 $$\mathbf{R}(\mathbf{q})=\mathbf{R}(-\mathbf{q}).$$
 
-/*
-FIXME
-
-(move to Lie tables?)*/
-
 The use of $C_H$ means that $Exp(\tilde{q}) \approx I + [\tilde{q}]_\times $ for small $\tilde{q}$. For $C_S$, the approximation becomes $I - [\tilde{q}]_\times$. A transposed matrix flips the sign again. The sign change for the active + passive world-to-body convention is important because the *values* in the actual quaternion correspond to the *inverse* of the underlying passive quaternion. Thus, all Jacobians $\partial \cdot / \partial \tilde{q}$  must have that negated sign to send the linearizing derivatives in the correct direction given the apparent error-state value.
-
-/*:::Technically correct, but needs to be expanded from page 7 of notes.:::*/
 
 **Euler Angles**
 
@@ -713,22 +605,8 @@ $$\mathbf{q}_A^C=\mathbf{q}_A^B\otimes \mathbf{q}_B^C$$
 $$\mathbf{q}^{-1}=\begin{bmatrix}q_w\\\mathbf{q}_v\end{bmatrix}^{-1}=\begin{bmatrix}q_w\\-\mathbf{q}_v\end{bmatrix}$$
 
 $$\left(\mathbf{q}_a \otimes \mathbf{q}_b \otimes \dots \otimes \mathbf{q}_N\right)^{-1}=\mathbf{q}_N^{-1}\otimes \dots \otimes \mathbf{q}_b^{-1} \otimes \mathbf{q}_a^{-1}$$
+
 ### Addition and Subtraction
-
-/*
-(:::copy to Lie tables?:::)
-
-::With addition and subtraction, an additional convention is introduced--that of *global vs. local perturbations*:: FIXME integrate right-and-left subtraction/addition operations for quaternions and others--should make a lot of sense when thinking about rotation matrices!. In other words, are the increments
-defined in the local (i.e., body frame) tangent space, or in the global (i.e., inertial/world frame) tangent space? FIXME The combination of passive directionality with this additional convention determines how $\oplus$ and $\ominus$ are expressed. When you write out the frames, it makes sense. Take $\mathcal{I}$ as the global frame/tangent space and $\mathcal{B}$ as the local. Here are some combinations, using rotation matrices:
-
-  * **Passive B2W + Local Perturbations:** $R_\mathcal{B_t}^\mathcal{I}=R_\mathcal{B}^\mathcal{I} Exp\left(\tilde{\theta}_\mathcal{B_t}^\mathcal{B}\right)$.
-  * **Passive B2W + Global Perturbations:** $R_\mathcal{B}^\mathcal{I_t}=Exp\left(\tilde{\theta}_\mathcal{I}^\mathcal{I_t}\right)R_\mathcal{B}^\mathcal{I}$.
-  * **Passive W2B + Local Perturbations:** $R_\mathcal{I}^\mathcal{B_t}=Exp\left(\tilde{\theta}_\mathcal{B}^\mathcal{B_t}\right)R_\mathcal{I}^\mathcal{B}$.
-
-*Note* that (and this is very easy to miss) while the rotation matrix form of our convention follows the third bullet point, the quaternion in our convention is *active*, which means it behaves *like a body-to-world rotation operator*! So, when dealing in the space of quaternions, the first bullet point is actually used! Effectively, for our convention, *quaternions compose in the opposite way that rotation matrices do*. Very tricky. FIXME
-
-:::add notion of error rotation...same for other representations!:::
-*/
 
 FIXME
 ### Notions of Distance
@@ -760,43 +638,6 @@ FIXME
 
 FIXME
 
-/*
-FIXME for Hamiltonian convention, main tests for Transform3D def for Ceres notes
-
-<code python>
-q1 = Quaterniond(0.,1.,0.,0.)
-    q2 = Quaterniond(0.,0.,1.,0.)
-
-    print('q1:\n')
-    print(q1)
-    print('\nq2:\n')
-    print(q2)
-    print('\nq1.inv():\n')
-    print(q1.inverse())
-    print('\nq1*q2:\n')
-    print(q1*q2)
-    print('\nq2*q1:\n')
-    print(q2*q1)
-    
-
-    T1 = Transform3D().Random()
-    T2 = Transform3D().Random()
-
-    print('\nT1:\n')
-    print(T1)
-    print('\nT2:\n')
-    print(T2)
-    print('\nT1-T2:\n')
-    print(T1 - T2)
-    print('\nT2-T1:\n')
-    print(T2 - T1)
-    print('\nT1+(T2-T1)=T2:\n')
-    v = T2-T1
-    print(T1 + v)
-    print('\nT2-(T1+(T2-T1))=0:\n')
-    print(T2 - (T1 + (T2-T1)))
-</code>
-*/
 ## Appendix
 
 More info on quaternions found here(([Some UPenn notes on quaternions](https://www.cis.upenn.edu/~cis610/cis610sl7.pdf))).
