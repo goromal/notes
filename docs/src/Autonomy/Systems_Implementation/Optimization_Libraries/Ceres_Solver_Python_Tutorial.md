@@ -48,7 +48,7 @@ Ceres is a C++ library, and its speed is certainly dependent on programming in t
 
 The Jupyter notebook below contains some illustrative examples of Ceres applied to small robotics problems of increasing complexity--they should give a sense of what the library is capable of, and perhaps even facilitate your own prototyping efforts. The Python syntax translates pretty well to C++, but of course the [Ceres website](http://ceres-solver.org/tutorial.html) serves as the best C++ API reference.
 
-**[THE PYTHON EXAMPLES](TODO)**
+**[THE PYTHON EXAMPLES](https://github.com/goromal/scratchpad/blob/master/optimizations/ceres_tutorial.ipynb)**
 
 ## Some Slides
 
