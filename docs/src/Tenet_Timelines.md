@@ -2,7 +2,7 @@
 
 The movie *Tenet* makes use of nonlinear storytelling in its purest form: the main characters literally “zig-zag” through time within the bounds of a two-week period, as illustrated in the “stacked timeline” below. This is my attempt to make sense of the timelines as well as some of the essential mechanics of the storyline after an initial viewing. The timeline below is by no means precise (hence no metric indicators on the time axis), but I do believe that the shapes are basically correct.
 
-<img src="../img/tenet-timelines.svg" style="display: block; margin-left: auto; margin-right: auto;">
+<img src="./img/tenet-timelines.svg" style="display: block; margin-left: auto; margin-right: auto;">
 
 ## Timeline Legend
 
