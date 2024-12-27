@@ -54,7 +54,7 @@ The Jupyter notebook below contains some illustrative examples of Ceres applied 
 
 As some end matter, here are some PDF slides I put together to present the above tutorial in a lab setting. The per-slide notes are also included, for reference.
 
-**[THE SLIDES](TODO)**
+**[THE SLIDES](https://andrewtorgesen.com/res/Ceres_Slides.pdf)**
 
 ### Ceres Solver (Title Slide)
 
