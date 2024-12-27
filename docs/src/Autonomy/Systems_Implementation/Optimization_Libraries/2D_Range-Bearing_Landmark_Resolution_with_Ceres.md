@@ -4,4 +4,4 @@
 
 This article has been implemented as a Jupyter Notebook:
 
-**[THE NOTEBOOK](TODO)**
+**[THE NOTEBOOK](https://github.com/goromal/scratchpad/blob/master/optimizations/range_bearing_fusion.ipynb)**
