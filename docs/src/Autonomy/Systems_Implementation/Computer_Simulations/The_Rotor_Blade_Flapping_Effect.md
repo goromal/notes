@@ -15,9 +15,9 @@
 
 ### Core Equations
 
-A rotor in translational flight undergoes an effect known as blade flapping. The advancing blade of the rotor has a higher velocity relative to the free-stream, while the retreating blade sees a lower effective airspeed. This causes an imbalance in lift, inducing an up and down oscillation of the rotor blades. In steady state, this causes the effective rotor plane to tilt at some angle off of vertical, causing a deflection of the thrust vector (see Figure 2). If the rotor plane is not aligned with the vehicle’s center of gravity, this will create a moment about the center of gravity ($M_{b,lon}$) that can degrade attitude controller performance. For stiff rotors without hinges at the hub, there is also a moment generated directly at the rotor hub from the deflection of the blades ($M_{b,s}$).
+A rotor in translational flight undergoes an effect known as blade flapping. The advancing blade of the rotor has a higher velocity relative to the free-stream, while the retreating blade sees a lower effective airspeed. This causes an imbalance in lift, inducing an up and down oscillation of the rotor blades. In steady state, this causes the effective rotor plane to tilt at some angle off of vertical, causing a deflection of the thrust vector (see Figure 2). If the rotor plane is not aligned with the vehicle’s center of gravity, this will create a moment about the center of gravity (\\(M_{b,lon}\\)) that can degrade attitude controller performance. For stiff rotors without hinges at the hub, there is also a moment generated directly at the rotor hub from the deflection of the blades (\\(M_{b,s}\\)).
 
-The total moment on the UAV about the body pitch and roll axes comes from the contribution of each rotor $i$:
+The total moment on the UAV about the body pitch and roll axes comes from the contribution of each rotor \\(i\\):
 
 $$M_{flap,\phi}=\sum_i (M_{b,lon,\phi,i}+ M_{b,s,\phi,i})$$
 
@@ -37,11 +37,11 @@ $$a_{1s,\theta}=k_f~^bv_x$$
 
 Where
 
-$h$ is the vertical distance from rotor plane to origin of the body frame ($m$),
+\\(h\\) is the vertical distance from rotor plane to origin of the body frame ($m$),
 
-$k_\beta$ ::is the stiffness of the rotor blade:: ($N~m/rad$),
+\\(k_\beta\\) is the stiffness of the rotor blade (\\(N~m/rad\\)),
 
-$k_f$ ::is a constant providing a linear approximation to Eq. 8 on page 7 of [1]. The linear approximation is explained preceding Eq. 14 on page 4 of [3]::.
+\\(k_f\\) is a constant providing a linear approximation to Eq. 8 on page 7 of [1]. The linear approximation is explained preceding Eq. 14 on page 4 of [3].
 
 Additionally, the total force on the quadrotor is
 
@@ -49,31 +49,31 @@ $$^\mathcal{I}F_{flap}=-\lambda_1\sum_i\omega_i\tilde{V}$$
 
 Where
 
-$\omega_i$ is the rotational speed of each rotor,
+\\(\omega_i\\) is the rotational speed of each rotor,
 
-$\tilde{V}$ is the projection of $^\mathcal{I}V$ on to the propeller plane,
+\\(\tilde{V}\\) is the projection of \\(^\mathcal{I}V\\) on to the propeller plane,
 
-$\lambda_1$ is a “critical parameter” which is the rotor drag coefficient, and ::probably entails an experimental estimation method (introduced on page 37 of [4])::
+\\(\lambda_1\\) is a “critical parameter” which is the rotor drag coefficient, and probably entails an experimental estimation method (introduced on page 37 of [4])
 
-Manipulating the relations from the top left of page 35 of [4], there is an easier-to-estimate parameter (again, see page 37) called $k_1$ (::which is assumed to be constant throughout stable flight::) such that
+Manipulating the relations from the top left of page 35 of [4], there is an easier-to-estimate parameter (again, see page 37) called \\(k_1\\) (which is assumed to be constant throughout stable flight) such that
 
 $$ k_1=\lambda_1\sum_i\omega_i. $$
 
-The authors of [4] found their $k_1$ value to be equal to 0.57.
+The authors of [4] found their \\(k_1\\) value to be equal to 0.57.
 
-Motor thrust related to total angular rotation rate by the following relation (::from page 33 of [4]::):
+Motor thrust related to total angular rotation rate by the following relation (from page 33 of [4]):
 
 $$T=k_T\sum_i\omega_i^2$$
 
-where $k_T$ is the "thrust coefficient" of the propellers.
+where \\(k_T\\) is the "thrust coefficient" of the propellers.
 
 ### How to simulate effect
 
-Currently, we are using a Force-Torque polynomial model fit to go directly from PWM motor commands to output thrusts and torques. This gives us no information about the individual rotor speed without an estimate of $k_T$. **If all the rotor planes were parallel with each other**, this would not be a big deal if we had a reasonable estimate of $k_1$. However, since our rotor planes are not guaranteed to be parallel, we need to use the following process to compute the blade flapping effect forces and torques on the UAV:
+Currently, we are using a Force-Torque polynomial model fit to go directly from PWM motor commands to output thrusts and torques. This gives us no information about the individual rotor speed without an estimate of \\(k_T\\). **If all the rotor planes were parallel with each other**, this would not be a big deal if we had a reasonable estimate of \\(k_1\\). However, since our rotor planes are not guaranteed to be parallel, we need to use the following process to compute the blade flapping effect forces and torques on the UAV:
 
 This is roughly what I'm doing in C++:
 
-<code c++>
+```cpp
 double omega_Total = 0.0;
 for (int i = 0; i < num_rotors_; i++)
 {
@@ -101,25 +101,19 @@ for (int i = 0; i < num_rotors_; i++)
     Torque_(1) -= actual_forces_(i) * motors_[i].position(2) * sin(as1theta);
     Torque_(1) += motor_kB_ * as1theta;
 }
-</code>
+```
 
 ## Parameter Estimation Attempts
 
-### Rotor Blade Stiffness $k_\beta$
+### Rotor Blade Stiffness \\(k_\beta\\)
 
 Page 15 of [this thesis](http://www.diva-portal.org/smash/get/diva2:1070420/FULLTEXT01.pdf) gives a static bending test table for a nylon 6 rotor blade, Under a load of 0.9 N, the measured deflection at the tip of the blade (with a length of 6 in = 0.1524 m) was 0.0305 m. Numerous other load and deflection values were tabulated. The calculated elastic modulus from the table was 9.5 GPa.
 
-Given the above numbers, $k_\beta$ can be calculated as
+Given the above numbers, \\(k_\beta\\) can be calculated as
 
 $$k_\beta=\frac{(0.9N)(0.1524m)}{\tan^{-1}(0.0305m/0.1524m)}\approx 0.7 \frac{Nm}{rad}.$$
 
-/*To find an estimate for $k_\beta$, an examination of its units plus the information we're given has us ask the question: *for a load of 1 N applied at a point 1 meter out on the rotor blade, what will the angular deflection be?* (I will use scaling to make the numbers more realistic, with a load of 1 N at a point 0.1 meter out. We will use the cantilever beam deflection formula:
-
-$$\delta = \frac{FL^3}{3EI}.$$
-
-where the deflection angle $\theta$ is equal to $\tan^{-1}(\delta/L)$. A sample from the table will allow us to calculate an approximate value for the moment of inertia I, which is calculated to be 3.75 $mm^4$. We can thus calculate that if a load of 1 N will be applied 0.1 meter out from the rotor blade*/
-
-### Rotor Thrust Coefficient $k_T$
+### Rotor Thrust Coefficient \\(k_T\\)
 
 From [this paper](https://arxiv.org/pdf/1601.00733.pdf), it is noted that quadrotors tend to have very low thrust coefficients compared to helicopters (on the order of zero from looking at the figure on page 20). As a ballpark estimate, the paper explains that the quadrotors studied require motor speeds around 5000 RPM to keep the vehicle in the air. Assuming that a quadrotor's mass is somewhere around 2 kilograms and distributed evenly among four rotors, that would give a thrust coefficient of
 
@@ -127,9 +121,8 @@ $$k_T=\frac{F_{rotor}}{\omega^2}\approx 2.0 \times 10^{-5} \frac{N s^2}{rad^2}$$
 
 which is in line with the figure.
 
-### The Enigmatic $k_1$ Parameter
+### The Enigmatic \\(k_1\\) Parameter
 
 I'm just copying the empirical value from [4] here, though it might be interesting in the future to replicate their parameter estimation process for our own platform if deemed necessary.
 
 $$k_1 \approx 0.57 \frac{kg~rad}{s}$$
-
