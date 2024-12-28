@@ -12,7 +12,7 @@ $$\boldsymbol{y}=\begin{bmatrix}1 & 0 & 0 & \cdots\end{bmatrix}\boldsymbol{x}=x.
 
 For these formulations, we'll go one step further and set \\(\boldsymbol{B}=0\\). The presented filters increase in order from constant position to constant velocity to constant acceleration models. Anything beyond that probably won't be worth it as higher-order terms empirically tend to become more significant as the system order increases. The derived filters will be of the form
 
-\\[ \hat{\boldsymbol{x}}_{k+1}=e^{\boldsymbol{A}\Delta t}\hat{\boldsymbol{x}}_{k}+\boldsymbol{l}r \\]
+\\[ \hat{\boldsymbol{x}}\_{k+1}=e^{\boldsymbol{A}\Delta t}\hat{\boldsymbol{x}}\_{k}+\boldsymbol{l}r \\]
 
 \\[r\triangleq x-\hat{x}. \\]
 

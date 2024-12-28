@@ -100,9 +100,7 @@ $$\dot{X}(s)=\frac{s}{\sigma s+1}X(s),$$
 
 and applying the approximation yields
 
-$$\dot{x}_k=\left(\frac{2\sigma-\Delta t}{2\sigma + \Delta t}\right)\dot{x}_p+\left(\frac{2}{2\sigma+\Delta t}\right)(x_k-x_p),$$
-
-where \\(p \triangleq k-1\\).
+$$\dot{x}_k=\left(\frac{2\sigma-\Delta t}{2\sigma + \Delta t}\right)\dot{x}\_{k-1}+\left(\frac{2}{2\sigma+\Delta t}\right)(x_k-x\_{k-1}).$$
 
   * **Finite differencing**
   * **Complex derivative**

@@ -105,7 +105,7 @@ $$=-\boldsymbol{R}[\boldsymbol e_1]_\times.$$
 
 $$\vdots$$
 
-$$\boldsymbol{J} = \begin{bmatrix} \boldsymbol{I} & \boldsymbol{0} \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e_1]_\times \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e_2]_\times \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e_3]_\times \end{bmatrix} \in \mathbb{R}^{12 \times 6}.$$
+$$\boldsymbol{J} = \begin{bmatrix} \boldsymbol{I} & \boldsymbol{0} \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e\_1]\_\times \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e\_2]\_\times \\\ \boldsymbol{0} & -\boldsymbol{R}[\boldsymbol e\_3]\_\times \end{bmatrix} \in \mathbb{R}^{12 \times 6}.$$
 
 ***3:** Check that the \\(\boxplus\\) operation makes sense.*
 
