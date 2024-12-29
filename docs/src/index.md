@@ -4,8 +4,6 @@ I'm a bit of a meticulous note taker--in part because it helps me retain informa
 
 [Return to main site](https://andrewtorgesen.com)
 
-***I'm still in the process of moving my public-facing notes from their old home; there's still a lot of cleanup to do.***
-
 - [Tenet Timelines](./Tenet_Timelines.md)
 - [Money Balancing Math](./Money_Balancing_Math.md)
 - [Recipes](./Recipes.md)
