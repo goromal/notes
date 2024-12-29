@@ -6,7 +6,8 @@ The 2-norm, or \\(\lvert\lvert\cdot\rvert\rvert_2\\), is advantageous as a cost 
   * It often coincides with a useful physical interpretation (e.g., energy, power).
   * It is induced by the inner product \\(\langle\cdot,\cdot\rangle\\) operator((Inner product-induced norms expand outwards like n-dimensional spheres which, as they expand, come to touch vector spaces (i.e., "flat" spaces) at exactly *one* location, implying exactly *one* optimal solution. Hence their **convexity** when bounded by linear constraints (since the linear constraints provide the "flat" space).)).
 
-A least-squares problem is, by definition, any optimization problem whose cost function is a 2-norm of some generalized **residual** function, \\(r(x)\\). Whether \\(r(x)\\) is linear or not (The residual equation is sometimes expressed as a constraint instead of in the cost function (rendering the cost function somewhat trivial), but usually not; both linear and nonlinear least-squares problems are generally considered to be a special case of [unconstrained nonlinear optimization problems](public:autonomy:search-optimization:nonlinear-optimization#unconstrained_form), for example.) will completely affect how the problem is approached and solved.
+A least-squares problem is, by definition, any optimization problem whose cost function is a 2-norm of some generalized **residual** function, \\(r(x)\\). Whether \\(r(x)\\) is linear or not (The residual equation is sometimes expressed as a constraint instead of in the cost function (rendering the cost function somewhat trivial), but usually not; both linear and nonlinear least-squares problems are generally considered to be a special case of [unconstrained nonlinear optimization problems](./Nonlinear_Optimization.md), for example.) will completely affect how the problem is approached and solved.
+
 ## Linear
 
 Despite their name, linear least-squares problems are a subset of general unconstrained nonlinear optimization problems because of the nonlinear 2-norm operator. They're also referred to as **quadratic programs**. Their general form is
@@ -104,7 +105,7 @@ At a high level, Gauss-Newton repeatedly linearizes the vector-valued \\(r(x)\\)
 
 $$x_{k+1}=x_k-\alpha_kJ^\dagger r(x_k)$$
 
-where the step size \\(\alpha_k\\) is determined via a line search (see [brief discussion on line searching for BFGS](public:autonomy:search-optimization:nonlinear-optimization#methods)) to help with convergence. Alternatively, if \\(r(x)\triangleq y-f(x)\\) and \\(J\\) is the Jacobian of \\(f(x)\\), then the recursive relation is
+where the step size \\(\alpha_k\\) is determined via a line search (see [brief discussion on line searching for BFGS](./Nonlinear_Optimization.md)) to help with convergence. Alternatively, if \\(r(x)\triangleq y-f(x)\\) and \\(J\\) is the Jacobian of \\(f(x)\\), then the recursive relation is
 
 $$x_{k+1}=x_k+\alpha_kJ^\dagger r(x_k).$$
 

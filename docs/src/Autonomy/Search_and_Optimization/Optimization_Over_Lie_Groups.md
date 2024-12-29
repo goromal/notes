@@ -19,9 +19,10 @@ $$\boldsymbol{a}\boxminus\boldsymbol{b}=\begin{cases}
 \end{cases}$$
 
 Local search, as the name suggests, utilizes the *local, right-* versions of the \\(\oplus\\) and \\(\ominus\\) operators, as well as *right-Jacobians*.
+
 ### Lie-ify Your Optimization Algorithm
 
-Local, iterative search algorithms (as with [nonlinear least squares](public:autonomy:search-optimization:least-squares#nonlinear)) take the following form when \\(\boldsymbol x\\) belongs to a vector space:
+Local, iterative search algorithms (as with [nonlinear least squares](./Nonlinear_Optimization.md)) take the following form when \\(\boldsymbol x\\) belongs to a vector space:
 
 $$\boldsymbol x_{k+1}=\boldsymbol x_k+\boldsymbol{\Delta x},~\boldsymbol{\Delta x}=f(\boldsymbol{x}_k,\boldsymbol J(\boldsymbol x_k))\in \mathbb{R}^n,$$
 

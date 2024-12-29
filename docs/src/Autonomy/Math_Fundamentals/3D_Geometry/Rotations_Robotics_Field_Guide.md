@@ -1,6 +1,6 @@
 # Implementing Rotations: A Robotics Field Guide
 
-*Why?*
+***Why?***
 
 My aim here is to elucidate the complex machinery that constitutes the hard part of working with transforms and frames in robotics: rotations and rotational representations. 
 
@@ -9,7 +9,7 @@ Even when working with a pre-existing software library that provides rotational 
 *This guide is meant to be a one-stop-shop for concisely clarifying the possibilities and helping you recognize which ones you're working with and their implications. Some convenient calculators that conform to your chosen conventions are also provided.*
 
 
-***Note***: The FIXME keywords indicate missing information that I'll be filling in as my free time allows.
+***Note***: The `FIXME` keywords indicate missing information that I'll be filling in as my free time allows.
 
 I've implemented many of these concepts in a [C++ library](https://github.com/goromal/manif-geom-cpp) with corresponding [Python bindings](https://github.com/goromal/geometry). There's also a [Python script](https://gist.github.com/goromal/fb15f44150ca4e0951acaee443f72d3e) that implements the checks laid out in this guide for deducing the rotational conventions used by a particular library.
 
@@ -91,7 +91,7 @@ See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destinat
 
 **Euler Angles**
 
-FIXME
+`FIXME`
 
 **Rodrigues**
 
@@ -113,11 +113,11 @@ Alternatively, \\(\mathbf{u}\\) can be thought of as the eigenvector of \\(\math
 
 > D = W2B, F = Passive:
 
-FIXME
+`FIXME`
 
 > D = W2B, F = Active:
 
-FIXME
+`FIXME`
 
 **Quaternion**
 
@@ -175,71 +175,69 @@ else
 
 > D = W2B, F = Passive:
 
-FIXME
+`FIXME`
 
 > D = W2B, F = Active:
 
-$\delta=\text{trace}(\boldsymbol{R})$
+\\(\delta=\text{trace}(\boldsymbol{R})\\)
 
-if $\delta>0$ then
+if \\(\delta>0\\) then
 
-$s=2\sqrt{\delta+1}$
+\\(s=2\sqrt{\delta+1}\\)
 
-$q_w=\frac{s}{4}$
+\\(q_w=\frac{s}{4}\\)
 
-$q_x=\frac{1}{s}(R_{23}-R_{32})$
+\\(q_x=\frac{1}{s}(R_{23}-R_{32})\\)
 
-$q_y=\frac{1}{s}(R_{31}-R_{13})$
+\\(q_y=\frac{1}{s}(R_{31}-R_{13})\\)
 
-$q_z=\frac{1}{s}(R_{12}-R_{21})$
+\\(q_z=\frac{1}{s}(R_{12}-R_{21})\\)
 
-else if $R_{11}>R_{22}$ and $R_{11}>R_{33}$ then
+else if \\(R_{11}>R_{22}\\) and \\(R_{11}>R_{33}\\) then
 
-$s=2\sqrt{1+R_{11}-R_{22}-R_{33}}$
+\\(s=2\sqrt{1+R_{11}-R_{22}-R_{33}}\\)
 
-$q_w=\frac{1}{s}(R_{23}-R_{32})$
+\\(q_w=\frac{1}{s}(R_{23}-R_{32})\\)
 
-$q_x=\frac{s}{4}$
+\\(q_x=\frac{s}{4}\\)
 
-$q_y=\frac{1}{s}(R_{21}+R_{12})$
+\\(q_y=\frac{1}{s}(R_{21}+R_{12})\\)
 
-$q_z=\frac{1}{s}(R_{31}+R_{13})$
+\\(q_z=\frac{1}{s}(R_{31}+R_{13})\\)
 
-else if $R_{22}>R_{33}$ then
+else if \\(R_{22}>R_{33}\\) then
 
-$s=2\sqrt{1+R_{22}-R_{11}-R_{33}}$
+\\(s=2\sqrt{1+R_{22}-R_{11}-R_{33}}\\)
 
-$q_w=\frac{1}{s}(R_{31}-R_{13})$
+\\(q_w=\frac{1}{s}(R_{31}-R_{13})\\)
 
-$q_x=\frac{1}{s}(R_{21}+R_{12})$
+\\(q_x=\frac{1}{s}(R_{21}+R_{12})\\)
 
-$q_y=\frac{s}{4}$
+\\(q_y=\frac{s}{4}\\)
 
-$q_z=\frac{1}{s}(R_{32}+R_{23})$
+\\(q_z=\frac{1}{s}(R_{32}+R_{23})\\)
 
 else
 
-$s=2\sqrt{1+R_{33}-R_{11}-R_{22}}$
+\\(s=2\sqrt{1+R_{33}-R_{11}-R_{22}}\\)
 
-$q_w=\frac{1}{s}(R_{12}-R_{21})$
+\\(q_w=\frac{1}{s}(R_{12}-R_{21})\\)
 
-$q_x=\frac{1}{s}(R_{31}+R_{13})$
+\\(q_x=\frac{1}{s}(R_{31}+R_{13})\\)
 
-$q_y=\frac{1}{s}(R_{32}+R_{23})$
+\\(q_y=\frac{1}{s}(R_{32}+R_{23})\\)
 
-$q_z=\frac{s}{4}$
+\\(q_z=\frac{s}{4}\\)
 
 ### Action
 
-<tabbox F = passive>
+> F = passive
 
 $$\mathbf{R}_A^B~^A\mathbf{v}=^B\mathbf{v}$$
 
-<tabbox F = active>
+> F = active
 
 $$\mathbf{R}~^A\mathbf{v}=^A\mathbf{v}'$$
-
-</tabbox>
 
 ### Composition and Inversion
 
@@ -250,29 +248,28 @@ $$\mathbf{R}_B^C\mathbf{R}_A^B=\mathbf{R}_A^C$$
 **Inversion**
 
 $$\left(\mathbf{R}_A^B\right)^{-1}=\left(\mathbf{R}_A^B\right)^T=\mathbf{R}_B^A$$
+
 ### Addition and Subtraction
 
-Perturbations are represented by $\boldsymbol{\theta}\in \mathbb{R}^3$, where local perturbations are expressed in the body frame and global perturbations are expressed in the world frame.
+Perturbations are represented by \\(\boldsymbol{\theta}\in \mathbb{R}^3\\), where local perturbations are expressed in the body frame and global perturbations are expressed in the world frame.
 
 **Addition**
 
-<tabbox F = Passive, D = B2W, P = Local>
+> F = Passive, D = B2W, P = Local
 
-$$\boldsymbol{R}_{B+}^{W}=\boldsymbol{R}_{B}^{W} \text{Exp}\left(\boldsymbol{\theta}_{B+}^{B}\right)$$
+$$\boldsymbol{R}\_{B+}^{W}=\boldsymbol{R}\_{B}^{W} \text{Exp}\left(\boldsymbol{\theta}\_{B+}^{B}\right)$$
 
-<tabbox F = Passive, D = B2W, P = Global>
+> F = Passive, D = B2W, P = Global
 
-$$\boldsymbol{R}_{B}^{W+}=\text{Exp}\left(\boldsymbol{\theta}_{W}^{W+}\right)\boldsymbol{R}_{B}^{W}$$
+$$\boldsymbol{R}\_{B}^{W+}=\text{Exp}\left(\boldsymbol{\theta}\_{W}^{W+}\right)\boldsymbol{R}\_{B}^{W}$$
 
-<tabbox F = Passive, D = W2B, P = Local>
+> F = Passive, D = W2B, P = Local
 
-$$\boldsymbol{R}_{W}^{B+}=\text{Exp}\left(\boldsymbol{\theta}_{B}^{B+}\right)\boldsymbol{R}_{W}^{B}$$
-
-</tabbox>
+$$\boldsymbol{R}\_{W}^{B+}=\text{Exp}\left(\boldsymbol{\theta}\_{B}^{B+}\right)\boldsymbol{R}\_{W}^{B}$$
 
 **Subtraction**
 
-FIXME
+`FIXME`
 ### Notions of Distance
 
 **Angular/Geodesic**
@@ -288,7 +285,7 @@ A computational, straight-line shortcut utilizing the Frobenius norm:
 $$||\mathbf{R}_A-\mathbf{R}_B||_F=||\mathbf{R}_B-\mathbf{R}_A||_F$$
 ### Derivatives and (Numeric) Integration
 
-FIXME
+`FIXME`
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -299,9 +296,11 @@ FIXME
 
   * Not very human-readable
   * Clearly redundant with 9 numbers for a 3-DOF quantity
+
 ### Unit Tests to Determine Conventions
 
-FIXME
+`FIXME`
+
 ## Euler Angles
 
 *Assuming 3-2-1 ordering.*
@@ -313,15 +312,13 @@ First consideration: Order. Follow the exact order in a straightforward fashion.
 
 Second, handedness must be considered:
 
-<tabbox H = Successive>
+> H = Successive
 
 Each rotation is visualized to be with respect to the transformed axes of the previous rotation. 
 
-<tabbox H = Fixed>
+> H = Fixed
 
 Each rotation is visualized to be with respect to the world axes.
-
-</tabbox>
 
 Handedness must be noted for all future operations with the numbers you just generated.
 ### Conversions (To...)
@@ -334,27 +331,25 @@ See Rotation Matrix construction techniques for building the component $\mathbf{
 
 First consideration is directionality of the matrices *(must be consistent)*:
 
-<tabbox D = B2W>
+> D = B2W
 
 $$\mathbf{R}_B^W=\mathbf{R}_3\mathbf{R}_2\mathbf{R}_1$$
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive
 
 $$\mathbf{R}_W^B=\mathbf{R}_1\mathbf{R}_2\mathbf{R}_3$$
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active
 
 $$\mathbf{R}=\mathbf{R}_3\mathbf{R}_2\mathbf{R}_1$$
 
-</tabbox>
-
 Then, take into account handedness:
 
-<tabbox H = Successive>
+> H = Successive
 
 Keep the above, which was derived assuming successive axes.
 
-<tabbox H = Fixed>
+> H = Fixed
 
 Reverse the above, whatever it is:
 
@@ -362,7 +357,7 @@ $$\mathbf{R}_a\mathbf{R}_b\mathbf{R}_c \rightarrow \mathbf{R}_c\mathbf{R}_b\math
 
 And the reversed rotations must be with respect to the chosen fixed frame. See below.
 
-The aim is to prove that intrinsic and extrinsic rotation compositions are applied in reverse order from each other. To prove this, consider three frames 0,1,2, where 0 is the fixed "world" frame. Suppose that $\mathbf{R}_2^0$ represents the rotation of the 2-frame relative to the 0-frame. To encode that rotation relative to the 1-frame requires a **similarity transform**, granted that the frames no longer appear to cancel out nicely:
+The aim is to prove that intrinsic and extrinsic rotation compositions are applied in reverse order from each other. To prove this, consider three frames 0,1,2, where 0 is the fixed "world" frame. Suppose that \\(\mathbf{R}_2^0\\) represents the rotation of the 2-frame relative to the 0-frame. To encode that rotation relative to the 1-frame requires a **similarity transform**, granted that the frames no longer appear to cancel out nicely:
 
 $$\mathbf{R}_2^1=(\mathbf{R}_1^0)^{-1}\mathbf{R}_2^0\mathbf{R}_1^0$$
 
@@ -370,16 +365,15 @@ Placing this within the context of rotation composition to get from frame 2 to 0
 
 $$\mathbf{R}_2^0=\mathbf{R}_1^0\mathbf{R}_2^1=\mathbf{R}_1^0((\mathbf{R}_1^0)^{-1}\mathbf{R}_2^0\mathbf{R}_1^0)=\mathbf{R}_2^0\mathbf{R}_1^0$$
 
-Note the reversed directionality between the **intrinsic** composition $\mathbf{R}_1^0\mathbf{R}_2^1$ and the *equivalent* **extrinsic** composition $\mathbf{R}_2^0\mathbf{R}_1^0$. Generic rotations were used here, demonstrating generalizability.
-</tabbox>
+Note the reversed directionality between the **intrinsic** composition \\(\mathbf{R}_1^0\mathbf{R}_2^1\\) and the *equivalent* **extrinsic** composition \\(\mathbf{R}_2^0\mathbf{R}_1^0\\). Generic rotations were used here, demonstrating generalizability.
 
 **Rodrigues**
 
-FIXME
+`FIXME`
 
 **Quaternion**
 
-FIXME
+`FIXME`
 ### Composition and Inversion
 
 *Not applicable for Euler angles.* Composition and inversion are typically performed by first converting the Euler angles to a rotation matrix.
@@ -387,7 +381,7 @@ FIXME
 
 Unlike with composition and inversion, there are methods of numeric differentiation and integration with Euler angles that are mathematically valid over infinitesimally small delta angles.
 
-FIXME
+`FIXME`
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -399,79 +393,76 @@ FIXME
 
   * There are many different orders and conventions that people don't always specify
   * Operations with Euler angles involve trigonometric functions, and are thus slower to compute and more difficult to analyze
-  * //Singularities/Gimbal Lock//: For example, $\mathbf{R}=\mathbf{R}_z(\delta)\mathbf{R}_y(\pi/2)\mathbf{R}_x(\alpha+\delta)$ for *any* choice of $\delta$. Singularities will occur for any 3-parameter representation((J. Stuelpnagel. On the Parametrization of the Three-Dimensional Rotation Group. SIAM Review, 6(4):422-430, 1964.)).
+  * *Singularities/Gimbal Lock*: For example, \\(\mathbf{R}=\mathbf{R}_z(\delta)\mathbf{R}_y(\pi/2)\mathbf{R}_x(\alpha+\delta)\\) for *any* choice of \\(\delta\\). Singularities will occur for any 3-parameter representation (J. Stuelpnagel. On the Parametrization of the Three-Dimensional Rotation Group. SIAM Review, 6(4):422-430, 1964.).
+
 ### Unit Tests to Determine Conventions
 
-FIXME
+`FIXME`
 ## Euler/Rodrigues
 
 ### Construction Techniques
 
-*Remember*, $\mathbf{u}$ is expressed in the World frame, just as you would intuitively think.
+*Remember*, \\(\mathbf{u}\\) is expressed in the World frame, just as you would intuitively think.
 
-**From Axis-Angle Representation: $\theta$, $\mathbf{u}$**
+**From Axis-Angle Representation: \\(\theta\\), \\(\mathbf{u}\\)**
 
-Normalize $\mathbf{u}$ and multiply by $\theta$.
+Normalize \\(\mathbf{u}\\) and multiply by \\(\theta\\).
+
 ### Conversions (To...)
 
-//Besides tangent-space operations, this is the computational bedrock of the usefulness of Euler/Rodrigues.* In fact, as with Euler Angles, the Function and Directionality conventions only matter for conversions, and are dictated by the destination forms.
+Besides tangent-space operations, this is the computational bedrock of the usefulness of Euler/Rodrigues.* In fact, as with Euler Angles, the Function and Directionality conventions only matter for conversions, and are dictated by the destination forms.
 
 **Rotation Matrix**
 
 *i.e., the SO(3) exponential map*.
 
-*i.e., Rodrigues' rotation formula//.
+*i.e., Rodrigues' rotation formula.
 
-<tabbox D = B2W>
+> D = B2W
 
-$$\mathbf{R}_B^W=\cos\theta\mathbf{I}+\sin\theta[\mathbf{u}]_\times+(1-\cos\theta)\mathbf{u} \mathbf{u}^T$$
+$$\mathbf{R}\_B^W=\cos\theta\mathbf{I}+\sin\theta[\mathbf{u}]\_\times+(1-\cos\theta)\mathbf{u} \mathbf{u}^T$$
 
-$$=\mathbf{I}+[\mathbf{u}]_\times\sin\theta+[\mathbf{u}]_\times^2(1-\cos\theta)$$
+$$=\mathbf{I}+[\mathbf{u}]\_\times\sin\theta+[\mathbf{u}]\_\times^2(1-\cos\theta)$$
 
-$$=exp([\theta\mathbf{u}]_\times)=Exp(\theta\mathbf{u})$$
+$$=exp([\theta\mathbf{u}]\_\times)=Exp(\theta\mathbf{u})$$
 
-$$\approx \boldsymbol{I}+\lfloor \boldsymbol{\theta} \rfloor_{\times}$$
+$$\approx \boldsymbol{I}+\lfloor \boldsymbol{\theta} \rfloor\_{\times}$$
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive
 
-FIXME
+`FIXME`
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active
 
-FIXME
-
-</tabbox>
-
+`FIXME`
 
 **Euler Angles**
 
-FIXME
+`FIXME`
 
 **Quaternion**
 
 *i.e., the Quaternion exponential map*.
 
-Assuming O = $q_w$ *first*.
+Assuming O = \\(q_w\\) *first*.
 
-<tabbox D = B2W>
+> D = B2W
 
-$$\mathbf{q}=\begin{bmatrix}\cos(\theta/2) \\ \sin(\theta/2)\mathbf{u}\end{bmatrix}$$
+$$\mathbf{q}=\begin{bmatrix}\cos(\theta/2) \\\ \sin(\theta/2)\mathbf{u}\end{bmatrix}$$
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive
 
-FIXME
+`FIXME`
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active
 
-FIXME
-
-</tabbox>
+`FIXME`
 
 ### Composition and Inversion
 
 **Composition**
 
-FIXME
+`FIXME`
 
 **Inversion**
 
@@ -479,12 +470,13 @@ $$(\theta\mathbf{u})^{-1}=-\theta\mathbf{u}$$
 
 ### Derivatives and (Numeric) Integration
 
-FIXME
+`FIXME`
+
 ### Representational Strengths and Shortcomings
 
 **Strengths**
 
-  * Constitutes the Lie Group of SO(3).
+  * Constitutes the Lie Group of \\(SO(3)\\).
   * Easily visualized and understood
   * Minimal representation
 
@@ -492,54 +484,57 @@ FIXME
 
   * Similar to Euler Angles, operations are with trig functions, and thus slower to compute and harder to analyze (though the inverse is trivial to compute)
   * Non-unique!
+
 ### Unit Tests to Determine Conventions
 
-FIXME
+`FIXME`
+
 ## Quaternions
 
 ### Construction Techniques
 
 Because quaternions are so non-intuitive, it is generally best to construct a quaternion at the outset either as the identity rotation or converted from a different representation.
+
 ### Conversions (To...)
 
 **Rotation Matrix**
 
-<tabbox D = B2W>
+> D = B2W
 
 Hamiltonian cosine matrix:
 
-$$\mathbf{R}=\mathbf{C}_H=(q_w^2-1)\boldsymbol{I}+2q_w\lfloor\boldsymbol{q}_v\rfloor_{\times}+2\boldsymbol{q}_v\boldsymbol{q}_v^{\top}=\begin{bmatrix}1-2q_y^2-2q_z^2 & 2q_xq_y-2q_wq_z & 2q_xq_z+2q_wq_y \\ 2q_xq_y+2q_wq_z & 1-2q_x^2-2q_z^2 & 2q_yq_z-2q_wq_x \\ 2q_xq_z-2q_wq_y & 2q_yq_z+2q_wq_x & 1-2q_x^2-2q_y^2\end{bmatrix}$$
+$$\mathbf{R}=\mathbf{C}\_H=(q\_w^2-1)\boldsymbol{I}+2q\_w\lfloor\boldsymbol{q}\_v\rfloor\_{\times}+2\boldsymbol{q}\_v\boldsymbol{q}\_v^{\top}=\begin{bmatrix}1-2q\_y^2-2q\_z^2 & 2q\_xq\_y-2q\_wq\_z & 2q\_xq\_z+2q\_wq\_y \\\ 2q\_xq\_y+2q\_wq\_z & 1-2q\_x^2-2q\_z^2 & 2q\_yq\_z-2q\_wq\_x \\\ 2q\_xq\_z-2q\_wq\_y & 2q\_yq\_z+2q\_wq\_x & 1-2q\_x^2-2q\_y^2\end{bmatrix}$$
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive
 
-$$\mathbf{R}=\mathbf{C}_H=$$*/
+$$\mathbf{R}=\mathbf{C}_H=$$
 
-FIXME
+`FIXME`
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active
 
 Shuster cosine matrix:
 
-$$\mathbf{R}=\mathbf{C}_S=(q_w^2-1)\boldsymbol{I}-2q_w\lfloor\boldsymbol{q}_v\rfloor_{\times}+2\boldsymbol{q}_v\boldsymbol{q}_v^{\top}=\begin{bmatrix}1-2q_y^2-2q_z^2 & 2q_xq_y+2q_wq_z & 2q_xq_z-2q_wq_y \\ 2q_xq_y-2q_wq_z & 1-2q_x^2-2q_z^2 & 2q_yq_z+2q_wq_x \\ 2q_xq_z+2q_wq_y & 2q_yq_z-2q_wq_x & 1-2q_x^2-2q_y^2\end{bmatrix}$$
+$$\mathbf{R}=\mathbf{C}\_S=(q\_w^2-1)\boldsymbol{I}-2q\_w\lfloor\boldsymbol{q}\_v\rfloor\_{\times}+2\boldsymbol{q}\_v\boldsymbol{q}\_v^{\top}=\begin{bmatrix}1-2q\_y^2-2q\_z^2 & 2q\_xq\_y+2q\_wq\_z & 2q\_xq\_z-2q\_wq\_y \\\ 2q\_xq\_y-2q\_wq\_z & 1-2q\_x^2-2q\_z^2 & 2q\_yq\_z+2q\_wq\_x \\\ 2q\_xq\_z+2q\_wq\_y & 2q\_yq\_z-2q\_wq\_x & 1-2q\_x^2-2q\_y^2\end{bmatrix}$$
 
-</tabbox> 
+
 
 $$\mathbf{R}(\mathbf{q})=\mathbf{R}(-\mathbf{q}).$$
 
-The use of $C_H$ means that $Exp(\tilde{q}) \approx I + [\tilde{q}]_\times $ for small $\tilde{q}$. For $C_S$, the approximation becomes $I - [\tilde{q}]_\times$. A transposed matrix flips the sign again. The sign change for the active + passive world-to-body convention is important because the *values* in the actual quaternion correspond to the *inverse* of the underlying passive quaternion. Thus, all Jacobians $\partial \cdot / \partial \tilde{q}$  must have that negated sign to send the linearizing derivatives in the correct direction given the apparent error-state value.
+The use of \\(C_H\\) means that \\(\text{Exp}(\tilde{q}) \approx I + [\tilde{q}]\_\times \\) for small \\(\tilde{q}\\). For \\(C_S\\), the approximation becomes \\(I - [\tilde{q}]_\times\\). A transposed matrix flips the sign again. The sign change for the active + passive world-to-body convention is important because the *values* in the actual quaternion correspond to the *inverse* of the underlying passive quaternion. Thus, all Jacobians \\(\partial \cdot / \partial \tilde{q}\\)  must have that negated sign to send the linearizing derivatives in the correct direction given the apparent error-state value.
 
 **Euler Angles**
 
-FIXME
+`FIXME`
 
 **Rodrigues**
 
-FIXME
+`FIXME`
 ### Action
 
-*Assuming O = $q_w$ last. Flip for $q_w$ first.*
+*Assuming O = \\(q_w\\) last. Flip for \\(q_w\\) first.*
 
-<tabbox F = passive>
+> F = passive
 
 $$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v}\\0\end{bmatrix} \otimes \left(\mathbf{q}_A^B\right)^{-1}=^B\mathbf{v}$$
 
@@ -549,7 +544,7 @@ $$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v}\\1\end{bmatrix} \otimes \le
 
 <tabbox F = active>
 
-FIXME
+`FIXME`
 
 </tabbox>
 ### Composition and Inversion
@@ -608,7 +603,7 @@ $$\left(\mathbf{q}_a \otimes \mathbf{q}_b \otimes \dots \otimes \mathbf{q}_N\rig
 
 ### Addition and Subtraction
 
-FIXME
+`FIXME`
 ### Notions of Distance
 
 **Quaternion distance**
@@ -620,7 +615,7 @@ A modification to account for the negative sign ambiguity:
 $$\min_{b\in\{-1;+1\}}||\mathbf{q}_A-b\mathbf{q}_B||$$
 ### Derivatives and (Numeric) Integration
 
-FIXME
+`FIXME`
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -636,7 +631,7 @@ FIXME
 
 ### Unit Tests to Determine Correctness
 
-FIXME
+`FIXME`
 
 ## Appendix
 
