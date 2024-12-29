@@ -129,7 +129,7 @@ When the random variables are continuous, we substitute in integrals for the sum
 
 \\[ \text{Prediction Step:} \\]
 
-\\[ \hat{x}^{-}_k=\int P(X_k|X_{k-1}=x)\hat{x}^{+}_{k-1}(X_{k-1}=x)dx \\]
+\\[ \hat{x}^{-}\_k=\int P(X_k|X\_{k-1}=x)\hat{x}^{+}\_{k-1}(X\_{k-1}=x)dx \\]
 
 \\[ x_k=\int P(X_k|X_{k-1})x_{k-1}(X_{k-1})dx \\]
 
@@ -139,7 +139,7 @@ $$\hat{x}^+_k=\eta P(Y_k|X_k)\hat{x}^-_k$$
 
 ----
 
-where \\( \hat{x}_k \triangleq P(X_k|Y_{1:k}) \\). **Particle filtering** directly approximates this algorithm using Monte Carlo integration.
+where \\( \hat{x}\_k \triangleq P(X\_k|Y\_{1:k}) \\). **Particle filtering** directly approximates this algorithm using Monte Carlo integration.
 
 ### Derivation of Smoothing Query Algorithm
 
