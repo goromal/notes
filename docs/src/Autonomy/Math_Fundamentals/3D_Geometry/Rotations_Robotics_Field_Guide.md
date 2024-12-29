@@ -109,7 +109,7 @@ else:
 
 $$\theta\mathbf{u} = Log(\mathbf{R}) = \mathbf{0}$$
 
-Alternatively, \\(\mathbf{u}\\) can be thought of as the eigenvector of \\(\mathbf{R}\\) that corresponds to the eigenvalue $1$.
+Alternatively, \\(\mathbf{u}\\) can be thought of as the eigenvector of \\(\mathbf{R}\\) that corresponds to the eigenvalue \\(1\\).
 
 > D = W2B, F = Passive:
 
