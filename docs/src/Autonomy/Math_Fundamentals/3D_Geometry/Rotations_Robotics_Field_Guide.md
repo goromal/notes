@@ -536,74 +536,70 @@ The use of \\(C_H\\) means that \\(\text{Exp}(\tilde{q}) \approx I + [\tilde{q}]
 
 > F = passive
 
-$$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v}\\0\end{bmatrix} \otimes \left(\mathbf{q}_A^B\right)^{-1}=^B\mathbf{v}$$
+$$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v} \\\ 0\end{bmatrix} \otimes \left(\mathbf{q}_A^B\right)^{-1}=^B\mathbf{v}$$
 
 **Homogeneous Coordinates:**
 
-$$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v}\\1\end{bmatrix} \otimes \left(\mathbf{q}_A^B\right)^{-1}=^B\mathbf{v}$$
+$$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v} \\\ 1\end{bmatrix} \otimes \left(\mathbf{q}_A^B\right)^{-1}=^B\mathbf{v}$$
 
-<tabbox F = active>
+> F = active
 
 `FIXME`
 
-</tabbox>
 ### Composition and Inversion
 
 **Composition**
 
 $$\mathbf{q}_1 \otimes \mathbf{q}_2=[\mathbf{q}_1]_L\mathbf{q}_2=[\mathbf{q}_2]_R\mathbf{q}_1$$
 
-<tabbox H = Right, O = qw-first>
+> H = Right, O = qw-first
 
-$$[\mathbf{q}]_L=\begin{bmatrix}q_w & -\mathbf{q}_v^T \\ \mathbf{q}_v & q_w\mathbf{I}+[\mathbf{q}_v]_\times\end{bmatrix}=\begin{bmatrix}q_w & -q_x & -q_y & -q_z \\ q_x & q_w & -q_z & q_y \\ q_y & q_z & q_w & -q_x \\ q_z & -q_y & q_x & q_w\end{bmatrix}$$
+$$[\mathbf{q}]\_L=\begin{bmatrix}q\_w & -\mathbf{q}\_v^T \\\ \mathbf{q}\_v & q\_w\mathbf{I}+[\mathbf{q}\_v]\_\times\end{bmatrix}=\begin{bmatrix}q\_w & -q\_x & -q\_y & -q\_z \\\ q\_x & q\_w & -q\_z & q\_y \\\ q\_y & q\_z & q\_w & -q\_x \\\ q\_z & -q\_y & q\_x & q\_w\end{bmatrix}$$
 
-$$[\mathbf{q}]_R=\begin{bmatrix}q_w & -\mathbf{q}_v^T \\ \mathbf{q}_v & q_w\mathbf{I}-[\mathbf{q}_v]_\times\end{bmatrix}=\begin{bmatrix}q_w & -q_x & -q_y & -q_z \\ q_x & q_w & q_z & -q_y \\ q_y & -q_z & q_w & q_x \\ q_z & q_y & -q_x & q_w \end{bmatrix}$$
+$$[\mathbf{q}]\_R=\begin{bmatrix}q\_w & -\mathbf{q}\_v^T \\\ \mathbf{q}\_v & q\_w\mathbf{I}-[\mathbf{q}\_v]\_\times\end{bmatrix}=\begin{bmatrix}q\_w & -q\_x & -q\_y & -q\_z \\\ q\_x & q\_w & q\_z & -q\_y \\\ q\_y & -q\_z & q\_w & q\_x \\\ q\_z & q\_y & -q\_x & q\_w \end{bmatrix}$$
 
-<tabbox H = Right, O = qw-last>
+> H = Right, O = qw-last
 
-$$[\mathbf{q}]_L=\begin{bmatrix}q_w\mathbf{I}+[\mathbf{q}_v]_\times & \mathbf{q}_v\\-\mathbf{q}_v^T & q_w\end{bmatrix}=\begin{bmatrix}q_w & -q_z & q_y & q_x\\q_z & q_w & -q_x & q_y\\-q_y & q_x & q_w & q_z \\ -q_x & -q_y & -q_z & q_w\end{bmatrix}$$
+$$[\mathbf{q}]\_L=\begin{bmatrix}q\_w\mathbf{I}+[\mathbf{q}\_v]\_\times & \mathbf{q}\_v\\\ -\mathbf{q}\_v^T & q\_w\end{bmatrix}=\begin{bmatrix}q\_w & -q\_z & q\_y & q\_x\\\ q\_z & q\_w & -q\_x & q\_y\\\ -q\_y & q\_x & q\_w & q\_z \\\ -q\_x & -q\_y & -q\_z & q\_w\end{bmatrix}$$
 
-$$[\mathbf{q}]_R=\begin{bmatrix}q_w\mathbf{I}-[\mathbf{q}_v]_\times & \mathbf{q}_v\\-\mathbf{q}_v^T & q_w\end{bmatrix}=\begin{bmatrix}q_w & q_z & -q_y & q_x\\-q_z & q_w & q_x & q_y\\q_y & -q_x & q_w & q_z \\ -q_x & -q_y & -q_z & q_w\end{bmatrix}$$
+$$[\mathbf{q}]\_R=\begin{bmatrix}q\_w\mathbf{I}-[\mathbf{q}\_v]\_\times & \mathbf{q}\_v\\\ -\mathbf{q}\_v^T & q\_w\end{bmatrix}=\begin{bmatrix}q\_w & q\_z & -q\_y & q\_x\\\ -q\_z & q\_w & q\_x & q\_y\\\q\_y & -q\_x & q\_w & q\_z \\\ -q\_x & -q\_y & -q\_z & q\_w\end{bmatrix}$$
 
-<tabbox H = Left, O = qw-first>
+> H = Left, O = qw-first
 
-$$[\mathbf{q}]_L=\begin{bmatrix}q_w & -\mathbf{q}_v^T \\ \mathbf{q}_v & q_w\mathbf{I}-[\mathbf{q}_v]_\times\end{bmatrix}=\begin{bmatrix}q_w & -q_x & -q_y & -q_z \\ q_x & q_w & q_z & -q_y \\ q_y & -q_z & q_w & q_x \\ q_z & q_y & -q_x & q_w \end{bmatrix}$$
+$$[\mathbf{q}]\_L=\begin{bmatrix}q\_w & -\mathbf{q}\_v^T \\\ \mathbf{q}\_v & q\_w\mathbf{I}-[\mathbf{q}\_v]\_\times\end{bmatrix}=\begin{bmatrix}q\_w & -q\_x & -q\_y & -q\_z \\\ q\_x & q\_w & q\_z & -q\_y \\\ q\_y & -q\_z & q\_w & q\_x \\\ q\_z & q\_y & -q\_x & q\_w \end{bmatrix}$$
 
-$$[\mathbf{q}]_R=\begin{bmatrix}q_w & -\mathbf{q}_v^T \\ \mathbf{q}_v & q_w\mathbf{I}+[\mathbf{q}_v]_\times\end{bmatrix}=\begin{bmatrix}q_w & -q_x & -q_y & -q_z \\ q_x & q_w & -q_z & q_y \\ q_y & q_z & q_w & -q_x \\ q_z & -q_y & q_x & q_w\end{bmatrix}$$
+$$[\mathbf{q}]\_R=\begin{bmatrix}q\_w & -\mathbf{q}\_v^T \\\ \mathbf{q}\_v & q\_w\mathbf{I}+[\mathbf{q}\_v]\_\times\end{bmatrix}=\begin{bmatrix}q\_w & -q\_x & -q\_y & -q\_z \\\ q\_x & q\_w & -q\_z & q\_y \\\ q\_y & q\_z & q\_w & -q\_x \\\ q\_z & -q\_y & q\_x & q\_w\end{bmatrix}$$
 
-<tabbox H = Left, O = qw-last>
+> H = Left, O = qw-last
 
-$$[\mathbf{q}]_L=\begin{bmatrix}q_w\mathbf{I}-[\mathbf{q}_v]_\times & \mathbf{q}_v\\-\mathbf{q}_v^T & q_w\end{bmatrix}=\begin{bmatrix}q_w & q_z & -q_y & q_x\\-q_z & q_w & q_x & q_y\\q_y & -q_x & q_w & q_z \\ -q_x & -q_y & -q_z & q_w\end{bmatrix}$$
+$$[\mathbf{q}]\_L=\begin{bmatrix}q\_w\mathbf{I}-[\mathbf{q}\_v]\_\times & \mathbf{q}\_v \\\ -\mathbf{q}\_v^T & q\_w\end{bmatrix}=\begin{bmatrix}q\_w & q\_z & -q\_y & q\_x \\\ -q\_z & q\_w & q\_x & q\_y\\\q\_y & -q\_x & q\_w & q\_z \\\ -q\_x & -q\_y & -q\_z & q\_w\end{bmatrix}$$
 
-$$[\mathbf{q}]_R=\begin{bmatrix}q_w\mathbf{I}+[\mathbf{q}_v]_\times & \mathbf{q}_v\\-\mathbf{q}_v^T & q_w\end{bmatrix}=\begin{bmatrix}q_w & -q_z & q_y & q_x\\q_z & q_w & -q_x & q_y\\-q_y & q_x & q_w & q_z \\ -q_x & -q_y & -q_z & q_w\end{bmatrix}$$
-
-</tabbox>
+$$[\mathbf{q}]\_R=\begin{bmatrix}q\_w\mathbf{I}+[\mathbf{q}\_v]\_\times & \mathbf{q}\_v\\\ -\mathbf{q}\_v^T & q\_w\end{bmatrix}=\begin{bmatrix}q\_w & -q\_z & q\_y & q\_x \\\ q\_z & q\_w & -q\_x & q\_y\\\ -q\_y & q\_x & q\_w & q\_z \\\ -q\_x & -q\_y & -q\_z & q\_w\end{bmatrix}$$
 
 When attaching frames to the quaternions, composition has the potential for nuance due to the fact that, in certain implementations, a quaternion can be specified to represent a certain type of SO(3) rotation that actually uses different conventions from the quaternion. This seems unwise, but it happens, *as with certain manifestations of the JPL convention*. For that reason, one cannot simply exclusively pair Passive B2W behavior with active behavior, as other combinations are also fair game.
 
-<tabbox D = B2W>
+> D = B2W
 
 $$\mathbf{q}_A^C=\mathbf{q}_B^C\otimes \mathbf{q}_A^B$$
 
-<tabbox D = W2B, F = Passive>
+> D = W2B, F = Passive
 
 $$\mathbf{q}_A^C=\mathbf{q}_B^C\otimes \mathbf{q}_A^B$$
 
-<tabbox D = W2B, F = Active>
+> D = W2B, F = Active
 
 $$\mathbf{q}_A^C=\mathbf{q}_A^B\otimes \mathbf{q}_B^C$$
 
-</tabbox>
-
 **Inversion**
 
-$$\mathbf{q}^{-1}=\begin{bmatrix}q_w\\\mathbf{q}_v\end{bmatrix}^{-1}=\begin{bmatrix}q_w\\-\mathbf{q}_v\end{bmatrix}$$
+$$\mathbf{q}^{-1}=\begin{bmatrix}q_w\\\ \mathbf{q}_v\end{bmatrix}^{-1}=\begin{bmatrix}q_w\\\ -\mathbf{q}_v\end{bmatrix}$$
 
 $$\left(\mathbf{q}_a \otimes \mathbf{q}_b \otimes \dots \otimes \mathbf{q}_N\right)^{-1}=\mathbf{q}_N^{-1}\otimes \dots \otimes \mathbf{q}_b^{-1} \otimes \mathbf{q}_a^{-1}$$
 
 ### Addition and Subtraction
 
 `FIXME`
+
 ### Notions of Distance
 
 **Quaternion distance**
@@ -636,5 +632,3 @@ $$\min_{b\in\{-1;+1\}}||\mathbf{q}_A-b\mathbf{q}_B||$$
 ## Appendix
 
 More info on quaternions found here(([Some UPenn notes on quaternions](https://www.cis.upenn.edu/~cis610/cis610sl7.pdf))).
-
-
