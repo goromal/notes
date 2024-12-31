@@ -327,7 +327,7 @@ Handedness must be noted for all future operations with the numbers you just gen
 
 **Rotation Matrix**
 
-See Rotation Matrix construction techniques for building the component $\mathbf{R}_i$ matrices here.
+See Rotation Matrix construction techniques for building the component \\(\mathbf{R}_i\\) matrices here.
 
 First consideration is directionality of the matrices *(must be consistent)*:
 
