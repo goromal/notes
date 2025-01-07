@@ -36,7 +36,7 @@ and instead discretize the *integration scheme itself*, \\(\int_0^{\Delta t}f dt
 
 $$x_{k+1}=x_k+\mathcal{I}$$
 
-Here are :
+Here are some methods:
 
   * **Euler integration**: 
 
@@ -62,7 +62,7 @@ $$k_3=f(x_k+k_2\Delta t/2,u_k),$$
 
 $$k_4=f(x_k+k_3\Delta t, u_k).$$
 
-[Explicit Runge-Kutta methods](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Explicit_Runge%E2%80%93Kutta_methods) generalize the above formulas.
+***Important Note:*** If your time-varying signal has known auto correlative properties (i.e., if you have the ability to evaluate \\(f(x)\\) closed-form for any arbitrary \\(x\\)), then you can take advantage of this knowledge to construct a more accurate integral for a similar number of FLOPS using the formulations generalized by [Explicit Runge-Kutta methods](https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods#Explicit_Runge%E2%80%93Kutta_methods). For example, [Simpson's Rule](https://en.wikipedia.org/wiki/Simpson%27s_rule) involves a similar FLOP count to 4th-order Runge-Kutta, but only requires "black box" signal sampling and will be less accurate (though still more accurate than the lower-order black box Trapezoidal method).
 
 ----
 
