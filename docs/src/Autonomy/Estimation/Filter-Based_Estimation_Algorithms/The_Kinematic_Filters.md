@@ -78,7 +78,7 @@ Recall that the continuous form of the \\(\alpha\\)-filter:
 
 $$\dot{\hat{x}}=\alpha r=\alpha(x-\hat{x})$$
 
-is a first-order ODE. If you think of the measurement at each time step as a system input $u$, and the filter estimate as the system internal state, then this describes both a first-order system and a low-pass filter! Thus, you get [the namesake alpha low-pass filter and first-order system simulator](autonomy:estimation:estimator-algs#alpha_filter), to which the math and intuition above directly applies.
+is a first-order ODE. If you think of the measurement at each time step as a system input \\(u\\), and the filter estimate as the system internal state, then this describes both a first-order system and a low-pass filter! Thus, you get the namesake alpha low-pass filter and first-order system simulator, to which the math and intuition above directly applies.
 
 
 ## Constant Velocity (\\(\alpha\\)-\\(\beta\\)- or \\(g\\)-\\(h\\)- Filter)
