@@ -1,8 +1,8 @@
 # Systems Implementation
 
 - [Optimization Libraries](./Optimization_Libraries/Optimization_Libraries.md)
-  - [Ceres Solver Python Tutorial](./Optimization_Libraries/Ceres_Solver_Python_Tutorial.md)
   - [2D Range-Bearing Landmark Resolution with Ceres](./Optimization_Libraries/2D_Range-Bearing_Landmark_Resolution_with_Ceres.md)
+  - [Ceres Solver Python Tutorial](./Optimization_Libraries/Ceres_Solver_Python_Tutorial.md)
 - [Computer Simulations](./Computer_Simulations/Computer_Simulations.md)
   - [Event-Based Collision Detection](./Computer_Simulations/Event-Based_Collision_Detection.md)
   - [The Rotor Blade Flapping Effect](./Computer_Simulations/The_Rotor_Blade_Flapping_Effect.md)
