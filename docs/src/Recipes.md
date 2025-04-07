@@ -686,10 +686,12 @@ For *one* piece of meat:
 
 ### Instant Pot
 
-  * Jasmine rice:
-    * 1:1 rice:water
-    * 5 minutes high pressure
-    * 10 minutes natural release
+#### Rice
+
+| Rice Type | Rice Cups | Water Cups | High Pressure Min. | Natural Release Min. |
+| --------- | --------- | ---------- | ------------------ | -------------------- |
+| Jasmine   | 1.5       | 2          | 6                  | 10                   |
+|           |           |            |                    |                      |
 
 ### Air Fryer
 
