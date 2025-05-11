@@ -406,6 +406,29 @@
   - Cook the salmon in the butter until browned and flaky (about *5 minutes* per side)
   - Serve each salmon piece with a lemon wedge
 
+### Cuban Black Beans
+
+----
+
+  * Avocado oil (enough to cover the bottom of a frying pan in a thin layer
+  * \\(1\frac{1}{2}\\) tablespoon of minced garlic
+  * 2 Bay leaves
+  * 1 can of black beans
+  * 1 teaspoon of salt
+  * \\(\frac{1}{2}\\) teaspoon of black pepper
+  * 1 teaspoon of cumin
+  * \\(1\frac{1}{2}\\) cap-fulls of white vinegar
+
+----
+
+  - Heat up the oil in a frying pan on medium heat for 2-3 minutes
+  - Add a minced garlic and two bay leaves to the oil and stir until fragrant
+  - Empty half of the liquid from the can of black beans, then poor what's left in the can (beans and remaining liquid) into the pan
+  - Add the salt, pepper, and cumin, then stir
+  - Add vinegar and stir
+  - Let simmering for another 2-3 minutes. It will start bubbling when done
+  - Remove from heat and serve. You'll want to remove the bay leaves.
+
 ### Filet Mignon
 
 ----
@@ -691,7 +714,7 @@ For *one* piece of meat:
 | Rice Type | Rice Cups | Water Cups | High Pressure Min. | Natural Release Min. |
 | --------- | --------- | ---------- | ------------------ | -------------------- |
 | Jasmine   | 1.5       | 2          | 6                  | 10                   |
-|           |           |            |                    |                      |
+| Basmati   | 1.5       | 2          | 6                  | 10                   |
 
 ### Air Fryer
 
