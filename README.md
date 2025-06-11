@@ -1,4 +1,4 @@
-# Notes
+# Notes 
 
 Published notes and articles on technical and non-technical topics.
 
