@@ -24,7 +24,7 @@ If this fails, then it confirms that the mDNS record is no longer available or h
 
 ---
 
-### ✅ **2. Check Avahi status on the target host (`ats`)**
+### ✅ **2. Check Avahi status on the target host (e.g., `ats`)**
 
 On the `ats` host, run:
 
