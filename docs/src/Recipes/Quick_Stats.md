@@ -1,8 +1,8 @@
 # Quick Stats
 
-**[Instant Pot cooking times cheatsheet](https://s3-us-west-2.amazonaws.com/byjillee/printables/ogt-instantpot.pdf)**
-
 ### Instant Pot
+
+**[Instant Pot cooking times cheatsheet](https://s3-us-west-2.amazonaws.com/byjillee/printables/ogt-instantpot.pdf)**
 
 #### Rice
 

@@ -79,6 +79,41 @@
   - Stir the two bowl contents into each other, then place in the fridge **for 1 hour**.
   - Preheat oven to \\(375^\circ\\).
   - Place refrigerated dough balls on cookie sheets and bake **for about 10 minutes** or until they start to brown.
+
+### Texas Sheet Cake
+
+----
+
+  * 2 cups of flour
+  * 2 cups of sugar
+  * \\(\frac{1}{4}\\) teaspoons of salt
+  * 8 tablespoons of (heaping) cocoa
+  * 1 cup of boiling water
+  * \\(\frac{1}{2}\\) cup of buttermilk
+  * 2 whole beaten eggs
+  * 1 teaspoon of baking soda
+  * 2 teaspoons of vanilla
+  * \\(\frac{1}{2}\\) cup of finely chopped peacans
+  * \\(3\frac{3}{4}\\) stick of butter
+  * 6 tablespoons of milk
+  * 1 pound (minus \\(\frac{1}{2}\\) cup) of powdered sugar--about 3 cups
+  * \\(18\times 13\\)-inch sheet cake pan
+
+----
+
+  - In a mixing bowl, combine the flour, sugar, and salt.
+  - In a saucepan, melt 2 of the sticks of butter. Add 4 tablespoons of the cocoa and stir. Add the boiling water and allow the mixture to boil for 30 seconds before turning off the heat.
+  - Pour the cocoa mixture over the flour mixture and stir lightly to cool.
+  - In a measuring cup, pour the buttermilk and add beaten eggs, baking soda, and 1 teaspoon of the vanilla.
+  - Stir the buttermilk mixture into the butter + chocolate mixture.
+  - Pour the whole thing into the sheet cake pan and bake at 350 degrees for 20 minutes.
+  - While the cake is baking, melt the remaining butter in a saucepan.
+  - Add the remaining cocoa, stir to combine, then turn off the heat.
+  - Add the milk, remaining vanilla, and powdered sugar. Stir together.
+  - Add the pecans and stir together.
+  - Pour the frosting over the warm cake.
+
+  
 ### Brazo Gitano (Swiss Roll)
 
 ----
