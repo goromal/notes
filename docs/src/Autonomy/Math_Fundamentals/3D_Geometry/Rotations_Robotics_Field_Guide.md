@@ -67,7 +67,9 @@ $$\mathbf{R}_A^B=\begin{bmatrix}^B\mathbf{x}_A & ^B\mathbf{y}_A & ^B\mathbf{z}_A
 
 > F = Active:
 
-See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destination frame.
+See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destination frame. Or:
+
+$$\mathbf{R}_A^B=\begin{bmatrix}^B\mathbf{x}_A^\top \\ ^B\mathbf{y}_A^\top \\ ^B\mathbf{z}_A^\top\end{bmatrix}$$
 
 **From Rotation \\(\theta\\) about n-Axis from World to Body**
 
@@ -90,6 +92,16 @@ See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destinat
 ### Conversions (To...)
 
 **Euler Angles**
+
+> D = B2W:
+
+`FIXME`
+
+> D = W2B, F = Passive:
+
+`FIXME`
+
+> D = W2B, F = Active:
 
 `FIXME`
 
