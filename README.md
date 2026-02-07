@@ -1,6 +1,6 @@
 # Notes
 
-Published notes and articles on technical and non-technical topics.
+Published notes and articles on assorted technical and non-technical topics.
 
 To generate updated docs, run
 
