@@ -8,6 +8,8 @@ def find_markdown_files(directory):
     for file in os.listdir(directory):
         if file.endswith('.md') and file != "index.md" and file != "SUMMARY.md" and file != f"{leaf_dir}.md":
             markdown_files.append(file)
+        elif file.endswith('.html'):
+            markdown_files.append(file)
     return markdown_files
 
 def list_directories(root_directory):
@@ -40,7 +42,9 @@ def form_nav_trees(nav_name, parent_dir, directory_dict):
     nav_tree = ""
     markdown_files = find_markdown_files(parent_dir)
     for markdown_file in markdown_files:
-        nav_tree += f"- [{markdown_file.replace('_',' ').replace('.md','')}]({os.path.join(parent_dir, markdown_file)})\n"
+        # Remove file extension for display name
+        display_name = markdown_file.replace('.md', '').replace('.html', '').replace('_', ' ')
+        nav_tree += f"- [{display_name}]({os.path.join(parent_dir, markdown_file)})\n"
     for key, value in directory_dict.items():
         if key != ".":
             nav_tree += form_nav_trees(key, os.path.join(parent_dir, key), value)

@@ -8,3 +8,8 @@ title = "Andrew's Notes"
 [output.html]
 default-theme = "light"
 mathjax-support = true
+additional-css = []
+additional-js = []
+
+[build]
+extra-watch-dirs = []
