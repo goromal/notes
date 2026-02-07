@@ -243,6 +243,133 @@
         .modal-body strong {
             color: #667eea;
         }
+
+        /* Responsive Design for Mobile */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 30px;
+            }
+
+            .layer {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .layer-label {
+                padding: 15px;
+                font-size: 1em;
+                min-height: auto;
+            }
+
+            .component {
+                padding: 12px 15px;
+            }
+
+            .component-title {
+                font-size: 0.95em;
+            }
+
+            .component-detail {
+                font-size: 0.85em;
+            }
+
+            .explanation {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+
+            .explanation h3 {
+                font-size: 1em;
+            }
+
+            .arrow {
+                font-size: 1.5em;
+                margin: -5px 0;
+            }
+
+            .timeline {
+                padding: 12px;
+                font-size: 0.9em;
+                margin-top: 30px;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                padding: 25px;
+                width: 95%;
+                max-width: 95%;
+            }
+
+            .modal-title {
+                font-size: 1.3em;
+                padding-bottom: 10px;
+            }
+
+            .modal-body {
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .close {
+                right: 15px;
+                top: 15px;
+                font-size: 28px;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .layer {
+                grid-template-columns: 150px 1fr 280px;
+                gap: 20px;
+            }
+
+            .layer-label {
+                padding: 15px;
+                font-size: 1em;
+            }
+
+            .explanation {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Improved touch targets for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .component {
+                padding: 15px 18px;
+                margin: 5px 0;
+            }
+
+            .component:active {
+                transform: scale(0.98);
+                background: #edf2f7;
+            }
+        }
     </style>
 </head>
 
