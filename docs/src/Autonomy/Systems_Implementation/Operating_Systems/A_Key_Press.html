@@ -1,0 +1,887 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keystroke to Screen Rendering Pipeline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 50px;
+            font-size: 1.1em;
+        }
+
+        .layer {
+            display: grid;
+            grid-template-columns: 200px 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .layer-label {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .layer-components {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .component {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .component:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #667eea;
+        }
+
+        .component-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .component-detail {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .explanation {
+            background: #fffaf0;
+            border-left: 4px solid #ed8936;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .explanation h3 {
+            color: #ed8936;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .arrow {
+            text-align: center;
+            color: #667eea;
+            font-size: 2em;
+            margin: -10px 0;
+        }
+
+        /* Color coding for different layers */
+        .layer:nth-child(2) .layer-label {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+        }
+
+        .layer:nth-child(4) .layer-label {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        }
+
+        .layer:nth-child(6) .layer-label {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            box-shadow: 0 4px 15px rgba(67, 233, 123, 0.4);
+        }
+
+        .layer:nth-child(8) .layer-label {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+        }
+
+        .layer:nth-child(10) .layer-label {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+            box-shadow: 0 4px 15px rgba(48, 207, 208, 0.4);
+        }
+
+        .layer:nth-child(12) .layer-label {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            box-shadow: 0 4px 15px rgba(168, 237, 234, 0.4);
+        }
+
+        .timeline {
+            background: #edf2f7;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 40px;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .component {
+            cursor: pointer;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #2d3748;
+        }
+
+        .modal-title {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.8;
+            font-size: 1.05em;
+        }
+
+        .modal-body p {
+            margin-bottom: 15px;
+        }
+
+        .modal-body strong {
+            color: #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>🎹 Keystroke to Screen Rendering Pipeline</h1>
+        <p class="subtitle">The complete journey from physical key press to visible character</p>
+
+        <!-- Hardware Layer -->
+        <div class="layer">
+            <div class="layer-label">HARDWARE<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="key-press">
+                    <div class="component-title">Key Press</div>
+                    <div class="component-detail">Physical switch closure</div>
+                </div>
+                <div class="component" data-info="keyboard-controller">
+                    <div class="component-title">Keyboard Controller</div>
+                    <div class="component-detail">Microcontroller/ASIC</div>
+                </div>
+                <div class="component" data-info="physical-connection">
+                    <div class="component-title">Physical Connection</div>
+                    <div class="component-detail">USB/PS2/Bluetooth interface</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                When you press a key, you physically close an electrical switch. The keyboard's microcontroller detects
+                this change in the circuit. This is pure electrical and mechanical interaction—the foundation of all
+                digital input.
+            </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <!-- Firmware Layer -->
+        <div class="layer">
+            <div class="layer-label">FIRMWARE<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="keyboard-firmware">
+                    <div class="component-title">Keyboard Firmware</div>
+                    <div class="component-detail">Scans key matrix</div>
+                </div>
+                <div class="component" data-info="debouncing">
+                    <div class="component-title">Debouncing Logic</div>
+                    <div class="component-detail">Filters electrical noise</div>
+                </div>
+                <div class="component" data-info="scan-code">
+                    <div class="component-title">Scan Code Generation</div>
+                    <div class="component-detail">Creates unique key identifier</div>
+                </div>
+                <div class="component" data-info="hid-protocol">
+                    <div class="component-title">HID Protocol Encoding</div>
+                    <div class="component-detail">Packages data for transmission</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                The firmware continuously scans the keyboard matrix to detect which key was pressed. It filters out
+                electrical "bounce" (rapid on/off signals) and generates a scan code—a unique number for that key. This
+                code is then packaged using the HID (Human Interface Device) protocol for transmission to the computer.
+            </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <!-- OS Kernel Layer -->
+        <div class="layer">
+            <div class="layer-label">OS KERNEL<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="device-driver">
+                    <div class="component-title">Device Driver</div>
+                    <div class="component-detail">USB/HID driver receives data</div>
+                </div>
+                <div class="component" data-info="interrupt-handler">
+                    <div class="component-title">Interrupt Handler</div>
+                    <div class="component-detail">IRQ processing</div>
+                </div>
+                <div class="component" data-info="input-subsystem">
+                    <div class="component-title">Input Subsystem</div>
+                    <div class="component-detail">Event processing and queuing</div>
+                </div>
+                <div class="component" data-info="keyboard-layout">
+                    <div class="component-title">Keyboard Layout Mapping</div>
+                    <div class="component-detail">Scan code → Key code conversion</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                The operating system kernel's device driver receives the signal via hardware interrupt. The interrupt
+                handler processes this high-priority event, and the input subsystem converts the hardware-specific scan
+                code into a standardized key code based on your keyboard layout (QWERTY, DVORAK, etc.).
+            </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <!-- OS Userspace Layer -->
+        <div class="layer">
+            <div class="layer-label">OS USERSPACE<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="window-manager">
+                    <div class="component-title">Window Manager/Display Server</div>
+                    <div class="component-detail">X11, Wayland, Windows DWM, macOS Quartz</div>
+                </div>
+                <div class="component" data-info="ime">
+                    <div class="component-title">Input Method Editor</div>
+                    <div class="component-detail">Character composition (IME)</div>
+                </div>
+                <div class="component" data-info="active-app">
+                    <div class="component-title">Active Application</div>
+                    <div class="component-detail">Event queue and focus management</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                The window manager determines which application has focus and routes the keypress event to it. The Input
+                Method Editor may compose multiple keypresses into a single character (important for languages like
+                Chinese, Japanese, or when typing accented characters). The event is placed in the application's event
+                queue.
+            </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <!-- Application Layer -->
+        <div class="layer">
+            <div class="layer-label">APPLICATION<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="event-handler">
+                    <div class="component-title">Event Handler</div>
+                    <div class="component-detail">Processes keypress event</div>
+                </div>
+                <div class="component" data-info="text-buffer">
+                    <div class="component-title">Text Buffer</div>
+                    <div class="component-detail">Inserts character at cursor position</div>
+                </div>
+                <div class="component" data-info="rendering-engine">
+                    <div class="component-title">Text Rendering Engine</div>
+                    <div class="component-detail">Font rasterization and layout</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                Your application (text editor, browser, etc.) receives the event and its event handler processes it. The
+                character is inserted into the text buffer at the cursor position. The rendering engine then determines
+                how to visually represent this character using the selected font, including kerning, anti-aliasing, and
+                layout calculations.
+            </div>
+        </div>
+
+        <div class="arrow">↓</div>
+
+        <!-- Display Layer -->
+        <div class="layer">
+            <div class="layer-label">DISPLAY<br>LAYER</div>
+            <div class="layer-components">
+                <div class="component" data-info="graphics-api">
+                    <div class="component-title">Graphics API</div>
+                    <div class="component-detail">OpenGL, DirectX, Metal, Vulkan</div>
+                </div>
+                <div class="component" data-info="gpu">
+                    <div class="component-title">GPU Processing</div>
+                    <div class="component-detail">Vertex & fragment shaders</div>
+                </div>
+                <div class="component" data-info="frame-buffer">
+                    <div class="component-title">Frame Buffer</div>
+                    <div class="component-detail">Pixel data storage</div>
+                </div>
+                <div class="component" data-info="display-controller">
+                    <div class="component-title">Display Controller</div>
+                    <div class="component-detail">HDMI/DisplayPort signal generation</div>
+                </div>
+                <div class="component" data-info="monitor">
+                    <div class="component-title">Monitor</div>
+                    <div class="component-detail">Character visible on screen!</div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>What Happens Here</h3>
+                The graphics API sends rendering commands to the GPU, which processes them through shader programs to
+                create the final pixels. These pixels are stored in the frame buffer, then sent by the display
+                controller through HDMI/DisplayPort to your monitor, where liquid crystals or LEDs illuminate to show
+                the character. Success!
+            </div>
+        </div>
+
+        <div class="timeline">
+            ⚡ Total Time: Typically 10-50 milliseconds from keypress to visible character
+        </div>
+    </div>
+
+    <script>
+        // Component explanations database
+        const explanations = {
+            'key-press': {
+                title: 'Key Press - Physical Switch Closure',
+                content: `
+                    <p>When you press a key on your keyboard, you're physically closing an electrical circuit. Most modern keyboards use one of several switch technologies:</p>
+                    
+                    <p><strong>Mechanical switches:</strong> These use physical metal contacts that close when pressed. They're popular among enthusiasts for their tactile feedback and durability (rated for 50-100 million keypresses).</p>
+                    
+                    <p><strong>Membrane switches:</strong> These use a rubber dome that presses a conductive trace onto a circuit board. They're quieter and cheaper but less durable.</p>
+                    
+                    <p><strong>Scissor switches:</strong> Common in laptops, these use a scissor-like mechanism to stabilize the key and provide even pressure distribution.</p>
+                    
+                    <p>When the circuit closes, it changes the electrical resistance at that point in the keyboard's matrix, which the controller can detect.</p>
+                `
+            },
+            'keyboard-controller': {
+                title: 'Keyboard Controller - The Brain of Your Keyboard',
+                content: `
+                    <p>The keyboard controller is a small microcontroller or ASIC (Application-Specific Integrated Circuit) embedded in your keyboard. It's essentially a tiny computer dedicated to one job: monitoring key presses.</p>
+                    
+                    <p><strong>Key Matrix Scanning:</strong> To save on wiring, keyboards arrange keys in a matrix (typically 8x16 or similar). The controller continuously scans this matrix by energizing one row at a time and checking which columns show a connection.</p>
+                    
+                    <p><strong>Scan Rate:</strong> Modern keyboards scan at 125-1000 Hz, meaning they check for key presses 125 to 1000 times per second. Gaming keyboards often feature higher scan rates (1000 Hz = 1ms polling rate).</p>
+                    
+                    <p><strong>Intelligent Processing:</strong> Some advanced keyboards have programmable controllers that can handle macros, key remapping, or RGB lighting effects directly in firmware.</p>
+                `
+            },
+            'physical-connection': {
+                title: 'Physical Connection - Getting Data to Your Computer',
+                content: `
+                    <p>Once the keyboard controller has detected and processed a keypress, it needs to transmit this information to your computer. Several connection methods exist:</p>
+                    
+                    <p><strong>USB (Universal Serial Bus):</strong> The most common modern connection. USB keyboards typically operate at "Low Speed" (1.5 Mbps) or "Full Speed" (12 Mbps) - more than enough for keyboard data. USB also provides power to the keyboard.</p>
+                    
+                    <p><strong>PS/2:</strong> An older connector (introduced in 1987) that's still preferred by some gamers because it supports true N-key rollover and doesn't share bandwidth with other devices. However, it's largely obsolete.</p>
+                    
+                    <p><strong>Bluetooth:</strong> Wireless keyboards use Bluetooth Low Energy to transmit keypresses. This introduces slightly more latency (typically 5-15ms additional) but offers the convenience of wireless operation. The keyboard must manage power consumption to maximize battery life.</p>
+                    
+                    <p><strong>2.4 GHz Wireless:</strong> Some wireless keyboards use proprietary 2.4 GHz protocols instead of Bluetooth, offering lower latency closer to wired performance.</p>
+                `
+            },
+            'keyboard-firmware': {
+                title: 'Keyboard Firmware - Software on Your Keyboard',
+                content: `
+                    <p>Firmware is permanent software programmed into the keyboard's controller chip. Unlike regular software, it stays in the device even when powered off and controls the keyboard's fundamental operation.</p>
+                    
+                    <p><strong>Matrix Scanning Algorithm:</strong> The firmware contains the logic for scanning the key matrix. It activates one row at a time and reads which columns are connected, building a map of which keys are currently pressed.</p>
+                    
+                    <p><strong>Key Mapping:</strong> The firmware knows the physical layout of keys and can map physical positions to logical key identifiers before sending data to the computer.</p>
+                    
+                    <p><strong>Programmable Firmware:</strong> Some keyboards (like those using QMK or VIA firmware) allow users to reprogram the firmware to customize key behavior, create macros, or modify the keyboard layout without involving the operating system.</p>
+                    
+                    <p><strong>Performance Optimization:</strong> Well-written firmware minimizes latency between physical keypress detection and data transmission to achieve sub-millisecond response times.</p>
+                `
+            },
+            'debouncing': {
+                title: 'Debouncing Logic - Filtering Electrical Noise',
+                content: `
+                    <p>When a mechanical switch closes, it doesn't make a clean electrical connection immediately. The metal contacts actually "bounce" against each other for a few milliseconds, creating multiple rapid on-off signals.</p>
+                    
+                    <p><strong>The Problem:</strong> Without debouncing, a single keypress could register as multiple keypresses (you'd see "hhhhhello" instead of "hello").</p>
+                    
+                    <p><strong>Software Debouncing:</strong> The firmware implements a debounce algorithm, typically waiting 5-10 milliseconds after detecting a state change before confirming it as a real keypress. During this window, any additional state changes are ignored.</p>
+                    
+                    <p><strong>Hardware Debouncing:</strong> Some keyboards also include capacitors or other components that smooth out the electrical signal physically, though software debouncing is still usually necessary.</p>
+                    
+                    <p><strong>Trade-offs:</strong> Longer debounce times are more reliable but add latency. Gaming keyboards often use shorter debounce times (2-5ms) to minimize input lag, accepting a slightly higher risk of bounce-related errors.</p>
+                `
+            },
+            'scan-code': {
+                title: 'Scan Code Generation - Creating a Unique Identifier',
+                content: `
+                    <p>After debouncing, the firmware generates a scan code - a unique number that identifies which key was pressed and whether it was pressed or released.</p>
+                    
+                    <p><strong>What is a Scan Code?</strong> A scan code is a hardware-level identifier specific to the physical position of a key on the keyboard. For example, the physical key in the top-left corner (usually Esc) always generates the same scan code, regardless of keyboard layout.</p>
+                    
+                    <p><strong>Make and Break Codes:</strong> Most systems use separate codes for key-down (make) and key-up (break) events. This allows the operating system to track which keys are currently held down - essential for modifier keys like Shift, Ctrl, and Alt.</p>
+                    
+                    <p><strong>Scan Code Sets:</strong> Historically, there have been different scan code sets (Set 1, Set 2, Set 3). Modern USB keyboards use HID scan codes, which are standardized across all manufacturers.</p>
+                    
+                    <p><strong>Extended Scan Codes:</strong> Some keys (like multimedia keys or the Windows key) require extended scan codes that use multiple bytes to represent keys that weren't in the original PC keyboard specification.</p>
+                `
+            },
+            'hid-protocol': {
+                title: 'HID Protocol Encoding - Packaging for Transmission',
+                content: `
+                    <p>The Human Interface Device (HID) protocol is a USB standard specifically designed for devices like keyboards, mice, and game controllers.</p>
+                    
+                    <p><strong>Standardization:</strong> HID provides a standard way for input devices to communicate with computers without requiring custom drivers. This is why you can plug any USB keyboard into any computer and it "just works."</p>
+                    
+                    <p><strong>Report Structure:</strong> The keyboard packages scan codes into HID reports - small data packets (typically 8 bytes for keyboards) that describe the current state of the keyboard. A typical report includes:
+                    - Modifier keys status (Ctrl, Shift, Alt, etc.) - 1 byte
+                    - Reserved byte - 1 byte  
+                    - Up to 6 simultaneously pressed keys - 6 bytes</p>
+                    
+                    <p><strong>Polling vs Interrupt:</strong> USB keyboards typically use interrupt transfers, where the keyboard only sends data when a change occurs. The computer polls the keyboard at regular intervals (every 1-8ms typically) asking "anything new?"</p>
+                    
+                    <p><strong>Boot Protocol:</strong> HID keyboards also support a simplified "boot protocol" that works even before the full OS loads, allowing you to use your keyboard in BIOS or boot menus.</p>
+                `
+            },
+            'device-driver': {
+                title: 'Device Driver - OS Gateway to Hardware',
+                content: `
+                    <p>A device driver is specialized software that allows the operating system to communicate with hardware devices. For keyboards, this is typically the USB HID driver or a keyboard-specific driver.</p>
+                    
+                    <p><strong>Built-in Drivers:</strong> Modern operating systems include generic HID drivers that work with standard keyboards out of the box. This is why you don't need to install drivers for most keyboards.</p>
+                    
+                    <p><strong>Driver Responsibilities:</strong> The keyboard driver handles low-level communication over the USB bus, processes HID reports from the keyboard, and translates them into a format the operating system can understand.</p>
+                    
+                    <p><strong>Custom Drivers:</strong> Gaming keyboards or keyboards with special features (programmable keys, RGB lighting, macro keys) may include custom drivers that provide enhanced functionality beyond what the standard HID driver supports.</p>
+                    
+                    <p><strong>Kernel Space Operation:</strong> Drivers run in kernel space (privileged mode) with direct hardware access, which is why poorly written drivers can crash your entire system rather than just one application.</p>
+                `
+            },
+            'interrupt-handler': {
+                title: 'Interrupt Handler - High-Priority Event Processing',
+                content: `
+                    <p>When a keyboard sends data to the computer, it triggers a hardware interrupt - a signal that immediately gets the processor's attention, even interrupting whatever else it was doing.</p>
+                    
+                    <p><strong>IRQ (Interrupt Request):</strong> Each device has an IRQ line. When the keyboard has data, it asserts its IRQ, causing the CPU to save its current state and jump to the interrupt handler code.</p>
+                    
+                    <p><strong>Why Interrupts?</strong> Interrupts ensure keyboard input is processed with minimal delay. Without interrupts, the OS would have to constantly poll the keyboard ("anything new? anything new?"), wasting CPU cycles and adding latency.</p>
+                    
+                    <p><strong>Interrupt Service Routine (ISR):</strong> The interrupt handler is a small, fast piece of code that runs with interrupts disabled. It quickly reads the data from the keyboard, stores it in a buffer, and acknowledges the interrupt so the CPU can resume what it was doing.</p>
+                    
+                    <p><strong>Deferred Processing:</strong> To minimize time spent in the ISR, complex processing is deferred to a later stage (the input subsystem), where it can run with interrupts enabled and be properly scheduled.</p>
+                    
+                    <p><strong>Interrupt Priority:</strong> Keyboard interrupts typically have high priority to ensure responsive input, though not as high as critical system interrupts like timer or disk controller interrupts.</p>
+                `
+            },
+            'input-subsystem': {
+                title: 'Input Subsystem - Event Processing and Queuing',
+                content: `
+                    <p>The input subsystem is the OS component responsible for managing all input events from various devices and making them available to applications in a consistent way.</p>
+                    
+                    <p><strong>Event Abstraction:</strong> The input subsystem converts low-level hardware signals into standardized input events. This abstraction means applications don't need to know whether input came from USB, PS/2, or Bluetooth - they all look the same.</p>
+                    
+                    <p><strong>Event Queue:</strong> Input events are placed in queues where they wait to be processed. This buffering prevents event loss if the system is temporarily busy. However, if events arrive faster than they can be processed, older events may be dropped.</p>
+                    
+                    <p><strong>Event Types:</strong> The subsystem tracks different event types:
+                    - Key press/release events
+                    - Repeat events (when a key is held down)
+                    - Modifier state changes
+                    - Special key combinations</p>
+                    
+                    <p><strong>Filtering and Translation:</strong> The input subsystem may filter events (like ignoring very rapid repeated presses) or translate them (handling key repeat timing, processing dead keys for accent marks).</p>
+                    
+                    <p><strong>Security:</strong> The input subsystem also enforces security policies - for example, preventing applications from capturing keystrokes from other applications without permission (preventing keyloggers).</p>
+                `
+            },
+            'keyboard-layout': {
+                title: 'Keyboard Layout Mapping - From Scan Codes to Characters',
+                content: `
+                    <p>Scan codes identify physical key positions, but users type in different languages and layouts. The keyboard layout mapping translates physical keys to logical characters.</p>
+                    
+                    <p><strong>Layout Types:</strong> Common layouts include QWERTY, DVORAK, AZERTY (French), QWERTZ (German), and many others. The same physical key produces different characters depending on the active layout.</p>
+                    
+                    <p><strong>Two-Stage Mapping:</strong> First, scan codes are mapped to virtual key codes (abstract key identifiers like VK_A, VK_SHIFT). Then, virtual key codes plus modifier state (Shift, Alt, etc.) are mapped to actual characters.</p>
+                    
+                    <p><strong>Dead Keys:</strong> Some layouts use "dead keys" that don't immediately produce a character but modify the next character typed. For example, pressing ´ then e produces é. The keyboard layout mapping must track this state.</p>
+                    
+                    <p><strong>Multi-Language Support:</strong> Users can switch between keyboard layouts (often with Alt+Shift or Windows+Space), allowing them to type in multiple languages on the same physical keyboard.</p>
+                    
+                    <p><strong>Custom Layouts:</strong> Power users can create custom keyboard layouts using tools like Microsoft Keyboard Layout Creator or third-party utilities to optimize for specific use cases (programming, stenography, etc.).</p>
+                `
+            },
+            'window-manager': {
+                title: 'Window Manager / Display Server - Routing Input to Applications',
+                content: `
+                    <p>The window manager or display server is responsible for determining which application should receive input events and coordinating what appears on screen.</p>
+                    
+                    <p><strong>Focus Management:</strong> The window manager tracks which window currently has "focus" - the active window that should receive keyboard input. Only one window can have keyboard focus at a time (though some systems support focus-follows-mouse).</p>
+                    
+                    <p><strong>X11 (Linux/Unix):</strong> X Window System uses a client-server model where the X server manages display and input, while applications (X clients) request to draw and receive input events. X has been the standard for decades but has design limitations.</p>
+                    
+                    <p><strong>Wayland (Modern Linux):</strong> A newer protocol that eliminates the X client-server split, giving applications (called Wayland clients) more direct control over their windows while the compositor handles display coordination.</p>
+                    
+                    <p><strong>Windows DWM (Desktop Window Manager):</strong> Introduced in Windows Vista, DWM uses GPU acceleration to composite all windows into the final display, handling effects like transparency and animations.</p>
+                    
+                    <p><strong>macOS Quartz:</strong> Apple's window manager combines display management with PDF-based rendering, providing smooth graphics and window compositing.</p>
+                    
+                    <p><strong>Security:</strong> The window manager enforces security boundaries - applications can't spy on other applications' windows or capture their input without explicit permission.</p>
+                `
+            },
+            'ime': {
+                title: 'Input Method Editor - Complex Character Composition',
+                content: `
+                    <p>Input Method Editors (IMEs) allow users to type characters that don't have direct keys on the keyboard - crucial for languages like Chinese, Japanese, Korean, and for typing accented characters.</p>
+                    
+                    <p><strong>Why IMEs Exist:</strong> Languages like Chinese have thousands of characters - far too many for a keyboard. IMEs let users type phonetically or using other input methods, then select the intended character from candidates.</p>
+                    
+                    <p><strong>Chinese Input:</strong> Users can type using Pinyin (romanization) or other systems. For example, typing "ni" might show candidates: 你 (you), 尼 (Buddhist nun), 泥 (mud), etc. The user selects the intended character.</p>
+                    
+                    <p><strong>Japanese Input:</strong> Users type in Romaji (Latin alphabet) which is converted to Hiragana, then can convert to Kanji. For example, "konnnichiwa" → "こんにちは" → "今日は"</p>
+                    
+                    <p><strong>Predictive Input:</strong> Modern IMEs use machine learning to predict which character the user intends based on context, dramatically speeding up input.</p>
+                    
+                    <p><strong>Accented Characters:</strong> Even for European languages, IMEs help type accented characters. You might type ' + e to get é, or use a picker to select from various accent marks.</p>
+                    
+                    <p><strong>Composition Window:</strong> IMEs typically show a small window near the cursor displaying the current input state and candidate characters, providing real-time feedback.</p>
+                `
+            },
+            'active-app': {
+                title: 'Active Application - Event Queue and Focus',
+                content: `
+                    <p>The active application is the program that currently has focus and will receive keyboard input. It manages its own event queue and determines how to respond to input.</p>
+                    
+                    <p><strong>Event Queue:</strong> Each application has an event queue (or message queue) where input events, window events, timer events, and other messages wait to be processed. The application's main event loop continuously processes events from this queue.</p>
+                    
+                    <p><strong>Event Loop:</strong> A typical event loop looks like:
+                    1. Wait for next event
+                    2. Dispatch event to appropriate handler
+                    3. Execute handler code
+                    4. Return to step 1
+                    This continues for the entire lifetime of the application.</p>
+                    
+                    <p><strong>Focus Tracking:</strong> Applications receive focus events (WM_SETFOCUS, FocusIn) when they become active and lose-focus events when they become inactive. This allows apps to provide visual feedback (like highlighting the title bar) and control behavior.</p>
+                    
+                    <p><strong>Event Filtering:</strong> Applications can filter which events they care about. A game might only care about certain keys, while a text editor needs to process all character input.</p>
+                    
+                    <p><strong>Blocked Event Loop:</strong> If an application's event loop is blocked (doing intensive processing), it can't process new events, leading to the "not responding" state where the app appears frozen and doesn't respond to input.</p>
+                `
+            },
+            'event-handler': {
+                title: 'Event Handler - Processing Keypress Events',
+                content: `
+                    <p>Event handlers are functions within an application that respond to specific events - in this case, keyboard input events.</p>
+                    
+                    <p><strong>Event-Driven Programming:</strong> Modern applications are event-driven - instead of running in a straight line, they wait for events (user input, network data, timer ticks) and respond to each event with the appropriate handler.</p>
+                    
+                    <p><strong>Handler Registration:</strong> Applications register handlers for events they care about. For example, a text box widget registers a keypress handler to insert typed characters.</p>
+                    
+                    <p><strong>Event Object:</strong> Handlers receive an event object containing detailed information:
+                    - Which key was pressed (key code)
+                    - Character value (after layout mapping)
+                    - Modifier state (Shift, Ctrl, Alt)
+                    - Timestamp
+                    - Repeat count (if key is held)</p>
+                    
+                    <p><strong>Event Propagation:</strong> Events often "bubble" through a hierarchy. A keypress might first go to a text field, then to the containing form, then to the window. Handlers can stop propagation if they've handled the event.</p>
+                    
+                    <p><strong>Shortcuts and Hotkeys:</strong> Handlers can implement keyboard shortcuts by checking for specific key combinations (Ctrl+S for save, Ctrl+C for copy, etc.) and executing the corresponding action.</p>
+                `
+            },
+            'text-buffer': {
+                title: 'Text Buffer - Managing Document Content',
+                content: `
+                    <p>The text buffer is the in-memory data structure that holds the actual content of your document - all the characters you've typed.</p>
+                    
+                    <p><strong>Buffer Data Structures:</strong> Text buffers use sophisticated data structures optimized for editing operations:
+                    - Gap buffers: Keep a "gap" at the cursor position for fast insertion
+                    - Rope data structure: Tree of strings for efficient editing of large documents
+                    - Piece tables: Track changes as a list of pieces from original and added text</p>
+                    
+                    <p><strong>Cursor Management:</strong> The buffer tracks cursor position(s) - where new characters will be inserted. Advanced editors support multiple cursors for simultaneous editing at different locations.</p>
+                    
+                    <p><strong>Undo/Redo:</strong> Text buffers maintain history of changes to support undo/redo functionality. This is often implemented as a stack of operations or using the Command pattern.</p>
+                    
+                    <p><strong>Text Encoding:</strong> The buffer stores text in a specific encoding (usually UTF-8 or UTF-16). This determines how characters are represented in memory - a single character might be 1, 2, 3, or even 4 bytes depending on the character and encoding.</p>
+                    
+                    <p><strong>Syntax Highlighting:</strong> In code editors, the text buffer is often paired with a parser that tokenizes the text to enable syntax highlighting, showing keywords, strings, and comments in different colors.</p>
+                    
+                    <p><strong>Performance:</strong> For large documents, efficient buffer implementation is crucial. Operations like insertion, deletion, and searching need to be fast even for documents with millions of characters.</p>
+                `
+            },
+            'rendering-engine': {
+                title: 'Text Rendering Engine - Making Text Visible',
+                content: `
+                    <p>The text rendering engine takes characters from the text buffer and determines how to draw them visually on screen with proper fonts, spacing, and styling.</p>
+                    
+                    <p><strong>Font Rasterization:</strong> Fonts are stored as vector outlines (TrueType, OpenType). The rendering engine converts these outlines into pixel patterns at the appropriate size - a process called rasterization. Modern systems cache rasterized glyphs for performance.</p>
+                    
+                    <p><strong>Anti-aliasing:</strong> To make text look smooth rather than jagged, rendering engines use anti-aliasing - adding semi-transparent pixels at the edges of glyphs. Techniques include grayscale anti-aliasing and subpixel rendering (ClearType on Windows, which uses the RGB subpixels of LCD screens).</p>
+                    
+                    <p><strong>Text Layout:</strong> The engine must:
+                    - Calculate glyph positions (with proper kerning - spacing between specific letter pairs)
+                    - Handle line breaking and word wrapping
+                    - Apply text formatting (bold, italic, underline, color)
+                    - Handle bidirectional text (mixing left-to-right and right-to-left languages)
+                    - Position combining characters (accents) correctly</p>
+                    
+                    <p><strong>Font Fallback:</strong> If a character isn't in the current font, the engine searches fallback fonts. This is how you can display emoji or Chinese characters even when using a Western font.</p>
+                    
+                    <p><strong>Performance Optimization:</strong> Text rendering is expensive, so engines use caching extensively:
+                    - Glyph caching (rasterized characters)
+                    - Layout caching (already-calculated line breaks and positions)
+                    - Only re-render changed portions when editing</p>
+                `
+            },
+            'graphics-api': {
+                title: 'Graphics API - Standardized Interface to GPU',
+                content: `
+                    <p>Graphics APIs provide a standardized way for applications to communicate with the GPU (Graphics Processing Unit) and draw graphics on screen.</p>
+                    
+                    <p><strong>OpenGL:</strong> Cross-platform graphics API developed in the early 1990s. It's widely supported but has accumulated legacy cruft over decades. Still popular for portable applications and Linux.</p>
+                    
+                    <p><strong>DirectX (Direct3D):</strong> Microsoft's graphics API for Windows and Xbox. Direct3D 11 is mature and stable; Direct3D 12 offers lower-level control for better performance but is harder to use. Industry standard for Windows gaming.</p>
+                    
+                    <p><strong>Metal:</strong> Apple's modern graphics API for macOS, iOS, and other Apple platforms. Designed from scratch for modern GPUs with low overhead and tight integration with Apple hardware.</p>
+                    
+                    <p><strong>Vulkan:</strong> Modern cross-platform API designed as OpenGL's successor. Offers low-level control similar to DirectX 12 and Metal, enabling maximum performance but requiring more complex code.</p>
+                    
+                    <p><strong>Abstraction Layers:</strong> Many applications use higher-level frameworks (like Qt, SDL, or game engines) that abstract away the specific graphics API, letting developers write once and run on any platform.</p>
+                    
+                    <p><strong>Command Buffers:</strong> Modern APIs work by building lists of commands (draw this triangle, use this texture, etc.) that are submitted to the GPU in batches for efficiency rather than sending commands one at a time.</p>
+                `
+            },
+            'gpu': {
+                title: 'GPU Processing - Parallel Graphics Computation',
+                content: `
+                    <p>The GPU (Graphics Processing Unit) is a specialized processor designed for parallel processing of graphics operations, with thousands of small cores instead of a few powerful cores like a CPU.</p>
+                    
+                    <p><strong>Vertex Shaders:</strong> The first stage processes vertices (corner points) of geometry. For text rendering, each glyph (character) is typically represented as a rectangular quad (two triangles). The vertex shader transforms these from text-buffer coordinates to screen coordinates.</p>
+                    
+                    <p><strong>Fragment Shaders (Pixel Shaders):</strong> For each pixel that might be covered by the geometry, the fragment shader runs to determine the final pixel color. For text, this involves:
+                    - Sampling the font texture (rasterized glyph image)
+                    - Applying the text color
+                    - Handling anti-aliasing (smooth edges)
+                    - Applying effects (shadows, outlines, etc.)</p>
+                    
+                    <p><strong>Massive Parallelism:</strong> GPUs can process millions of pixels simultaneously. A modern GPU might have 2,000+ shader cores, each processing different pixels at the same time. This is why they're so fast at graphics despite having slower individual cores than CPUs.</p>
+                    
+                    <p><strong>Texture Sampling:</strong> Font glyphs are stored as textures (images) in GPU memory. The GPU has specialized hardware for efficiently looking up pixel values from textures, with filtering for smooth scaling.</p>
+                    
+                    <p><strong>GPU Pipeline:</strong> The graphics pipeline includes many stages between vertex and fragment shaders (clipping, rasterization, depth testing, blending). The GPU executes this entire pipeline for every frame rendered.</p>
+                `
+            },
+            'frame-buffer': {
+                title: 'Frame Buffer - Temporary Image Storage',
+                content: `
+                    <p>The frame buffer is a region of memory (usually in the GPU's VRAM) that holds the complete pixel data for what will be displayed on screen.</p>
+                    
+                    <p><strong>Pixel Format:</strong> Each pixel in the frame buffer typically stores:
+                    - Red, Green, Blue color values (8 bits each = 24 bits total for ~16.7 million colors)
+                    - Alpha (transparency) channel (8 bits)
+                    - Total: 32 bits (4 bytes) per pixel
+                    For a 1920x1080 screen, that's about 8 MB of data per frame.</p>
+                    
+                    <p><strong>Double Buffering:</strong> To prevent visual tearing (where part of the screen shows the old frame and part shows the new), systems use double buffering:
+                    - Front buffer: Currently being displayed
+                    - Back buffer: Being drawn to
+                    When drawing is complete, buffers are swapped instantly.</p>
+                    
+                    <p><strong>Triple Buffering:</strong> Some systems use three buffers to improve performance and reduce latency, especially at high refresh rates.</p>
+                    
+                    <p><strong>Compositing:</strong> Modern systems don't draw directly to the final frame buffer. Each window has its own buffer, and the compositor combines them into the final frame buffer, enabling effects like transparency, shadows, and smooth window animations.</p>
+                    
+                    <p><strong>Frame Rate:</strong> The frame buffer is typically refreshed at your monitor's refresh rate (60, 120, 144, or 240 Hz). For smooth typing, you want the character to appear in the next frame after input, giving 16.7ms latency at 60 Hz or 8.3ms at 120 Hz.</p>
+                `
+            },
+            'display-controller': {
+                title: 'Display Controller - Generating Video Signals',
+                content: `
+                    <p>The display controller (also called display driver or timing controller) is hardware that reads pixel data from the frame buffer and generates the exact electrical signals needed to drive the monitor.</p>
+                    
+                    <p><strong>Scan-out:</strong> The controller systematically reads the frame buffer from left-to-right, top-to-bottom, sending pixel data to the monitor. This must happen continuously at the monitor's refresh rate to maintain a stable image.</p>
+                    
+                    <p><strong>Display Interfaces:</strong>
+                    - HDMI: Consumer standard supporting audio + video, common on TVs and monitors
+                    - DisplayPort: More advanced standard with higher bandwidth, supports daisy-chaining
+                    - USB-C (with DisplayPort Alt Mode): Carries DisplayPort signals over USB-C cables
+                    - DVI: Older digital standard, still seen on some monitors
+                    - VGA: Ancient analog standard, largely obsolete</p>
+                    
+                    <p><strong>Timings and Modes:</strong> The controller must generate precise timing signals (horizontal sync, vertical sync) that tell the monitor when each row and frame begins. These timings vary by resolution and refresh rate.</p>
+                    
+                    <p><strong>Color Conversion:</strong> The controller may convert between color spaces (RGB to YCbCr for HDMI) and apply color calibration to match the monitor's characteristics.</p>
+                    
+                    <p><strong>Adaptive Sync:</strong> Technologies like FreeSync and G-Sync allow the display controller to vary the refresh rate dynamically to match the GPU's frame output rate, eliminating tearing and stuttering.</p>
+                `
+            },
+            'monitor': {
+                title: 'Monitor - Final Display of Your Character',
+                content: `
+                    <p>The monitor is the final destination - it receives digital signals from the display controller and converts them into visible light that your eyes can see.</p>
+                    
+                    <p><strong>LCD (Liquid Crystal Display):</strong> Most common monitor type. Each pixel contains liquid crystals that twist to control light passing through:
+                    - Backlight provides white light
+                    - Liquid crystals block or transmit light for each subpixel (R, G, B)
+                    - Color filters produce the final color
+                    Response times: typically 1-5ms gray-to-gray</p>
+                    
+                    <p><strong>OLED (Organic LED):</strong> Each pixel is a self-emitting organic LED. Advantages include perfect blacks (pixels can turn completely off), infinite contrast, and faster response times. Used in premium monitors and most smartphones.</p>
+                    
+                    <p><strong>Refresh Rate:</strong> How many times per second the monitor updates the image (60 Hz, 120 Hz, 144 Hz, 240 Hz, or even higher). Higher refresh rates reduce perceived latency and motion blur.</p>
+                    
+                    <p><strong>Response Time:</strong> How quickly pixels can change color. Important for gaming to reduce ghosting (trails behind moving objects).</p>
+                    
+                    <p><strong>Resolution and Pixel Density:</strong> 
+                    - 1920x1080 (Full HD)
+                    - 2560x1440 (QHD)  
+                    - 3840x2160 (4K UHD)
+                    Higher resolution means more pixels, requiring more frame buffer memory and GPU power.</p>
+                    
+                    <p><strong>Success!</strong> After this entire journey through hardware, firmware, operating system, application, and display layers - typically taking just 10-50 milliseconds - your character finally appears on screen, ready for you to see!</p>
+                `
+            }
+        };
+
+        // Get modal elements
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close');
+
+        // Add click event listeners to all components
+        document.querySelectorAll('.component').forEach(component => {
+            component.addEventListener('click', function () {
+                const infoKey = this.getAttribute('data-info');
+                const info = explanations[infoKey];
+
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalBody.innerHTML = info.content;
+                    modal.style.display = 'block';
+                }
+            });
+        });
+
+        // Close modal when clicking the X
+        closeBtn.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function (event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
