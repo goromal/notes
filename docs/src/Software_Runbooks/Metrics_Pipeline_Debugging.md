@@ -20,9 +20,9 @@ echo "orchestrator_jobs_active:1|g" | nc -u -w1 127.0.0.1 9000
 ```bash
 journalctl -u vector -f | grep statsd
 ```
-✅ If logs indicate received metrics → Vector is receiving data.
+**OK:** If logs indicate received metrics → Vector is receiving data.
 
-❌ If no logs appear → The Python program might not be sending metrics correctly or is targeting the wrong address/port.
+**FAIL:** If no logs appear → The Python program might not be sending metrics correctly or is targeting the wrong address/port.
 
 ---
 
@@ -31,9 +31,9 @@ journalctl -u vector -f | grep statsd
 ```bash
 curl -s http://127.0.0.1:9598/metrics | grep orchestrator
 ```
-✅ If metrics appear → Vector is working correctly.
+**OK:** If metrics appear → Vector is working correctly.
 
-❌ If no metrics appear →
+**FAIL:** If no metrics appear →
 
 - Ensure that Vector’s `flush_period_secs` is correctly configured.
 - Check Vector logs for errors: `journalctl -u vector -f`.
@@ -45,25 +45,25 @@ curl -s http://127.0.0.1:9598/metrics | grep orchestrator
 ```bash
 curl -s "http://localhost:9090/api/v1/targets" | jq '.data.activeTargets[] | {scrapeUrl, lastScrape, lastError, health}'
 ```
-✅ If `health` is `"up"` and `lastError` is empty → Prometheus is successfully scraping.
+**OK:** If `health` is `"up"` and `lastError` is empty → Prometheus is successfully scraping.
 
-❌ If `health` is `"down"` → There is a scraping issue (check `lastError`).
+**FAIL:** If `health` is `"down"` → There is a scraping issue (check `lastError`).
 
 #### **Check if Prometheus has seen the metric**
 ```bash
 curl -s "http://localhost:9090/api/v1/series?match[]=orchestrator_jobs_active" | jq .
 ```
-✅ If the query returns data → Prometheus has recorded the metric.
+**OK:** If the query returns data → Prometheus has recorded the metric.
 
-❌ If empty → Check Vector and StatsD configuration.
+**FAIL:** If empty → Check Vector and StatsD configuration.
 
 #### **Query latest metric values**
 ```bash
 curl -s "http://localhost:9090/api/v1/query?query=orchestrator_jobs_active" | jq .
 ```
-✅ If a value is returned → The metric is stored.
+**OK:** If a value is returned → The metric is stored.
 
-❌ If no value is returned → Metrics may be expiring before they are scraped.
+**FAIL:** If no value is returned → Metrics may be expiring before they are scraped.
 
 ---
 
@@ -121,11 +121,11 @@ prometheus --storage.tsdb.retention.time=7d
 
 ## **Final Debugging Checklist**
 
-- ✅ **Python program emits StatsD metrics** (`nc -u -w1 127.0.0.1 9000`)
-- ✅ **Vector receives metrics** (`journalctl -u vector -f | grep statsd`)
-- ✅ **Vector exposes metrics correctly** (`curl -s http://127.0.0.1:9598/metrics`)
-- ✅ **Prometheus scrapes successfully** (`api/v1/targets` with `health: "up"`)
-- ✅ **Metrics are stored in Prometheus** (`api/v1/query?query=orchestrator_jobs_active`)
+- [ ] **Python program emits StatsD metrics** (`nc -u -w1 127.0.0.1 9000`)
+- [ ] **Vector receives metrics** (`journalctl -u vector -f | grep statsd`)
+- [ ] **Vector exposes metrics correctly** (`curl -s http://127.0.0.1:9598/metrics`)
+- [ ] **Prometheus scrapes successfully** (`api/v1/targets` with `health: "up"`)
+- [ ] **Metrics are stored in Prometheus** (`api/v1/query?query=orchestrator_jobs_active`)
 
 Following this runbook will help identify and resolve issues efficiently when debugging the metrics pipeline.
 

@@ -12,7 +12,9 @@ $$p_{z}^{c}\begin{bmatrix}u_{m}^{c}\\\\ v_{m}^{c}\\\\ 1 \end{bmatrix}=\begin{bma
 
 To convert the point to pixels, consider the following pixel model (accommodating skew):
 
-$$u^{I}=s_{x}u_{m}^{c}+o_{x},\;\;v^{I}=s_{y}v_{m}^{c}+o_{y},$$
+$$u^{I}=s_{x}u_{m}^{c}+o_{x},$$
+
+$$v^{I}=s_{y}v_{m}^{c}+o_{y},$$
 
 which, once we add the possibility of cross-skew (i.e., non-rectangular pixels), gives the point-to-pixels projection model:
 
@@ -20,9 +22,9 @@ $$p_{z}^{c}\begin{bmatrix}u^{I}\\\\ v^{I}\\\\ 1 \end{bmatrix}=\begin{bmatrix}s_{
 
 \\(\boldsymbol{K}\\) is called the **intrinsic (calibration) matrix**.
 
-Say that the 3D point is expressed in a different frame, \\(W\\), than the camera frame. We need to augment the point with homogeneous coordinates \\(\tilde{\boldsymbol{p}}^{W}=\begin{bmatrix}\left(\boldsymbol{p}^{W}\right)^{T} & 1\end{bmatrix}^{T} \\) and apply the **extrinsic (calibration) matrix** \\(\begin{bmatrix}\boldsymbol{R}_{W}^{c} &\boldsymbol{t}_{W}^{c}\end{bmatrix}\\):
+Say that the 3D point is expressed in a different frame, \\(W\\), than the camera frame. We need to augment the point with homogeneous coordinates \\(\tilde{\boldsymbol{p}}^{W}=\begin{bmatrix}\left(\boldsymbol{p}^{W}\right)^{T} & 1\end{bmatrix}^{T} \\) and apply the **extrinsic (calibration) matrix** \\(\begin{bmatrix}\boldsymbol{R}_W^c &\boldsymbol{t}_W^c\end{bmatrix}\\):
 
-$$p_{z}^{c}\begin{bmatrix}u^{I}\\\\ v^{I}\\\\ 1 \end{bmatrix}=\boldsymbol{K}\begin{bmatrix}\boldsymbol{R}_{W}^{c} & \boldsymbol{t}_{W}^{c}\end{bmatrix}\tilde{\boldsymbol{p}}^{W}=\boldsymbol{\Pi}\tilde{\boldsymbol{p}}^{W},$$
+$$p_z^c\begin{bmatrix}u^I\\\\ v^I\\\\ 1 \end{bmatrix}=\boldsymbol{K}\begin{bmatrix}\boldsymbol{R}_W^c & \boldsymbol{t}_W^c\end{bmatrix}\tilde{\boldsymbol{p}}^W=\boldsymbol{\Pi}\tilde{\boldsymbol{p}}^W,$$
 
 where \\(\boldsymbol{\Pi}\\) is the **projection matrix**. If the point is already expressed in the camera frame, as before:
 
@@ -77,15 +79,15 @@ $$\boldsymbol{p}^{c}(\lambda)=\boldsymbol{p}_{0}^{c}+\lambda\hat{\boldsymbol{r}}
 
 Substituting the projection equation into the line equation gives the following pixel coordinates (also parameterized by \\(\lambda\\)) for \\(\boldsymbol{p}\\) in the image plane:
 
-$$u_{p}(\lambda) =\frac{p_{0,x}^{c}+\lambda\hat{r}_{x}^{c}}{p_{0,z}^{c}+\lambda\hat{r}_{z}^{c}},$$
+$$u_{p}(\lambda) =\frac{\alpha +\lambda\hat{r}_x^c}{\gamma+\lambda\hat{r}_z^c},$$
 
-$$v_{p}(\lambda) =\frac{p_{0,y}^{c}+\lambda\hat{r}_{y}^{c}}{p_{0,z}^{c}+\lambda\hat{r}_{z}^{c}}.$$
+$$v_{p}(\lambda) =\frac{\beta+\lambda\hat{r}_{y}^{c}}{\gamma+\lambda\hat{r}_z^c},$$
 
-The vanishing point can be found in the limit as \\(\lambda\rightarrow\infty\\):
+where \\(\alpha \triangleq p_{0,x}^c\\), \\(\beta \triangleq p_{0,y}^c\\), \\(\gamma \triangleq p_{0,z}^c\\). The vanishing point can be found in the limit as \\(\lambda\rightarrow\infty\\):
 
-$$\lim_{\lambda\rightarrow\infty}u_{p}(\lambda) =\frac{\hat{r}_{x}^{c}}{\hat{r}_{z}^{c}},$$
+$$\lim_{\lambda\rightarrow\infty}u_p(\lambda) =\frac{\hat{r}_x^c}{\hat{r}_z^c},$$
 
-$$\lim_{\lambda\rightarrow\infty}v_{p}(\lambda) =\frac{\hat{r}_{y}^{c}}{\hat{r}_{z}^{c}}.$$
+$$\lim_{\lambda\rightarrow\infty}v_p(\lambda) =\frac{\hat{r}_y^c}{\hat{r}_z^c}.$$
 
 These equations indicate that the vanishing point depends only on \\(\hat{\boldsymbol{r}}^{c}\\), so *any set of* parallel lines in 3D space will share the same vanishing point in the image plane.
 

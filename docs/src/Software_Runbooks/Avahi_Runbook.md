@@ -4,7 +4,7 @@ When debugging mDNS issues with Avahi on a LAN, particularly when a `.local` hos
 
 ---
 
-### ✅ **1. Check if the host is still advertising via Avahi**
+### **1. Check if the host is still advertising via Avahi**
 
 On another machine on the LAN, run:
 
@@ -24,7 +24,7 @@ If this fails, then it confirms that the mDNS record is no longer available or h
 
 ---
 
-### ✅ **2. Check Avahi status on the target host (e.g., `ats`)**
+### **2. Check Avahi status on the target host (e.g., `ats`)**
 
 On the `ats` host, run:
 
@@ -52,7 +52,7 @@ Look for signs of:
 
 ---
 
-### ✅ **3. Check hostname and Avahi publishing config on `ats`**
+### **3. Check hostname and Avahi publishing config on `ats`**
 
 Ensure that `ats` is still using the expected hostname:
 
@@ -74,7 +74,7 @@ avahi-browse -a
 
 ---
 
-### ✅ **4. Confirm networking and firewall settings**
+### **4. Confirm networking and firewall settings**
 
 Make sure:
 
@@ -98,7 +98,7 @@ Watch for queries and responses involving `ats.local`.
 
 ---
 
-### ✅ **5. Restart Avahi and re-announce services**
+### **5. Restart Avahi and re-announce services**
 
 If things still look stale or broken, try a full Avahi restart on the `ats` host:
 
@@ -110,7 +110,7 @@ Then re-check service announcements with `avahi-browse`.
 
 ---
 
-### ✅ **6. Tools for further debugging**
+### **6. Tools for further debugging**
 
 * `avahi-discover`: GUI tool to browse mDNS services.
 * `dns-sd` (on macOS): e.g., `dns-sd -B _services._dns-sd._udp`

@@ -702,11 +702,11 @@ The use of \\(C_H\\) means that \\(\text{Exp}(\tilde{q}) \approx I + [\tilde{q}]
 
 *Assuming 3-2-1 ordering, O = \\(q\_w\\) first, D = B2W:*
 
-$$\phi=\text{atan2}\left(2(q\_wq\_x+q\_yq\_z),\;1-2(q\_x^2+q\_y^2)\right)$$
+$$\phi=\text{atan2}\left(2(q\_wq\_x+q\_yq\_z),1-2(q\_x^2+q\_y^2)\right)$$
 
 $$\theta=\arcsin\left(2(q\_wq\_y-q\_xq\_z)\right)$$
 
-$$\psi=\text{atan2}\left(2(q\_wq\_z+q\_xq\_y),\;1-2(q\_y^2+q\_z^2)\right)$$
+$$\psi=\text{atan2}\left(2(q\_wq\_z+q\_xq\_y),1-2(q\_y^2+q\_z^2)\right)$$
 
 For other conventions, convert to the rotation matrix first using the appropriate cosine matrix formula, then extract Euler angles from the matrix.
 
@@ -718,7 +718,7 @@ Assuming O = \\(q\_w\\) first:
 
 if \\(\lVert\mathbf{q}\_v\rVert>\epsilon\\):
 
-$$\theta\mathbf{u}=Log(\mathbf{q})=2\;\text{atan2}(\lVert\mathbf{q}\_v\rVert,\;q\_w)\frac{\mathbf{q}\_v}{\lVert\mathbf{q}\_v\rVert}$$
+$$\theta\mathbf{u}=Log(\mathbf{q})=2\text{atan2}(\lVert\mathbf{q}\_v\rVert,q\_w)\frac{\mathbf{q}\_v}{\lVert\mathbf{q}\_v\rVert}$$
 
 else:
 
@@ -883,7 +883,3 @@ Always renormalize after integration to maintain unit norm: \\(\mathbf{q}\leftar
 5. **Function and Directionality**: Construct a quaternion for 90° about z. Convert to a rotation matrix and apply the rotation matrix convention tests.
 6. **Double cover**: Verify \\(\mathbf{R}(\mathbf{q})=\mathbf{R}(-\mathbf{q})\\).
 7. **Norm preservation**: \\(\lVert\mathbf{q}\_1\otimes\mathbf{q}\_2\rVert=\lVert\mathbf{q}\_1\rVert\cdot\lVert\mathbf{q}\_2\rVert\\).
-
-## Appendix
-
-More info on quaternions found here(([Some UPenn notes on quaternions](https://www.cis.upenn.edu/~cis610/cis610sl7.pdf))).
