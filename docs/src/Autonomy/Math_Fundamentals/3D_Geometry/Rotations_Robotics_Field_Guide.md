@@ -9,8 +9,6 @@ Even when working with a pre-existing software library that provides rotational 
 *This guide is meant to be a one-stop-shop for concisely clarifying the possibilities and helping you recognize which ones you're working with and their implications. Some convenient calculators that conform to your chosen conventions are also provided.*
 
 
-***Note***: The `FIXME` keywords indicate missing information that I'll be filling in as my free time allows.
-
 I've implemented many of these concepts in a [C++ library](https://github.com/goromal/manif-geom-cpp) with corresponding [Python bindings](https://github.com/goromal/geometry). There's also a [Python script](https://gist.github.com/goromal/fb15f44150ca4e0951acaee443f72d3e) that implements the checks laid out in this guide for deducing the rotational conventions used by a particular library.
 
 ## Introduction: Conventions
@@ -91,7 +89,23 @@ See *F = passive*, where \\(A\\) is the source frame and \\(B\\) is the destinat
 
 **Euler Angles**
 
-`FIXME`
+*Assuming 3-2-1 ordering, H = Successive.*
+
+> D = B2W:
+
+$$\phi=\text{atan2}(R_{32},R_{33}),\quad\theta=-\arcsin(R_{31}),\quad\psi=\text{atan2}(R_{21},R_{11})$$
+
+> D = W2B, F = Passive:
+
+$$\phi=\text{atan2}(R_{23},R_{33}),\quad\theta=-\arcsin(R_{13}),\quad\psi=\text{atan2}(R_{12},R_{11})$$
+
+> D = W2B, F = Active:
+
+Same matrix form as D = B2W, so:
+
+$$\phi=\text{atan2}(R_{32},R_{33}),\quad\theta=-\arcsin(R_{31}),\quad\psi=\text{atan2}(R_{21},R_{11})$$
+
+Singularity at \\(\theta=\pm\pi/2\\) (gimbal lock). For H = Fixed, reverse the multiplication order in the underlying matrix construction; extraction then proceeds from the transposed matrix structure.
 
 **Rodrigues**
 
@@ -113,11 +127,15 @@ Alternatively, \\(\mathbf{u}\\) can be thought of as the eigenvector of \\(\math
 
 > D = W2B, F = Passive:
 
-`FIXME`
+Same formula applied to \\(\mathbf{R}\_W^B\\):
+
+$$\theta\mathbf{u} = Log(\mathbf{R}) = \frac{\theta(\mathbf{R}-\mathbf{R}^T)^\vee}{2\sin(\theta)}$$
+
+Since \\(\mathbf{R}\_W^B=(\mathbf{R}\_B^W)^T\\), the result is the negation of the B2W Rodrigues vector: \\(Log(\mathbf{R}\_W^B)=-Log(\mathbf{R}\_B^W)\\).
 
 > D = W2B, F = Active:
 
-`FIXME`
+Same formula and result as D = B2W, since the W2B active rotation matrix is identical to the B2W passive rotation matrix.
 
 **Quaternion**
 
@@ -175,7 +193,59 @@ else
 
 > D = W2B, F = Passive:
 
-`FIXME`
+Same Shepperd extraction as D = B2W, applied to \\(\mathbf{R}\_W^B\\). Since \\(\mathbf{R}\_W^B=(\mathbf{R}\_B^W)^T\\), this yields \\(\mathbf{q}\_W^B=(\mathbf{q}\_B^W)^{-1}\\). Equivalently, using the B2W quaternion components directly:
+
+\\(\delta=\text{trace}(\boldsymbol{R})\\)
+
+if \\(\delta>0\\) then
+
+\\(s=2\sqrt{\delta+1}\\)
+
+\\(q_w=\frac{s}{4}\\)
+
+\\(q_x=\frac{1}{s}(R_{32}-R_{23})\\)
+
+\\(q_y=\frac{1}{s}(R_{13}-R_{31})\\)
+
+\\(q_z=\frac{1}{s}(R_{21}-R_{12})\\)
+
+else if \\(R_{11}>R_{22}\\) and \\(R_{11}>R_{33}\\) then
+
+\\(s=2\sqrt{1+R_{11}-R_{22}-R_{33}}\\)
+
+\\(q_w=\frac{1}{s}(R_{32}-R_{23})\\)
+
+\\(q_x=\frac{s}{4}\\)
+
+\\(q_y=\frac{1}{s}(R_{21}+R_{12})\\)
+
+\\(q_z=\frac{1}{s}(R_{31}+R_{13})\\)
+
+else if \\(R_{22}>R_{33}\\) then
+
+\\(s=2\sqrt{1+R_{22}-R_{11}-R_{33}}\\)
+
+\\(q_w=\frac{1}{s}(R_{13}-R_{31})\\)
+
+\\(q_x=\frac{1}{s}(R_{21}+R_{12})\\)
+
+\\(q_y=\frac{s}{4}\\)
+
+\\(q_z=\frac{1}{s}(R_{32}+R_{23})\\)
+
+else
+
+\\(s=2\sqrt{1+R_{33}-R_{11}-R_{22}}\\)
+
+\\(q_w=\frac{1}{s}(R_{21}-R_{12})\\)
+
+\\(q_x=\frac{1}{s}(R_{31}+R_{13})\\)
+
+\\(q_y=\frac{1}{s}(R_{32}+R_{23})\\)
+
+\\(q_z=\frac{s}{4}\\)
+
+The formulas are structurally identical to B2W, but plugging in \\(\mathbf{R}\_W^B\\) entries (which are the transpose of \\(\mathbf{R}\_B^W\\)) naturally produces the conjugate quaternion.
 
 > D = W2B, F = Active:
 
@@ -269,7 +339,18 @@ $$\boldsymbol{R}\_{W}^{B+}=\text{Exp}\left(\boldsymbol{\theta}\_{B}^{B+}\right)\
 
 **Subtraction**
 
-`FIXME`
+> F = Passive, D = B2W, P = Local
+
+$$\boldsymbol{\theta}\_{B+}^{B}=\text{Log}\left((\boldsymbol{R}\_{B}^{W})^T\boldsymbol{R}\_{B+}^{W}\right)$$
+
+> F = Passive, D = B2W, P = Global
+
+$$\boldsymbol{\theta}\_{W}^{W+}=\text{Log}\left(\boldsymbol{R}\_{B}^{W+}(\boldsymbol{R}\_{B}^{W})^T\right)$$
+
+> F = Passive, D = W2B, P = Local
+
+$$\boldsymbol{\theta}\_{B}^{B+}=\text{Log}\left(\boldsymbol{R}\_{W}^{B+}(\boldsymbol{R}\_{W}^{B})^T\right)$$
+
 ### Notions of Distance
 
 **Angular/Geodesic**
@@ -285,7 +366,26 @@ A computational, straight-line shortcut utilizing the Frobenius norm:
 $$||\mathbf{R}_A-\mathbf{R}_B||_F=||\mathbf{R}_B-\mathbf{R}_A||_F$$
 ### Derivatives and (Numeric) Integration
 
-`FIXME`
+> D = B2W:
+
+$$\dot{\mathbf{R}}\_B^W=\mathbf{R}\_B^W[\boldsymbol{\omega}^B]\_\times=[\boldsymbol{\omega}^W]\_\times\mathbf{R}\_B^W$$
+
+where \\(\boldsymbol{\omega}^B\\) and \\(\boldsymbol{\omega}^W\\) are the angular velocity expressed in the body and world frames, respectively.
+
+> D = W2B, F = Passive:
+
+$$\dot{\mathbf{R}}\_W^B=-[\boldsymbol{\omega}^B]\_\times\mathbf{R}\_W^B=-\mathbf{R}\_W^B[\boldsymbol{\omega}^W]\_\times$$
+
+**Numeric Integration (first-order):**
+
+> D = B2W:
+
+$$\mathbf{R}\_B^W(t+\Delta t)\approx\mathbf{R}\_B^W(t)\cdot Exp(\boldsymbol{\omega}^B\Delta t)$$
+
+> D = W2B, F = Passive:
+
+$$\mathbf{R}\_W^B(t+\Delta t)\approx Exp(-\boldsymbol{\omega}^B\Delta t)\cdot\mathbf{R}\_W^B(t)$$
+
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -299,7 +399,13 @@ $$||\mathbf{R}_A-\mathbf{R}_B||_F=||\mathbf{R}_B-\mathbf{R}_A||_F$$
 
 ### Unit Tests to Determine Conventions
 
-`FIXME`
+1. Verify \\(\mathbf{R}^T\mathbf{R}=\mathbf{I}\\) and \\(\det(\mathbf{R})=1\\).
+2. Construct a rotation of \\(\theta=90°\\) about the z-axis.
+3. Apply \\(\mathbf{R}\\) to \\(\mathbf{v}=[1,0,0]^T\\):
+   * Result \\([0,1,0]^T\\): **F = Active** or **(F = Passive, D = B2W)**.
+   * Result \\([0,-1,0]^T\\): **F = Passive, D = W2B**.
+4. To distinguish Active from Passive B2W: compose two 90° rotations about z, then about x. Check whether frame subscripts cancel (Passive) or the operation moves the vector (Active).
+5. Identity check: \\(\mathbf{R}(0)=\mathbf{I}\\) for any axis.
 
 ## Euler Angles
 
@@ -369,11 +475,22 @@ Note the reversed directionality between the **intrinsic** composition \\(\mathb
 
 **Rodrigues**
 
-`FIXME`
+Convert to a rotation matrix first (using the Euler Angles \\(\rightarrow\\) Rotation Matrix formulas above), then extract the Rodrigues vector using the \\(SO(3)\\) logarithmic map.
 
 **Quaternion**
 
-`FIXME`
+*Direct method for 3-2-1 ordering, H = Successive:*
+
+Compose the elemental quaternions for each axis rotation:
+
+$$\mathbf{q}=\mathbf{q}\_3(\psi)\otimes\mathbf{q}\_2(\theta)\otimes\mathbf{q}\_1(\phi)$$
+
+where (assuming O = \\(q\_w\\) first):
+
+$$\mathbf{q}\_1(\phi)=\begin{bmatrix}\cos(\phi/2)\\\ \sin(\phi/2)\\\ 0\\\ 0\end{bmatrix},\quad \mathbf{q}\_2(\theta)=\begin{bmatrix}\cos(\theta/2)\\\ 0\\\ \sin(\theta/2)\\\ 0\end{bmatrix},\quad \mathbf{q}\_3(\psi)=\begin{bmatrix}\cos(\psi/2)\\\ 0\\\ 0\\\ \sin(\psi/2)\end{bmatrix}$$
+
+Composition order follows the same directionality/handedness rules as the Euler Angles \\(\rightarrow\\) Rotation Matrix conversion. Alternatively, convert to a rotation matrix first and then extract the quaternion.
+
 ### Composition and Inversion
 
 *Not applicable for Euler angles.* Composition and inversion are typically performed by first converting the Euler angles to a rotation matrix.
@@ -381,7 +498,22 @@ Note the reversed directionality between the **intrinsic** composition \\(\mathb
 
 Unlike with composition and inversion, there are methods of numeric differentiation and integration with Euler angles that are mathematically valid over infinitesimally small delta angles.
 
-`FIXME`
+*Assuming 3-2-1 ordering (\\(\psi\\) yaw, \\(\theta\\) pitch, \\(\phi\\) roll), H = Successive, D = B2W.*
+
+**Euler angle rates from body-frame angular velocity:**
+
+$$\boldsymbol{\omega}^B=\begin{bmatrix}p\\\ q\\\ r\end{bmatrix}=\begin{bmatrix}1 & 0 & -\sin\theta\\\ 0 & \cos\phi & \sin\phi\cos\theta\\\ 0 & -\sin\phi & \cos\phi\cos\theta\end{bmatrix}\begin{bmatrix}\dot{\phi}\\\ \dot{\theta}\\\ \dot{\psi}\end{bmatrix}$$
+
+**Inverse (for integration):**
+
+$$\begin{bmatrix}\dot{\phi}\\\ \dot{\theta}\\\ \dot{\psi}\end{bmatrix}=\begin{bmatrix}1 & \sin\phi\tan\theta & \cos\phi\tan\theta\\\ 0 & \cos\phi & -\sin\phi\\\ 0 & \sin\phi\sec\theta & \cos\phi\sec\theta\end{bmatrix}\begin{bmatrix}p\\\ q\\\ r\end{bmatrix}$$
+
+Note the singularity at \\(\theta=\pm\pi/2\\) in the inverse mapping (gimbal lock).
+
+**Numeric Integration (first-order):**
+
+$$\boldsymbol{\Theta}(t+\Delta t)\approx\boldsymbol{\Theta}(t)+\dot{\boldsymbol{\Theta}}(t)\Delta t$$
+
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -397,7 +529,11 @@ Unlike with composition and inversion, there are methods of numeric differentiat
 
 ### Unit Tests to Determine Conventions
 
-`FIXME`
+1. Set \\((\psi,\theta,\phi)=(90°,0,0)\\) (pure yaw) and convert to a rotation matrix.
+2. **Ordering**: Check which axis the rotation occurred about (the first number in the ordering label corresponds to the outermost rotation axis).
+3. **Handedness**: Set \\((\psi,\theta,\phi)=(90°,45°,0)\\). Convert to a matrix and compare against constructing the same rotations about the successive (body) axes vs. the fixed (world) axes. The one that matches determines H.
+4. **F and D**: Apply the resulting rotation matrix to a known vector and use the rotation matrix unit tests above to determine function and directionality.
+
 ## Euler/Rodrigues
 
 ### Construction Techniques
@@ -430,15 +566,25 @@ $$\approx \boldsymbol{I}+\lfloor \boldsymbol{\theta} \rfloor\_{\times}$$
 
 > D = W2B, F = Passive
 
-`FIXME`
+$$\mathbf{R}\_W^B=\cos\theta\mathbf{I}-\sin\theta[\mathbf{u}]\_\times+(1-\cos\theta)\mathbf{u}\mathbf{u}^T$$
+
+$$=\mathbf{I}-[\mathbf{u}]\_\times\sin\theta+[\mathbf{u}]\_\times^2(1-\cos\theta)$$
+
+$$=exp(-[\theta\mathbf{u}]\_\times)=Exp(-\theta\mathbf{u})$$
+
+$$\approx\boldsymbol{I}-\lfloor\boldsymbol{\theta}\rfloor\_{\times}$$
 
 > D = W2B, F = Active
 
-`FIXME`
+Same matrix form as D = B2W:
+
+$$\mathbf{R}=\cos\theta\mathbf{I}+\sin\theta[\mathbf{u}]\_\times+(1-\cos\theta)\mathbf{u}\mathbf{u}^T=Exp(\theta\mathbf{u})$$
+
+$$\approx\boldsymbol{I}+\lfloor\boldsymbol{\theta}\rfloor\_{\times}$$
 
 **Euler Angles**
 
-`FIXME`
+Convert to a rotation matrix first using the \\(SO(3)\\) exponential map (Rodrigues' rotation formula above), then extract Euler angles using the Rotation Matrix \\(\rightarrow\\) Euler Angles formulas.
 
 **Quaternion**
 
@@ -452,17 +598,27 @@ $$\mathbf{q}=\begin{bmatrix}\cos(\theta/2) \\\ \sin(\theta/2)\mathbf{u}\end{bmat
 
 > D = W2B, F = Passive
 
-`FIXME`
+$$\mathbf{q}=\begin{bmatrix}\cos(\theta/2) \\\ -\sin(\theta/2)\mathbf{u}\end{bmatrix}$$
+
+i.e., the conjugate of the B2W quaternion: \\(\mathbf{q}\_W^B=(\mathbf{q}\_B^W)^{-1}\\).
 
 > D = W2B, F = Active
 
-`FIXME`
+$$\mathbf{q}=\begin{bmatrix}\cos(\theta/2) \\\ -\sin(\theta/2)\mathbf{u}\end{bmatrix}$$
+
+Same values as W2B Passive. The quaternion uses \\(C\_S\\) instead of \\(C\_H\\) to map to the rotation matrix, but the quaternion components are identical.
 
 ### Composition and Inversion
 
 **Composition**
 
-`FIXME`
+Rodrigues vector composition does not have a clean closed-form expression. The standard approach is to convert to rotation matrices or quaternions, compose, and convert back:
+
+$$(\theta\_1\mathbf{u}\_1)\circ(\theta\_2\mathbf{u}\_2)=Log\left(Exp(\theta\_1\mathbf{u}\_1)\cdot Exp(\theta\_2\mathbf{u}\_2)\right)$$
+
+For small angles, the Baker-Campbell-Hausdorff (BCH) formula provides an approximation:
+
+$$Log(Exp(\mathbf{a})\cdot Exp(\mathbf{b}))\approx\mathbf{a}+\mathbf{b}+\frac{1}{2}[\mathbf{a}]\_\times\mathbf{b}+\frac{1}{12}\left([\mathbf{a}]\_\times^2\mathbf{b}+[\mathbf{b}]\_\times^2\mathbf{a}\right)+\ldots$$
 
 **Inversion**
 
@@ -470,7 +626,23 @@ $$(\theta\mathbf{u})^{-1}=-\theta\mathbf{u}$$
 
 ### Derivatives and (Numeric) Integration
 
-`FIXME`
+The relationship between the Rodrigues vector rate and angular velocity involves the left and right Jacobians of \\(SO(3)\\):
+
+$$\dot{\boldsymbol{\theta}}=\mathbf{J}\_l^{-1}(\boldsymbol{\theta})\boldsymbol{\omega}^W=\mathbf{J}\_r^{-1}(\boldsymbol{\theta})\boldsymbol{\omega}^B$$
+
+where:
+
+$$\mathbf{J}\_l(\boldsymbol{\theta})=\frac{\sin\theta}{\theta}\mathbf{I}+\left(1-\frac{\sin\theta}{\theta}\right)\mathbf{u}\mathbf{u}^T+\frac{1-\cos\theta}{\theta}[\mathbf{u}]\_\times$$
+
+$$\mathbf{J}\_r(\boldsymbol{\theta})=\mathbf{J}\_l(-\boldsymbol{\theta})=\frac{\sin\theta}{\theta}\mathbf{I}+\left(1-\frac{\sin\theta}{\theta}\right)\mathbf{u}\mathbf{u}^T-\frac{1-\cos\theta}{\theta}[\mathbf{u}]\_\times$$
+
+The inverse left Jacobian:
+
+$$\mathbf{J}\_l^{-1}(\boldsymbol{\theta})=\frac{\theta/2}{\tan(\theta/2)}\mathbf{I}+\left(1-\frac{\theta/2}{\tan(\theta/2)}\right)\mathbf{u}\mathbf{u}^T-\frac{\theta}{2}[\mathbf{u}]\_\times$$
+
+**Numeric Integration:**
+
+$$\boldsymbol{\theta}(t+\Delta t)=Log\left(Exp(\boldsymbol{\theta}(t))\cdot Exp(\boldsymbol{\omega}^B\Delta t)\right)$$
 
 ### Representational Strengths and Shortcomings
 
@@ -487,7 +659,10 @@ $$(\theta\mathbf{u})^{-1}=-\theta\mathbf{u}$$
 
 ### Unit Tests to Determine Conventions
 
-`FIXME`
+1. Construct \\(\boldsymbol{\theta}=(\pi/2)\hat{\mathbf{z}}\\) (90° about z-axis) and convert to a rotation matrix.
+2. Apply the rotation matrix unit tests to determine F and D.
+3. Verify \\(Exp(\mathbf{0})=\mathbf{I}\\).
+4. Verify \\(Exp(\boldsymbol{\theta})\cdot Exp(-\boldsymbol{\theta})=\mathbf{I}\\).
 
 ## Quaternions
 
@@ -507,9 +682,9 @@ $$\mathbf{R}=\mathbf{C}\_H=(q\_w^2-1)\boldsymbol{I}+2q\_w\lfloor\boldsymbol{q}\_
 
 > D = W2B, F = Passive
 
-$$\mathbf{R}=\mathbf{C}_H=$$
+$$\mathbf{R}=\mathbf{C}\_H=(q\_w^2-1)\boldsymbol{I}+2q\_w\lfloor\boldsymbol{q}\_v\rfloor\_{\times}+2\boldsymbol{q}\_v\boldsymbol{q}\_v^{\top}=\begin{bmatrix}1-2q\_y^2-2q\_z^2 & 2q\_xq\_y-2q\_wq\_z & 2q\_xq\_z+2q\_wq\_y \\\ 2q\_xq\_y+2q\_wq\_z & 1-2q\_x^2-2q\_z^2 & 2q\_yq\_z-2q\_wq\_x \\\ 2q\_xq\_z-2q\_wq\_y & 2q\_yq\_z+2q\_wq\_x & 1-2q\_x^2-2q\_y^2\end{bmatrix}$$
 
-`FIXME`
+Same \\(C\_H\\) formula as B2W. The W2B passive quaternion \\(\mathbf{q}\_W^B=(\mathbf{q}\_B^W)^{-1}\\) produces \\(\mathbf{R}\_W^B=(\mathbf{R}\_B^W)^T\\) when plugged in. Note that \\(C\_H(\mathbf{q}\_W^B)=C\_S(\mathbf{q}\_B^W)\\).
 
 > D = W2B, F = Active
 
@@ -525,11 +700,32 @@ The use of \\(C_H\\) means that \\(\text{Exp}(\tilde{q}) \approx I + [\tilde{q}]
 
 **Euler Angles**
 
-`FIXME`
+*Assuming 3-2-1 ordering, O = \\(q\_w\\) first, D = B2W:*
+
+$$\phi=\text{atan2}\left(2(q\_wq\_x+q\_yq\_z),\;1-2(q\_x^2+q\_y^2)\right)$$
+
+$$\theta=\arcsin\left(2(q\_wq\_y-q\_xq\_z)\right)$$
+
+$$\psi=\text{atan2}\left(2(q\_wq\_z+q\_xq\_y),\;1-2(q\_y^2+q\_z^2)\right)$$
+
+For other conventions, convert to the rotation matrix first using the appropriate cosine matrix formula, then extract Euler angles from the matrix.
 
 **Rodrigues**
 
-`FIXME`
+*i.e., the Quaternion logarithmic map.*
+
+Assuming O = \\(q\_w\\) first:
+
+if \\(\lVert\mathbf{q}\_v\rVert>\epsilon\\):
+
+$$\theta\mathbf{u}=Log(\mathbf{q})=2\;\text{atan2}(\lVert\mathbf{q}\_v\rVert,\;q\_w)\frac{\mathbf{q}\_v}{\lVert\mathbf{q}\_v\rVert}$$
+
+else:
+
+$$\theta\mathbf{u}=Log(\mathbf{q})\approx 2\frac{\mathbf{q}\_v}{q\_w}$$
+
+To avoid \\(\theta>\pi\\), negate \\(\mathbf{q}\\) if \\(q\_w<0\\) before applying the map.
+
 ### Action
 
 *Assuming O = \\(q_w\\) last. Flip for \\(q_w\\) first.*
@@ -544,7 +740,11 @@ $$\mathbf{q}_A^B \otimes \begin{bmatrix}^A\mathbf{v} \\\ 1\end{bmatrix} \otimes 
 
 > F = active
 
-`FIXME`
+$$\left(\mathbf{q}\right)^{-1} \otimes \begin{bmatrix}^A\mathbf{v} \\\ 0\end{bmatrix} \otimes \mathbf{q}=\begin{bmatrix}^A\mathbf{v}' \\\ 0\end{bmatrix}$$
+
+**Homogeneous Coordinates:**
+
+$$\left(\mathbf{q}\right)^{-1} \otimes \begin{bmatrix}^A\mathbf{v} \\\ 1\end{bmatrix} \otimes \mathbf{q}=\begin{bmatrix}^A\mathbf{v}' \\\ 1\end{bmatrix}$$
 
 ### Composition and Inversion
 
@@ -598,7 +798,35 @@ $$\left(\mathbf{q}_a \otimes \mathbf{q}_b \otimes \dots \otimes \mathbf{q}_N\rig
 
 ### Addition and Subtraction
 
-`FIXME`
+Perturbations are represented by \\(\boldsymbol{\theta}\in\mathbb{R}^3\\), where local perturbations are expressed in the body frame and global perturbations are expressed in the world frame.
+
+**Addition**
+
+> D = B2W, P = Local
+
+$$\mathbf{q}\_{B+}^{W}=\mathbf{q}\_{B}^{W}\otimes\text{Exp}(\boldsymbol{\theta}\_{B+}^{B})$$
+
+> D = B2W, P = Global
+
+$$\mathbf{q}\_{B}^{W+}=\text{Exp}(\boldsymbol{\theta}\_{W}^{W+})\otimes\mathbf{q}\_{B}^{W}$$
+
+> D = W2B, F = Passive, P = Local
+
+$$\mathbf{q}\_{W}^{B+}=\text{Exp}(\boldsymbol{\theta}\_{B}^{B+})\otimes\mathbf{q}\_{W}^{B}$$
+
+**Subtraction**
+
+> D = B2W, P = Local
+
+$$\boldsymbol{\theta}\_{B+}^{B}=\text{Log}\left((\mathbf{q}\_{B}^{W})^{-1}\otimes\mathbf{q}\_{B+}^{W}\right)$$
+
+> D = B2W, P = Global
+
+$$\boldsymbol{\theta}\_{W}^{W+}=\text{Log}\left(\mathbf{q}\_{B}^{W+}\otimes(\mathbf{q}\_{B}^{W})^{-1}\right)$$
+
+> D = W2B, F = Passive, P = Local
+
+$$\boldsymbol{\theta}\_{B}^{B+}=\text{Log}\left(\mathbf{q}\_{W}^{B+}\otimes(\mathbf{q}\_{W}^{B})^{-1}\right)$$
 
 ### Notions of Distance
 
@@ -611,7 +839,28 @@ A modification to account for the negative sign ambiguity:
 $$\min_{b\in\{-1;+1\}}||\mathbf{q}_A-b\mathbf{q}_B||$$
 ### Derivatives and (Numeric) Integration
 
-`FIXME`
+*Assuming O = \\(q\_w\\) first, H = Right.*
+
+> D = B2W:
+
+$$\dot{\mathbf{q}}\_B^W=\frac{1}{2}\mathbf{q}\_B^W\otimes\begin{bmatrix}0\\\ \boldsymbol{\omega}^B\end{bmatrix}=\frac{1}{2}\begin{bmatrix}0\\\ \boldsymbol{\omega}^W\end{bmatrix}\otimes\mathbf{q}\_B^W$$
+
+> D = W2B, F = Passive:
+
+$$\dot{\mathbf{q}}\_W^B=-\frac{1}{2}\begin{bmatrix}0\\\ \boldsymbol{\omega}^B\end{bmatrix}\otimes\mathbf{q}\_W^B=-\frac{1}{2}\mathbf{q}\_W^B\otimes\begin{bmatrix}0\\\ \boldsymbol{\omega}^W\end{bmatrix}$$
+
+**Numeric Integration (first-order):**
+
+> D = B2W:
+
+$$\mathbf{q}\_B^W(t+\Delta t)=\mathbf{q}\_B^W(t)\otimes Exp(\boldsymbol{\omega}^B\Delta t)$$
+
+> D = W2B, F = Passive:
+
+$$\mathbf{q}\_W^B(t+\Delta t)=Exp(-\boldsymbol{\omega}^B\Delta t)\otimes\mathbf{q}\_W^B(t)$$
+
+Always renormalize after integration to maintain unit norm: \\(\mathbf{q}\leftarrow\mathbf{q}/\lVert\mathbf{q}\rVert\\).
+
 ### Representational Strengths and Shortcomings
 
 **Strengths**
@@ -627,7 +876,13 @@ $$\min_{b\in\{-1;+1\}}||\mathbf{q}_A-b\mathbf{q}_B||$$
 
 ### Unit Tests to Determine Correctness
 
-`FIXME`
+1. **Identity**: \\(\mathbf{q}=[1,0,0,0]^T\\) (or \\([0,0,0,1]^T\\) for O = \\(q\_w\\) last) should yield \\(\mathbf{R}=\mathbf{I}\\).
+2. **Inverse**: \\(\mathbf{q}\otimes\mathbf{q}^{-1}=\mathbf{q}\_{id}\\).
+3. **Ordering**: Check whether the scalar is stored first or last in the library's data structure.
+4. **Handedness**: Compute \\(\mathbf{q}\_i\otimes\mathbf{q}\_j\\) where \\(\mathbf{q}\_i=[0,1,0,0]^T\\) and \\(\mathbf{q}\_j=[0,0,1,0]^T\\) (O = \\(q\_w\\) first). Result \\([0,0,0,1]^T\\) implies **H = Right**; result \\([0,0,0,-1]^T\\) implies **H = Left**.
+5. **Function and Directionality**: Construct a quaternion for 90° about z. Convert to a rotation matrix and apply the rotation matrix convention tests.
+6. **Double cover**: Verify \\(\mathbf{R}(\mathbf{q})=\mathbf{R}(-\mathbf{q})\\).
+7. **Norm preservation**: \\(\lVert\mathbf{q}\_1\otimes\mathbf{q}\_2\rVert=\lVert\mathbf{q}\_1\rVert\cdot\lVert\mathbf{q}\_2\rVert\\).
 
 ## Appendix
 
