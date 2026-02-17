@@ -1,9 +1,12 @@
 # Autonomy
 
+- [Control](./Control/Control.md)
+  - [Controllers](./Control/Controllers.html)
 - [Estimation](./Estimation/Estimation.md)
   - [Applied Statistics for Stochastic Processes](./Estimation/Applied_Statistics_for_Stochastic_Processes/Applied_Statistics_for_Stochastic_Processes.md)
     - [Bayesian Inference](./Estimation/Applied_Statistics_for_Stochastic_Processes/Bayesian_Inference.md)
   - [Filter-Based Estimation Algorithms](./Estimation/Filter-Based_Estimation_Algorithms/Filter-Based_Estimation_Algorithms.md)
+    - [Filters Overview](./Estimation/Filter-Based_Estimation_Algorithms/Filters_Overview.html)
     - [The Kalman Filter (Time-Varying LQE)](./Estimation/Filter-Based_Estimation_Algorithms/The_Kalman_Filter_(Time-Varying_LQE).md)
     - [The Kinematic Filters](./Estimation/Filter-Based_Estimation_Algorithms/The_Kinematic_Filters.md)
     - [The Luenberger Observer (LQE)](./Estimation/Filter-Based_Estimation_Algorithms/The_Luenberger_Observer_(LQE).md)
@@ -21,6 +24,7 @@
   - [Optimization Over Lie Groups](./Search_and_Optimization/Optimization_Over_Lie_Groups.md)
 - [Systems Implementation](./Systems_Implementation/Systems_Implementation.md)
   - [Computer Science](./Systems_Implementation/Computer_Science/Computer_Science.md)
+    - [Algorithms](./Systems_Implementation/Computer_Science/Algorithms.html)
     - [Data Structures](./Systems_Implementation/Computer_Science/Data_Structures.html)
   - [Computer Simulations](./Systems_Implementation/Computer_Simulations/Computer_Simulations.md)
     - [Event-Based Collision Detection](./Systems_Implementation/Computer_Simulations/Event-Based_Collision_Detection.md)

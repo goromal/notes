@@ -1,6 +1,7 @@
 # Systems Implementation
 
 - [Computer Science](./Computer_Science/Computer_Science.md)
+  - [Algorithms](./Computer_Science/Algorithms.html)
   - [Data Structures](./Computer_Science/Data_Structures.html)
 - [Computer Simulations](./Computer_Simulations/Computer_Simulations.md)
   - [Event-Based Collision Detection](./Computer_Simulations/Event-Based_Collision_Detection.md)
