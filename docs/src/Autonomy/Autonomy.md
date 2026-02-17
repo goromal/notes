@@ -1,5 +1,7 @@
 # Autonomy
 
+- [Control](./Control/Control.md)
+  - [Controllers](./Control/Controllers.html)
 - [Estimation](./Estimation/Estimation.md)
   - [Applied Statistics for Stochastic Processes](./Estimation/Applied_Statistics_for_Stochastic_Processes/Applied_Statistics_for_Stochastic_Processes.md)
     - [Bayesian Inference](./Estimation/Applied_Statistics_for_Stochastic_Processes/Bayesian_Inference.md)
@@ -21,6 +23,7 @@
   - [Optimization Over Lie Groups](./Search_and_Optimization/Optimization_Over_Lie_Groups.md)
 - [Systems Implementation](./Systems_Implementation/Systems_Implementation.md)
   - [Computer Science](./Systems_Implementation/Computer_Science/Computer_Science.md)
+    - [Algorithms](./Systems_Implementation/Computer_Science/Algorithms.html)
     - [Data Structures](./Systems_Implementation/Computer_Science/Data_Structures.html)
   - [Computer Simulations](./Systems_Implementation/Computer_Simulations/Computer_Simulations.md)
     - [Event-Based Collision Detection](./Systems_Implementation/Computer_Simulations/Event-Based_Collision_Detection.md)
@@ -38,3 +41,4 @@
     - [The Transport Theorem](./Systems_Theory/Mechanics/The_Transport_Theorem.md)
   - [Signals](./Systems_Theory/Signals/Signals.md)
     - [Algorithms in Continuous vs Discrete Time](./Systems_Theory/Signals/Algorithms_in_Continuous_vs_Discrete_Time.md)
+    - [Signal Processing Filters](./Systems_Theory/Signals/Signal_Processing_Filters.html)
