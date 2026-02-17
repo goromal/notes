@@ -50,7 +50,6 @@ I'm a bit of a meticulous note taker--in part because it helps me retain informa
 - [Philosophy](./Philosophy/Philosophy.md)
   - [Aristotelian Science](./Philosophy/Aristotelian_Science.md)
   - [Logical Fallacies as Bayesian Failures](./Philosophy/Logical_Fallacies_as_Bayesian_Failures.md)
-  - [Philosophy Essays](./Philosophy/Philosophy_Essays.md)
   - [Realism vs Nominalism](./Philosophy/Realism_vs_Nominalism.md)
   - [Thomas Aquinas on Reason and Revelation](./Philosophy/Thomas_Aquinas_on_Reason_and_Revelation.md)
 - [Random](./Random/Random.md)
