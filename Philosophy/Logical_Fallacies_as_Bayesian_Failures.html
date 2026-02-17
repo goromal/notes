@@ -1,0 +1,619 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Logical Fallacies as Bayesian Failures - Andrew&#x27;s Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-3d639fc2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d0f23d9a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Andrew&#x27;s Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="logical-fallacies-as-failures-of-probabilistic-reasoning"><a class="header" href="#logical-fallacies-as-failures-of-probabilistic-reasoning">Logical Fallacies as Failures of Probabilistic Reasoning</a></h1>
+<p><em>Every classical logical fallacy can be understood as a specific failure to construct a Bayesian network that faithfully represents reality.</em></p>
+<h2 id="introduction"><a class="header" href="#introduction">Introduction</a></h2>
+<p>In the <a href="../Autonomy/Estimation/Applied_Statistics_for_Stochastic_Processes/Bayesian_Inference.html">Bayesian Inference</a> article, we saw that a Bayes net is a directed acyclic graph (DAG) whose nodes are random variables and whose edges encode conditional dependencies. The entire graph specifies a joint probability distribution over all of its variables, and answering questions about the world reduces to <em>querying</em> this distribution given observations. When the graph is well-constructed—meaning its structure, variable domains, and conditional distributions accurately reflect reality—the inferences drawn from it are sound. When any of these three components are wrong, the inferences break down in predictable ways.</p>
+<p>This article argues that the classical logical fallacies catalogued by philosophers since Aristotle are not merely rhetorical tricks or lapses in attention. Each one corresponds to a <em>specific, identifiable failure mode</em> in the construction or querying of a probabilistic model. A fallacious argument is, at its core, an inference drawn from a malformed Bayes net—one whose graph has the wrong shape, whose variables have the wrong domains, or whose conditional distributions are miscalibrated.</p>
+<p>The failure modes fall into five natural categories:</p>
+<ol>
+<li><strong>Structural failures</strong> — the graph topology is wrong (missing nodes, extra edges, or cycles).</li>
+<li><strong>Directional failures</strong> — the direction of inference along an edge is reversed without proper application of Bayes’ rule.</li>
+<li><strong>Domain failures</strong> — the random variables represent the wrong quantities or have artificially restricted sample spaces.</li>
+<li><strong>Parametric failures</strong> — the conditional probability distributions or priors are miscalibrated.</li>
+<li><strong>Chain failures</strong> — errors compound along sequential inference chains.</li>
+</ol>
+<h2 id="quick-review-what-a-bayes-net-encodes"><a class="header" href="#quick-review-what-a-bayes-net-encodes">Quick Review: What a Bayes Net Encodes</a></h2>
+<p>Recall that a Bayes net over variables \(X_1, \dots, X_n\) encodes their joint distribution by exploiting conditional independence:</p>
+<p>$$P(X_1, \dots, X_n) = \prod_{i=1}^{n} P(X_i \mid \text{Parents}(X_i)).$$</p>
+<p>Consider the following simple net:</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 200 160" width="200">
+  <defs>
+    <marker id="f0-arr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444" />
+    </marker>
+  </defs>
+  <line x1="62" y1="53" x2="88" y2="101" stroke="#444" stroke-width="2" marker-end="url(#f0-arr)" />
+  <line x1="138" y1="53" x2="112" y2="101" stroke="#444" stroke-width="2" marker-end="url(#f0-arr)" />
+  <circle cx="50" cy="40" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="50" y="41" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="150" cy="40" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="150" y="41" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <circle cx="100" cy="115" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="100" y="116" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">C</text>
+</svg>
+</div>
+
+<p>This net asserts that \(A\) and \(B\) are independent root nodes and that \(C\) depends on both, giving a joint of \(P(A,B,C) = P(C|A,B) P(A) P(B)\). Three things must be correct for inferences from this model to be sound:</p>
+<ol>
+<li><strong>Structure:</strong> The edges must reflect genuine causal or generative relationships, and no relevant variables may be missing.</li>
+<li><strong>Domains:</strong> Each variable’s sample space must include all values it can actually take.</li>
+<li><strong>Distributions:</strong> The prior \(P(A)\), \(P(B)\), and the conditional \(P(C|A,B)\) must be calibrated to reality.</li>
+</ol>
+<p>A logical fallacy arises when a reasoner implicitly constructs a mental model that violates one or more of these requirements.</p>
+<hr>
+<h2 id="i-structural-fallacies-building-the-wrong-graph"><a class="header" href="#i-structural-fallacies-building-the-wrong-graph">I. Structural Fallacies: Building the Wrong Graph</a></h2>
+<p>These fallacies arise when the topology of the reasoner’s implicit Bayes net does not match the causal structure of reality—edges are added where none exist, genuine causes are omitted, or the acyclicity constraint is violated.</p>
+<h3 id="begging-the-question--cycles-in-the-graph"><a class="header" href="#begging-the-question--cycles-in-the-graph">Begging the Question — Cycles in the Graph</a></h3>
+<p><strong>The fallacy in classical form:</strong> Using the conclusion of an argument as one of its premises. <em>“God exists because the Bible says so, and the Bible is true because it is the word of God.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner has constructed a graph with a <em>cycle</em>. Node \(P\) generates evidence for \(Q\), which generates evidence for \(R\), which in turn supports \(P\). But a Bayes net must be a DAG—directed <em>acyclic</em> graph. Cycles make the joint distribution undefined because the chain rule cannot terminate: you can never reach an unconditional prior from which to begin calculating.</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 470 175" width="470">
+  <defs>
+    <marker id="f1-arrr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b" />
+    </marker>
+    <marker id="f1-arrb" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2471a3" />
+    </marker>
+  </defs>
+  <!-- Left: Cycle (invalid) -->
+  <line x1="93" y1="53" x2="137" y2="112" stroke="#c0392b" stroke-width="2" marker-end="url(#f1-arrr)" />
+  <line x1="126" y1="130" x2="34" y2="130" stroke="#c0392b" stroke-width="2" marker-end="url(#f1-arrr)" />
+  <line x1="23" y1="112" x2="67" y2="53" stroke="#c0392b" stroke-width="2" marker-end="url(#f1-arrr)" />
+  <circle cx="80" cy="35" r="22" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="80" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">P</text>
+  <circle cx="150" cy="130" r="22" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="150" y="131" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">Q</text>
+  <circle cx="10" cy="130" r="22" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="10" y="131" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">R</text>
+  <text x="80" y="168" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c0392b">Cycle (invalid)</text>
+  <!-- Right: DAG (valid) -->
+  <line x1="333" y1="53" x2="377" y2="112" stroke="#2471a3" stroke-width="2" marker-end="url(#f1-arrb)" />
+  <line x1="307" y1="53" x2="263" y2="112" stroke="#2471a3" stroke-width="2" marker-end="url(#f1-arrb)" />
+  <circle cx="320" cy="35" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="320" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">P</text>
+  <circle cx="390" cy="130" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="390" y="131" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">Q</text>
+  <circle cx="250" cy="130" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="250" y="131" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">R</text>
+  <text x="320" y="168" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2471a3">DAG (valid)</text>
+  <!-- Divider -->
+  <line x1="200" y1="10" x2="200" y2="165" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3" />
+</svg>
+</div>
+
+<p>Formally, the chain rule for the cyclic graph would require</p>
+<p>$$P(P) = \cdots = f(P(R)) = f(g(P(Q))) = f(g(h(P(P))))$$</p>
+<p>which is a fixed-point equation, not a generative model. There is no unconditional distribution from which to begin inference. The argument provides no new information—it is self-referential.</p>
+<p><strong>The fix:</strong> Every sound argument must ultimately trace back to premises whose truth is established independently of the conclusion. In Bayes net terms, the graph must be acyclic, terminating at root nodes (priors) whose distributions are specified without reference to their descendants.</p>
+<h3 id="post-hoc-ergo-propter-hoc--the-missing-confounder"><a class="header" href="#post-hoc-ergo-propter-hoc--the-missing-confounder">Post Hoc Ergo Propter Hoc — The Missing Confounder</a></h3>
+<p><strong>The fallacy in classical form:</strong> Assuming that because event \(A\) preceded event \(B\), \(A\) must have caused \(B\). <em>“I wore my lucky socks and we won the game; therefore the socks caused the victory.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner’s model has a direct edge \(A \to B\) where none should exist. The true causal structure involves a hidden common cause \(C\) (a <em>confounder</em>) that independently generates both \(A\) and \(B\). Marginalizing out \(C\) produces a statistical correlation between \(A\) and \(B\), which the reasoner mistakes for a direct causal link.</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 440 195" width="440">
+  <defs>
+    <marker id="f2-arrr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b" />
+    </marker>
+    <marker id="f2-arrb" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2471a3" />
+    </marker>
+  </defs>
+  <!-- Left: Assumed direct cause -->
+  <line x1="84" y1="95" x2="136" y2="95" stroke="#c0392b" stroke-width="2" marker-end="url(#f2-arrr)" />
+  <circle cx="60" cy="95" r="22" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="60" y="96" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="160" cy="95" r="22" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="160" y="96" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <text x="110" y="30" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c0392b">Assumed Model</text>
+  <!-- Divider -->
+  <line x1="220" y1="10" x2="220" y2="180" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3" />
+  <!-- Right: True causal structure with confounder -->
+  <line x1="321" y1="56" x2="283" y2="124" stroke="#2471a3" stroke-width="2" marker-end="url(#f2-arrb)" />
+  <line x1="339" y1="56" x2="377" y2="124" stroke="#2471a3" stroke-width="2" marker-end="url(#f2-arrb)" />
+  <circle cx="330" cy="38" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="330" y="39" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">C</text>
+  <circle cx="270" cy="142" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="270" y="143" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="390" cy="142" r="22" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="390" y="143" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <line x1="294" y1="142" x2="366" y2="142" stroke="#999" stroke-width="1.5" stroke-dasharray="5,4" />
+  <text x="330" y="158" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#999">observed correlation</text>
+  <text x="330" y="17" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2471a3">True Model</text>
+</svg>
+</div>
+
+<p>In the assumed model, the reasoner computes \(P(B|A)\) using a direct conditional \(P(B|A)\). In the true model, \(A\) and \(B\) are <em>conditionally independent</em> given the confounder \(C\):</p>
+<p>$$P(A,B|C) = P(A|C) P(B|C).$$</p>
+<p>Their marginal correlation \(P(A,B) = \sum_C P(A|C) P(B|C) P(C) \neq P(A) P(B)\) is real but not causal. The correlation vanishes once \(C\) is observed. This is why controlled experiments—which hold \(C\) fixed—are essential for establishing causation.</p>
+<h3 id="survivorship-bias--conditioning-on-a-collider"><a class="header" href="#survivorship-bias--conditioning-on-a-collider">Survivorship Bias — Conditioning on a Collider</a></h3>
+<p><strong>The fallacy in classical form:</strong> Drawing conclusions from a non-representative sample that has been filtered by some selection process. <em>“Exposed buildings in this city are all well-built, so construction quality must be high.”</em> (Ignoring that poorly-built buildings collapsed and were removed from the sample.)</p>
+<p><strong>Bayesian diagnosis:</strong> Two independent causes \(A\) and \(B\) both influence a common effect \(S\) (a <em>collider</em>). When we condition on \(S\)—by observing only cases where \(S\) takes a particular value—we inadvertently create a spurious statistical dependency between \(A\) and \(B\), even though they are marginally independent.</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 190" width="300">
+  <defs>
+    <marker id="f3-arr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444" />
+    </marker>
+  </defs>
+  <line x1="66" y1="55" x2="134" y2="113" stroke="#444" stroke-width="2" marker-end="url(#f3-arr)" />
+  <line x1="234" y1="55" x2="166" y2="113" stroke="#444" stroke-width="2" marker-end="url(#f3-arr)" />
+  <line x1="74" y1="40" x2="226" y2="40" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="5,4" />
+  <text x="150" y="28" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#c0392b">spurious dependency</text>
+  <circle cx="50" cy="40" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="50" y="41" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="250" cy="40" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="250" y="41" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <circle cx="150" cy="130" r="22" fill="#e8e8e8" stroke="#444" stroke-width="2.5" />
+  <text x="150" y="131" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">S</text>
+  <text x="150" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#666">(observed / selected)</text>
+</svg>
+</div>
+
+<p>This is known in statistics as <em>Berkson’s paradox</em>. Formally, \(A \perp B\) marginally, but \(A \not\perp B \mid S\). The joint factors as:</p>
+<p>$$P(A,B,S) = P(S|A,B) P(A) P(B)$$</p>
+<p>and conditioning on \(S\) yields \(P(A,B|S) = \eta  P(S|A,B) P(A) P(B)\), which generally does <em>not</em> factor into \(P(A|S) P(B|S)\). Knowing that \(S\) occurred and that \(A\) did not contribute makes \(B\) more likely as an explanation—hence the spurious correlation.</p>
+<p><strong>Example:</strong> Among admitted university students (\(S\) = admitted), academic talent (\(A\)) and athletic talent (\(B\)) may appear negatively correlated—not because they are, but because admissions selected for at least one.</p>
+<hr>
+<h2 id="ii-directional-fallacies-reversing-the-arrows"><a class="header" href="#ii-directional-fallacies-reversing-the-arrows">II. Directional Fallacies: Reversing the Arrows</a></h2>
+<p>These fallacies arise from confusing the direction of conditional probability—treating \(P(B|A)\) as though it were \(P(A|B)\)—without the corrective machinery of Bayes’ rule.</p>
+<h3 id="affirming-the-consequent--inverting-a-conditional"><a class="header" href="#affirming-the-consequent--inverting-a-conditional">Affirming the Consequent — Inverting a Conditional</a></h3>
+<p><strong>The fallacy in classical form:</strong> <em>“If it rains, the ground is wet. The ground is wet. Therefore, it rained.”</em> The argument treats \(P(\text{Rain}|\text{Wet})\) as equivalent to \(P(\text{Wet}|\text{Rain})\).</p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner’s model has an edge \(A \to B\) with a well-defined forward conditional \(P(B|A)\). They observe \(B\) and want to infer \(A\), but they skip Bayes’ rule and treat the forward conditional as the backward one:</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 300 155" width="300">
+  <defs>
+    <marker id="f4-arr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#2471a3" />
+    </marker>
+    <marker id="f4-arrr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b" />
+    </marker>
+  </defs>
+  <!-- Forward edge -->
+  <line x1="99" y1="55" x2="201" y2="55" stroke="#2471a3" stroke-width="2.5" marker-end="url(#f4-arr)" />
+  <text x="150" y="43" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="13" fill="#2471a3">P(B | A)</text>
+  <!-- Reverse (fallacious) curve -->
+  <path d="M201,70 C201,125 99,125 99,70" stroke="#c0392b" stroke-width="2" fill="none" stroke-dasharray="6,3" marker-end="url(#f4-arrr)" />
+  <text x="150" y="115" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="13" fill="#c0392b">P(A | B) ≠ P(B | A)</text>
+  <!-- Nodes -->
+  <circle cx="75" cy="55" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="75" y="56" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="225" cy="55" r="22" fill="#e8e8e8" stroke="#444" stroke-width="2.5" />
+  <text x="225" y="56" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <text x="225" y="142" text-anchor="middle" font-family="Arial, sans-serif" font-size="10" fill="#666">(B observed)</text>
+</svg>
+</div>
+
+<p>Bayes’ rule provides the correct inversion:</p>
+<p>$$P(A|B) = \frac{P(B|A) P(A)}{P(B)} = \frac{P(B|A) P(A)}{\sum_{a} P(B|A=a) P(A=a)}.$$</p>
+<p>The key insight is that \(P(A|B)\) depends critically on the <em>prior</em> \(P(A)\) and on all other possible causes of \(B\) (captured in the denominator). The fallacy of affirming the consequent amounts to setting \(P(A) = 1\) and ignoring alternative explanations, which is equivalent to asserting that \(A\) is the <em>only</em> possible cause of \(B\).</p>
+<h3 id="denying-the-antecedent--neglecting-alternative-parents"><a class="header" href="#denying-the-antecedent--neglecting-alternative-parents">Denying the Antecedent — Neglecting Alternative Parents</a></h3>
+<p><strong>The fallacy in classical form:</strong> <em>“If it rains, the ground is wet. It didn’t rain. Therefore, the ground is not wet.”</em> This ignores that a sprinkler, a burst pipe, or a spill could also wet the ground.</p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner’s model has only a single parent \(A\) for child node \(C\), when in reality \(C\) has multiple parents \(A, B, \dots\) In the true model:</p>
+<p>$$P(C | A, B) \neq P(C | A).$$</p>
+<p>Even when \(A\) is observed to be false (\(A = 0\)), the child \(C\) can still be true if another parent \(B\) is active:</p>
+<p>$$P(C=1 | A=0) = \sum_b P(C=1|A=0, B=b) P(B=b).$$</p>
+<p>This is generally nonzero. The fallacy is a structural error: the reasoner’s graph is <em>missing parent nodes</em>. By leaving out \(B\), the model artificially couples \(C\)’s fate entirely to \(A\), making \(\neg A \Rightarrow \neg C\) seem valid when it is not.</p>
+<hr>
+<h2 id="iii-domain-fallacies-misspecifying-the-variables"><a class="header" href="#iii-domain-fallacies-misspecifying-the-variables">III. Domain Fallacies: Misspecifying the Variables</a></h2>
+<p>These fallacies arise not from wrong edges or wrong distributions, but from defining the random variables themselves incorrectly—truncating their domains, substituting one variable for another, or conflating two distinct quantities under one name.</p>
+<h3 id="the-false-dilemma--truncating-the-sample-space"><a class="header" href="#the-false-dilemma--truncating-the-sample-space">The False Dilemma — Truncating the Sample Space</a></h3>
+<p><strong>The fallacy in classical form:</strong> Presenting only two options when more exist. <em>“You’re either with us or against us.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> A random variable \(X\) in the reasoner’s model has been assigned the domain \(\{a, b\}\) when its true domain is \(\{a, b, c, d, \dots\}\). Since probabilities must sum to one over the domain, the artificial restriction forces</p>
+<p>$$P(X = a) + P(X = b) = 1$$</p>
+<p>which inflates the probabilities of \(a\) and \(b\) at the expense of the missing alternatives.</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 380 140" width="380">
+  <!-- Left: truncated domain -->
+  <circle cx="80" cy="55" r="28" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="80" y="52" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="20" fill="#333">X</text>
+  <text x="80" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#c0392b">{A, B}</text>
+  <text x="80" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#c0392b">Truncated Domain</text>
+  <!-- Divider -->
+  <line x1="190" y1="10" x2="190" y2="130" stroke="#ccc" stroke-width="1" stroke-dasharray="4,3" />
+  <!-- Right: full domain -->
+  <circle cx="300" cy="55" r="28" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="300" y="52" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="20" fill="#333">X</text>
+  <text x="300" y="100" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#2471a3">{A, B, C, D, ...}</text>
+  <text x="300" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2471a3">Full Domain</text>
+</svg>
+</div>
+
+<p>In practice, the false dilemma distorts every conditional in which \(X\) participates. If a downstream node \(Y\) depends on \(X\), then \(P(Y) = \sum_x P(Y|X=x) P(X=x)\) is computed over the wrong support, yielding incorrect marginals for \(Y\) as well. The error propagates through the entire graph.</p>
+<h3 id="the-straw-man--substituting-the-query-variable"><a class="header" href="#the-straw-man--substituting-the-query-variable">The Straw Man — Substituting the Query Variable</a></h3>
+<p><strong>The fallacy in classical form:</strong> Refuting a distorted version of an opponent’s argument rather than the actual argument. <em>“My opponent wants to improve public transit”</em> becomes <em>“My opponent wants to ban cars.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner wishes to evaluate \(P(Q)\) for some query variable \(Q\), but instead evaluates \(P(\tilde{Q})\) for a <em>different</em> variable \(\tilde{Q}\) that is easier to attack. Even if \(\tilde{Q}\) is correlated with \(Q\), they are not the same random variable:</p>
+<p>$$P(\tilde{Q}=\text{false}) \not\Rightarrow P(Q=\text{false}).$$</p>
+<p>This is akin to answering the wrong query on a Bayes net. The computational machinery may be perfectly correct, but it is applied to the wrong node. The resulting inference is valid for \(\tilde{Q}\) and irrelevant for \(Q\).</p>
+<h3 id="equivocation--conflating-distinct-variables"><a class="header" href="#equivocation--conflating-distinct-variables">Equivocation — Conflating Distinct Variables</a></h3>
+<p><strong>The fallacy in classical form:</strong> Using the same word to refer to different concepts within a single argument. <em>“A feather is light. What is light cannot be dark. Therefore, a feather cannot be dark.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner has created a single node in their Bayes net where two nodes should exist. If “light” in the sense of weight is variable \(L_w\) and “light” in the sense of brightness is variable \(L_b\), then the correct model has:</p>
+<p>$$P(L_w) \perp P(L_b)$$</p>
+<p>(assuming they are independent). The equivocator collapses these into one node \(L\), illicitly transferring the evidence or conditional distribution associated with \(L_w\) to \(L_b\). The resulting graph has fewer nodes than reality, and the joint distribution it encodes is wrong.</p>
+<hr>
+<h2 id="iv-parametric-fallacies-miscalibrating-the-distributions"><a class="header" href="#iv-parametric-fallacies-miscalibrating-the-distributions">IV. Parametric Fallacies: Miscalibrating the Distributions</a></h2>
+<p>Even when the graph topology and variable domains are correct, inference fails if the prior distributions or the conditional probability tables are wrong. These fallacies correspond to specific miscalibrations.</p>
+<h3 id="base-rate-neglect--dropping-the-prior"><a class="header" href="#base-rate-neglect--dropping-the-prior">Base Rate Neglect — Dropping the Prior</a></h3>
+<p><strong>The fallacy in classical form:</strong> Ignoring the prevalence of a condition when interpreting the significance of a positive test. <em>“The test is 99% accurate and I tested positive, so I almost certainly have the disease.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> This is the most famous Bayesian fallacy. The reasoner correctly understands the likelihood \(P(\text{Test}^+|\text{Disease})\) but ignores the prior \(P(\text{Disease})\).</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 340 210" width="340">
+  <defs>
+    <marker id="f6-arr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444" />
+    </marker>
+  </defs>
+  <!-- Edge -->
+  <line x1="170" y1="62" x2="170" y2="118" stroke="#444" stroke-width="2" marker-end="url(#f6-arr)" />
+  <!-- Disease node -->
+  <circle cx="170" cy="40" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="170" y="41" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">D</text>
+  <!-- Test node -->
+  <circle cx="170" cy="140" r="22" fill="#e8e8e8" stroke="#444" stroke-width="2.5" />
+  <text x="170" y="141" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">T</text>
+  <!-- Annotations -->
+  <text x="65" y="44" text-anchor="end" font-family="Georgia, serif" font-size="13" fill="#c0392b">P(D) = 0.001</text>
+  <text x="56" y="60" text-anchor="end" font-family="Arial, sans-serif" font-size="10" fill="#c0392b">(often ignored!)</text>
+  <text x="255" y="95" text-anchor="start" font-family="Georgia, serif" font-size="13" fill="#2471a3">P(T⁺|D) = 0.99</text>
+  <text x="255" y="111" text-anchor="start" font-family="Georgia, serif" font-size="13" fill="#2471a3">P(T⁺|¬D) = 0.05</text>
+  <!-- Query -->
+  <text x="170" y="185" text-anchor="middle" font-family="Georgia, serif" font-size="14" fill="#333">P(D | T⁺) = ?</text>
+  <text x="170" y="204" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#666">(observed: T⁺)</text>
+</svg>
+</div>
+
+<p>Bayes’ rule gives:</p>
+<p>$$P(D|T^+) = \frac{P(T^+|D) P(D)}{P(T^+|D) P(D) + P(T^+|\neg D) P(\neg D)} = \frac{0.99 \times 0.001}{0.99 \times 0.001 + 0.05 \times 0.999} \approx 0.019.$$</p>
+<p>Despite the 99% sensitivity, the posterior probability of disease given a positive test is only about 2%—because the disease is rare (\(P(D) = 0.001\)). The base-rate-neglecting reasoner, effectively substituting \(P(D|T^+) \approx P(T^+|D) = 0.99\), is off by a factor of fifty. This is precisely the error of ignoring the prior in the Bayesian update.</p>
+<h3 id="the-gamblers-fallacy--fabricating-dependencies"><a class="header" href="#the-gamblers-fallacy--fabricating-dependencies">The Gambler’s Fallacy — Fabricating Dependencies</a></h3>
+<p><strong>The fallacy in classical form:</strong> Believing that past outcomes of independent events influence future outcomes. <em>“The coin has landed heads five times in a row, so tails is due.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The outcomes \(X_1, X_2, \dots, X_n\) of independent trials are, by definition, root nodes with no edges between them. The correct joint is simply</p>
+<p>$$P(X_1, \dots, X_n) = \prod_i P(X_i).$$</p>
+<p>The gambler’s implicit model adds spurious edges, typically \(X_{i} \to X_{i+1}\), creating a Markov chain where none exists:</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 420 165" width="420">
+  <defs>
+    <marker id="f7-arrr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b" />
+    </marker>
+  </defs>
+  <!-- Top row: Reality (independent) -->
+  <text x="10" y="40" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#2471a3">Reality:</text>
+  <circle cx="100" cy="35" r="20" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="100" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₁</text>
+  <circle cx="180" cy="35" r="20" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="180" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₂</text>
+  <circle cx="260" cy="35" r="20" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="260" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₃</text>
+  <circle cx="340" cy="35" r="20" fill="#fff" stroke="#2471a3" stroke-width="2.5" />
+  <text x="340" y="36" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₄</text>
+  <!-- Bottom row: Fallacy (dependent chain) -->
+  <text x="10" y="130" text-anchor="start" font-family="Arial, sans-serif" font-size="11" fill="#c0392b">Fallacy:</text>
+  <line x1="122" y1="125" x2="158" y2="125" stroke="#c0392b" stroke-width="2" marker-end="url(#f7-arrr)" />
+  <line x1="202" y1="125" x2="238" y2="125" stroke="#c0392b" stroke-width="2" marker-end="url(#f7-arrr)" />
+  <line x1="282" y1="125" x2="318" y2="125" stroke="#c0392b" stroke-width="2" marker-end="url(#f7-arrr)" />
+  <circle cx="100" cy="125" r="20" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="100" y="126" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₁</text>
+  <circle cx="180" cy="125" r="20" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="180" y="126" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₂</text>
+  <circle cx="260" cy="125" r="20" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="260" y="126" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₃</text>
+  <circle cx="340" cy="125" r="20" fill="#fff" stroke="#c0392b" stroke-width="2.5" />
+  <text x="340" y="126" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="14" fill="#333">X₄</text>
+</svg>
+</div>
+
+<p>In the gambler’s model, \(P(X_{i+1}|X_i = \text{heads})\) is biased toward tails (to “balance out”), so the joint becomes \(\prod_i P(X_i|X_{i-1})\) with a compensatory conditional. This model is simply wrong—it adds edges to the Bayes net that do not exist in reality.</p>
+<p>It is worth noting that the <em>inverse</em> error also occurs: treating genuinely dependent events as independent (ignoring edges that do exist). This is the fallacy of <strong>neglecting serial correlation</strong>, common in financial modeling.</p>
+<h3 id="the-conjunction-fallacy--inflating-joint-probabilities"><a class="header" href="#the-conjunction-fallacy--inflating-joint-probabilities">The Conjunction Fallacy — Inflating Joint Probabilities</a></h3>
+<p><strong>The fallacy in classical form:</strong> Judging that the conjunction of two events is more likely than one of the events alone. The classic example due to Tversky and Kahneman: <em>“Linda is a bank teller AND a feminist activist”</em> is judged more likely than <em>“Linda is a bank teller.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> For any two events \(A\) and \(B\), the axioms of probability require</p>
+<p>$$P(A \cap B) \leq P(A).$$</p>
+<p>This is not a property of any particular Bayes net—it is an axiom of the probability calculus itself. The conjunction fallacy occurs when the reasoner’s internal probability assignments violate this axiom, typically because a vivid narrative (the conjunction) is more <em>representative</em> of the available evidence than the less specific single event.</p>
+<p>In Bayes net terms, the reasoner has constructed a model where the joint distribution assigns \(P(A=1, B=1) &gt; P(A=1)\), which is impossible. The “distribution” in their mental model is not a valid probability distribution at all—it fails to normalize correctly. This is a parametric error at the most fundamental level.</p>
+<h3 id="hasty-generalization--undersampled-evidence"><a class="header" href="#hasty-generalization--undersampled-evidence">Hasty Generalization — Undersampled Evidence</a></h3>
+<p><strong>The fallacy in classical form:</strong> Drawing a broad conclusion from too few observations. <em>“I met two rude people from that city, so everyone there must be rude.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> Consider a static Bayes net (a naive Bayes classifier) where a hidden state \(X\) generates observations \(Y_1, Y_2, \dots, Y_n\). The posterior after \(n\) observations is</p>
+<p>$$P(X|Y_1, \dots, Y_n) = \eta  P(X) \prod_{i=1}^{n} P(Y_i|X).$$</p>
+<p>When \(n\) is small, the posterior is dominated by the prior and the few observations. With only \(n = 2\) observations, the likelihood ratio \(\prod P(Y_i|X=x)/P(Y_i|X=\bar{x})\) may strongly favor one hypothesis, but the <em>confidence</em> in this conclusion should be low—the posterior is broad, not sharply peaked.</p>
+<p>The hasty generalizer treats a weakly updated posterior as if it were a delta function: they observe \(Y_1, Y_2\) and act as though \(X\) has been determined with certainty. The Bayesian corrective is simple: keep the full posterior distribution and recognize that sparse evidence yields a wide, uncertain belief.</p>
+<hr>
+<h2 id="v-chain-fallacies-compounding-errors-along-inference-paths"><a class="header" href="#v-chain-fallacies-compounding-errors-along-inference-paths">V. Chain Fallacies: Compounding Errors Along Inference Paths</a></h2>
+<h3 id="the-slippery-slope--ignoring-accumulated-uncertainty"><a class="header" href="#the-slippery-slope--ignoring-accumulated-uncertainty">The Slippery Slope — Ignoring Accumulated Uncertainty</a></h3>
+<p><strong>The fallacy in classical form:</strong> Arguing that a single step will inevitably lead, through a chain of consequences, to an extreme outcome. <em>“If we allow A, then B will follow, then C, then D, and eventually catastrophe E.”</em></p>
+<p><strong>Bayesian diagnosis:</strong> The reasoner’s implicit model is a Markov chain \(A \to B \to C \to D \to E\), where each conditional \(P(X_{k+1}|X_k)\) has some probability \(p_k &lt; 1\) of the “bad” transition occurring. The probability of the final catastrophe is the <em>product</em> of these conditionals:</p>
+<p>$$P(E|A) = \sum_{B,C,D} P(E|D) P(D|C) P(C|B) P(B|A).$$</p>
+<div style="text-align:center; margin: 1.5em 0;">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 520 165" width="520">
+  <defs>
+    <marker id="f8-arr" markerwidth="8" markerheight="6" refx="8" refy="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444" />
+    </marker>
+  </defs>
+  <!-- Uncertainty ellipses (growing) -->
+  <ellipse cx="60" cy="70" rx="28" ry="30" fill="none" stroke="#2471a3" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6" />
+  <ellipse cx="170" cy="70" rx="33" ry="35" fill="none" stroke="#2471a3" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6" />
+  <ellipse cx="280" cy="70" rx="40" ry="42" fill="none" stroke="#2471a3" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.6" />
+  <ellipse cx="390" cy="70" rx="48" ry="50" fill="none" stroke="#2471a3" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5" />
+  <ellipse cx="500" cy="70" rx="57" ry="58" fill="none" stroke="#2471a3" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.4" />
+  <!-- Edges -->
+  <line x1="84" y1="70" x2="147" y2="70" stroke="#444" stroke-width="2" marker-end="url(#f8-arr)" />
+  <line x1="194" y1="70" x2="257" y2="70" stroke="#444" stroke-width="2" marker-end="url(#f8-arr)" />
+  <line x1="304" y1="70" x2="367" y2="70" stroke="#444" stroke-width="2" marker-end="url(#f8-arr)" />
+  <line x1="414" y1="70" x2="477" y2="70" stroke="#444" stroke-width="2" marker-end="url(#f8-arr)" />
+  <!-- Nodes -->
+  <circle cx="60" cy="70" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="60" y="71" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">A</text>
+  <circle cx="170" cy="70" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="170" y="71" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">B</text>
+  <circle cx="280" cy="70" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="280" y="71" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">C</text>
+  <circle cx="390" cy="70" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="390" y="71" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">D</text>
+  <circle cx="500" cy="70" r="22" fill="#fff" stroke="#444" stroke-width="2.5" />
+  <text x="500" y="71" text-anchor="middle" dominant-baseline="central" font-family="Georgia, serif" font-style="italic" font-size="18" fill="#333">E</text>
+  <!-- Label -->
+  <text x="280" y="152" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#2471a3">Uncertainty compounds at each step</text>
+</svg>
+</div>
+
+<p>Even if each individual transition is moderately probable—say \(p_k = 0.7\)—the chain probability drops rapidly:</p>
+<p>$$P(E|A) \leq 0.7^4 = 0.24.$$</p>
+<p>The slippery slope fallacy treats each \(p_k\) as though it were 1.0 (certainty), collapsing the probabilistic chain into a deterministic one. In the language of HMMs from the <a href="../Autonomy/Estimation/Applied_Statistics_for_Stochastic_Processes/Bayesian_Inference.html">Bayesian Inference</a> article, this is equivalent to assuming zero process noise in every state transition—a modeling assumption that grows increasingly unrealistic with each additional link in the chain.</p>
+<p>The dashed ellipses in the diagram represent the growing uncertainty envelope around the chain’s trajectory. By the time we reach \(E\), the distribution is so broad that the “catastrophic” outcome is only one of many—and likely not the most probable.</p>
+<hr>
+<h2 id="conclusion-thinking-in-graphs"><a class="header" href="#conclusion-thinking-in-graphs">Conclusion: Thinking in Graphs</a></h2>
+<p>The unifying thesis of this article is simple: <strong>all reasoning is inference, and all inference has a model</strong>. When that model is implicit—as it always is in everyday human reasoning—its assumptions go unexamined, and errors creep in. The classical logical fallacies are not arbitrary categories of bad thinking. They are a remarkably systematic taxonomy of the ways a probabilistic model can be wrong:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Failure Mode</th><th>What’s Wrong</th><th>Example Fallacies</th></tr>
+</thead>
+<tbody>
+<tr><td>Wrong graph structure</td><td>Missing nodes, extra edges, or cycles</td><td>Circular reasoning, Post hoc, Survivorship bias</td></tr>
+<tr><td>Wrong edge direction</td><td>Confusing \(P(B|A)\) with \(P(A|B)\)</td><td>Affirming the consequent, Denying the antecedent</td></tr>
+<tr><td>Wrong variable domains</td><td>Truncated sample spaces, substituted variables</td><td>False dilemma, Straw man, Equivocation</td></tr>
+<tr><td>Wrong distributions</td><td>Ignored priors, fabricated dependencies</td><td>Base rate neglect, Gambler’s fallacy, Conjunction fallacy</td></tr>
+<tr><td>Wrong chain inference</td><td>Treating uncertain chains as deterministic</td><td>Slippery slope</td></tr>
+</tbody>
+</table>
+</div>
+<p>The Bayesian framework does not merely <em>classify</em> these errors—it <em>quantifies</em> them. For each fallacy, there is a precise mathematical statement of what the reasoner assumed versus what is true, and Bayes’ rule provides the corrective. Learning to recognize these failure modes is, in effect, learning to build better mental models of the world: models with the right variables, the right structure, and honestly calibrated uncertainty.</p>
+<p>As the <a href="../Autonomy/Estimation/Applied_Statistics_for_Stochastic_Processes/Bayesian_Inference.html">Bayesian Inference</a> article demonstrates in the engineering context, these same principles underpin the estimation algorithms that allow autonomous systems to navigate uncertain environments. The parallel is not a metaphor—human reasoning and robotic estimation are both instances of probabilistic inference over graphical models. The difference is that the robot’s model is explicit and auditable. The aspiration of clear thinking is to make our own models equally so.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../Philosophy/Aristotelian_Science.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../Philosophy/Realism_vs_Nominalism.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../Philosophy/Aristotelian_Science.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../Philosophy/Realism_vs_Nominalism.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

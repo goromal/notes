@@ -1,0 +1,249 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Thomas Aquinas on Reason and Revelation - Andrew&#x27;s Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-3d639fc2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d0f23d9a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Andrew&#x27;s Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="thomas-aquinas-on-reason-and-revelation"><a class="header" href="#thomas-aquinas-on-reason-and-revelation">Thomas Aquinas on Reason and Revelation</a></h1>
+<p>The question of reconciling faith with reason and science is one that is relevant to many, including myself. Aquinas offers some early thoughts on addressing this question. Some of his notions are perhaps outdated, but nevertheless serve as one of many decent starting points for organized thought on the issue.</p>
+<hr>
+<p>For much of the Medieval era, the theoretical sciences, as championed anciently by Aristotle, are popularly seen as being either in direct conflict with or extremely subservient to the study of the word of God as it is revealed by canonized scripture. The theoretical sciences entail the pursuit of all truth through reason, and the prevailing Augustinian view is that the only worthwhile use of reason falls within the domain of direct religious application all other intellectual pursuits are deemed superfluous and symptomatic of the lust of the eyes. This viewpoint can be characterized as faith seeking knowledge. St. Thomas Aquinas, who lives at a time when the writings of Aristotle have been revealed once again to western civilization as they are translated into Latin, offers a substantially different view of the pursuit of knowledge. His ideas champion the notion that revelation and the use of reason for the theoretical sciences are equally necessary in Gods plan for mankind. In contrast to the Augustinian model of faith seeking knowledge, Aquinas advocates for knowledge seeking faith. In spite of my finding the occasional lack of nuance in Aquinas conception of the relationship between reason and revelation, I sympathize much more strongly with his view than St. Augustine’s, for it gives equal weight to the words and acts of God in a manner that is comprehensible, while granting fundamental importance to mankind’s chief defining characteristic.</p>
+<p>To justify the comparable significance of both reason and revelation, Aquinas addresses the concerns of those who extol reason and revelation as the supreme source of truth, respectively. This is not surprising, for the believer and the philosopher tend to harbor very different models of the universe. According to Aquinas, the philosopher thinks about creatures according to their proper natures, whereas the believer only concerns himself with how those creatures are related to God. Aquinas must bridge the gap between these two models. To do this, he must justify the usefulness of one model to those who espouse the other. He must also prove that the two epistemological models do not pose relative threats to one another, as would be the case in the Augustinian conception of a zero-sum game.</p>
+<p>Aquinas justifies the use of revelation to the philosopher in part by distinguishing between two kinds of theology derived from revelation: positive and negative. Positive theology speaks to scriptural proclamations and demonstrations of what God has done, and these lend themselves to the examination of reason. For example, revelation reveals the nature of mankind, as well as what humanity must do to live in harmony with goodness. These principles can be reflected on by the philosopher, not falling outside the domain of reason. Moreover, the theologian may even turn to reason to find interrelations between divine principles and defend those principles against the accusation of being nonsense. One may ask: if positive theology can be traversed by the tools of reason, then what is the need of approaching such points from a theological point of view? In response to this question, Aquinas claims that diverse ways of knowing give rise to different sciences, appealing to the Aristotelian conception of coexisting domains of knowledge. If the astronomer and the philosopher can both come to the conclusion that the earth is round by different reasonable means, then positive theology can give rise to familiar conclusions with a perspective that still brings much needed insight.</p>
+<p>A similar question may be posed: why should God rely on supernatural means to communicate knowledge which can be obtained by the senses? Aquinas answers this question by envisioning what the world would be like if there were no revelation. If God did not use revelation to reveal reasonable truths about His works, then few would ever come to possess a knowledge of God in this life. This is because most individuals do not pursue knowledge for its own sake, and many lack the resources, mental faculties, or freedom from mortal responsibilities necessary to dedicate time to such a monumental pursuit of knowledge. In addition, given the nature of human reason, which is subject to all manner of biases and false associations, it would be too easy for lies to become intermingled with truth were there no mediating force. It would be too difficult to dispel all the interspersed lies in the minds of the many, especially in the minds of those who are not well-versed in the process of demonstration. To counteract these unfortunate phenomena, Aquinas argues that the certitude which comes from faith is needed as a buttress to support reasons search for the knowledge of God. I agree with this sentiment, though for subtly different reasons. As the rational mind attempts to comprehend and attribute meaning to natural phenomena, it runs up against a large roadblock. The roadblock is the sheer volume of knowledge which can be attained in this life; how is one to know which objects of knowledge are more important to pursue? This problem is exacerbated by the deep separation which I believe exists between what is (that is, what can be observed through the senses) and what ought to be. In other words, I do not think there is any way to justifiably impose direction-giving meaning onto phenomena, using pure reason, without presupposing the existence of a particular narrative through which to view life. Pure demonstration cannot lead one to that which is not observable, including finding a purpose and source of all things in the universe. Thus, faith, inasmuch as it conforms to a coherent narrative about the purpose of creation and all things pertaining to it, acts as a guiding light in the pursuit of knowledge through reason.</p>
+<p>To further justify the value of revelation to the philosopher, Aquinas must give a convincing argument that there can exist revealed truths whose full meaning defies all comprehension. These are truths which cannot be grasped by the senses, which, according to Aquinas, is because the senses are lower than He who created them, and something lower cannot comprehend what is higher unless a bridge is created by what is higher. For justification of this notion, Aquinas offers the premise that men are ordained by God to a purpose which extends beyond anything that can be experienced or thought of in this life. Thus, in order for mankind to be motivated to work toward such a lofty goal, mankind must first learn of the existence of such higher forms of being and knowing. I find nothing logically inconsistent in this argument. However, it is difficult for me to conceive of any fully satisfactory logical bridge between what is actionable (what can be done by man) and what is incomprehensible (the nature of God) that is useful for man’s betterment. For man to be truly motivated, I believe that a more understandable God and gospel is needed no one can wholeheartedly love something of which one has no real conception. Partially addressing this line of reasoning, Aquinas offers the promise that an admittance that there are divine truths beyond human comprehension leads to a fomenting of intellectual humility. Knowing that God comprehends what man cannot, Aquinas argues, will counteract the disposition of many to put their own opinions in the highest regard, thus opening the door to improvement for the soul. I mostly agree with this point, though I also recognize that, historically, forcing reason to take a backseat to revelation in the name of pious humility has sometimes resulted in atrocities of varying degrees. I can only assume that Aquinas presupposes that every word revealed by God, fully comprehensible or not, will only inspire mankind to do good. After all, he claims that even the most imperfect knowledge about the most noble realities brings the greatest perfection of the soul. I cannot personally make such a sweeping statement.</p>
+<p>There are still others who would claim that reason has no place in the face of divine revelation. Even among the strongest critics of reason, it is acknowledged that human beings are naturally seekers of knowledge a point raised anciently by Aristotle. The Augustinian view holds that everything which man does through the natural urges alienates him from God. Aquinas, in contrast, asserts that man has the ability to perform works which gradually become perfected by the grace of God, rather than destroyed. For Aquinas, man’s ability to reason constitutes the works to be perfected, and faith is a gift of perfecting grace. Thus, the natural desire for knowledge is fundamentally tied to the natural desire for perfection. Perfection is defined as attaining the fullest form of what is naturally given. For example, humans do not naturally have wings, so flying is not included in the perfection of humans. The differentiating characteristic of humans is rationality, however, and the mind desires to be developed as a potential for perfection. In essence, man desires to acquire and be shaped by knowledge, just as matter desires to be shaped by form. I find this argument to be compelling, though I don’t see anything barring one from using the same argument to justify the development of any arbitrary characteristic found to be unique to humans, such as the ability to formulate elaborate deceptions. That is, unless one could argue that the development of knowledge simultaneously diminishes ones desire for the development of other, less holy characteristics of the human condition.</p>
+<p>An important idea in Aquinas conception of the relationship between reason and revelation is that reason can never truly oppose what is accepted on faith. One reason is that faith encompasses truths which lie beyond the senses, and reason cannot reach what is beyond the senses. I agree with this point, just as I think that what ought to be (constituting an unobservable ideal) cannot be derived directly from what is. Regarding truths accepted on faith which lie within the realm of the senses, Aquinas claims that the theoretical sciences cannot muster an opposing truth which is, at the same time, constrained to be the only possible conclusion. While this may often be the case, I do not believe that this argument holds for cases in which reason is able to uncover a logical inconsistency among the revealed truths themselves. Science, due to its conjectural nature, is unable to ever make definitive statements of truth. However, science can definitively reject theories which demonstrate internal inconsistencies; this is how progress is made within the sciences as bad explanations which make false predictions are soundly rejected.</p>
+<p>If one is to accept the relative importance and relevance of both reason and revelation, then Aquinas offers a compelling picture of their roles within Gods plan for mankind. For Aquinas, viewing both reason and revelation through Aristotle’s epistemological lens of demonstration, the major difference between reason-based philosophy and revelation-based theology is found in their principles, or starting points. The principles of philosophy are, to a certain extent, knowable through deep reflection as being self-evident. The principles of theology are based in faith, and cannot be learned through experience or pure reflection. By revelation, God is believed to be the first cause, and the movement of everything in the universe can be traced back to His design. The bridge between philosophy and theology is created after one first seeks to learn about the world through the senses, according to the order of knowing. Because mankind naturally desires knowledge, it will never cease searching until it has arrived at the first cause. Direction in the search is given by what has been given by revelation to be examined by reason. There inevitably comes a point when reasoning through the senses ceases to find more truths which can be derived from experience. That is when reason comes to rely on revelation, which knows the cause before the effect and can thus pick up the search for the first cause. It is after the limits of the senses have been exhausted that mankind comes to truly appreciate the truths revealed beyond the realm of experience. For Aquinas, the fullest form of happiness lies in these truths, which can never be fully comprehended in this life.</p>
+<p>In the end, Aquinas says that our appreciation of the knowledge revealed by God gives a rationale for Gods creating the universe. The unchanging God, as the first cause, creates the universe, and His creations are separated from Him through a loss of intelligence and perfection. The perfection of the universe occurs when everything in it reunites with its source. According to Aquinas, it is man’s intellect which allows this union to occur. The intellect allows man to bear an increasing likeness to his source, and man will not stop inquiring until he arrives at the source. Therefore, mankind makes Gods creation worthwhile by its ability to recognize and move closer to God through increasing intelligence. Coming to know God through the application of reason, as guided and extended by the application of revelation, represents the height of human intellect, and the incremental realization of human perfection.</p>
+<p>I agree with Aquinas that exercising faith in the revealed word of God for the purpose of directing and extending the intellect is, overall, extremely beneficial for the human condition. It provides a reliable sense of meaning, and motivates us to be better to each other, most of the time. For this reason, I believe that faith must be accepted alongside the use of reason. Also for this reason, I think that this acceptance of faith is ultimately based in a desire to believe, and not in epistemological certainty, which I believe is impossible to acquire in this life. There will always be alternative descriptions of reality which appeal to propositions beyond the reach of the senses while in this life, and our models of reality always hinge on the validity of the fundamental principles and axioms which we have no way of definitively proving true. Aquinas offers the comforting notion that at least living a life directed by faith in revelation can be seen as consistent with a noble and enlarging purpose for all mankind.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../Philosophy/Realism_vs_Nominalism.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../Random/Random.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../Philosophy/Realism_vs_Nominalism.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../Random/Random.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

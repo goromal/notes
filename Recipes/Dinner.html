@@ -1,0 +1,587 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Dinner - Andrew&#x27;s Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-3d639fc2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-d0f23d9a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Andrew&#x27;s Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="dinner-recipes"><a class="header" href="#dinner-recipes">Dinner Recipes</a></h1>
+<p><a href="https://www.brit.co/beginner-instant-pot-recipes/">45 Beginner Instant Pot Recipes</a></p>
+<h3 id="taco-soup-chili"><a class="header" href="#taco-soup-chili">Taco Soup (Chili)</a></h3>
+<hr>
+<ul>
+<li>1 can of black beans</li>
+<li>1 can of kidney beans</li>
+<li>2 cans of petite diced tomatoes</li>
+<li>1 can of corn</li>
+<li>1 packet of ranch mix</li>
+<li>1 packet of taco mix</li>
+<li>1 pound of ground beef</li>
+</ul>
+<hr>
+<ul>
+<li>In the bottom of a large pot, cook the meat fully.</li>
+<li>Drain all cans except for the tomatoes, and empty all cans in the pot.</li>
+<li>Add up to 1 can of water, for desired consistency.</li>
+<li>Heat everything up, then serve.</li>
+</ul>
+<h3 id="mashed-potatoes-instant-pot"><a class="header" href="#mashed-potatoes-instant-pot">Mashed Potatoes (Instant Pot)</a></h3>
+<hr>
+<ul>
+<li>1 pound of baby yellow, gold, <strong>or</strong> red potatoes (<em>gold preferred</em>)</li>
+<li>\(\frac{1}{2}\) cup of water, <strong>or</strong> vegetable/chicken broth for more flavor</li>
+<li>2 tablespoons of butter</li>
+<li>1-2 cloves of minced garlic (<em>optional</em>)</li>
+<li>\(\frac{1}{4}\) to \(\frac{1}{2}\) teaspoons of salt</li>
+<li>\(\frac{1}{4}\) to \(\frac{1}{2}\) teaspoons of black pepper</li>
+<li>2-4 tablespoons of milk</li>
+<li>fresh parsley (<em>optional</em>)</li>
+</ul>
+<hr>
+<ul>
+<li>Peel the potatoes and cut into \(\approx\) 1-inch uniform chunks.</li>
+<li>Place chunks and the water/broth in the instant pot and cook on HIGH pressure for 5 minutes. Release the pressure valve as soon as the 5 minutes are up.</li>
+<li>Check on the potatoes to make sure they’re soft and easy to mash. If not, then put the lid back on and “keep warm” for 5-10 minutes more.</li>
+<li>With the water still in the pot, use a potato masher or large fork to mash the potatoes halfway to the consistency that you want.</li>
+<li>Add the butter, optional garlic, and salt/pepper.</li>
+<li>Mash the potatoes the rest of the way to their desired consistency.
+<ul>
+<li>Use the milk to thin out the potatoes, if needed.</li>
+</ul>
+</li>
+<li>Serve hot, and garnish with parsley if you want. Leftovers can be stored in the refrigerator for 3-4 days.</li>
+</ul>
+<h3 id="beef-stew-instant-pot"><a class="header" href="#beef-stew-instant-pot">Beef Stew (Instant Pot)</a></h3>
+<hr>
+<ul>
+<li>\(1 \frac{1}{2}\) Pounds of Beef Stew Meat</li>
+<li>1 Tablespoon of Olive Oil</li>
+<li>1 Teaspoon of Salt</li>
+<li>1 Teaspoon of Pepper</li>
+<li>1 Teaspoon of Italian Seasoning</li>
+<li>2 Tablespoons of Worcestershire Sauce</li>
+<li>3 Cloves of Minced Garlic</li>
+<li>1 Large, Chopped Onion</li>
+<li>\(1\times 16\)-oz Bag of Baby Carrots (cut into slices)</li>
+<li>1 Pound of Cubed Potatoes</li>
+<li>\(2 \frac{1}{2}\) Cups of Beef Broth</li>
+<li>\(1\times 10\)-oz Can of Tomato Sauce</li>
+<li>2 Tablespoons of Cornstarch</li>
+<li>2 Tablespoons of Water</li>
+</ul>
+<hr>
+<ul>
+<li>Add the olive oil to the instant pot and turn on the saute function. When the oil starts to sizzle, add the meat and season with the salt, pepper, and Italian seasoning.</li>
+<li>Cook the meat until Browned on all sides.</li>
+<li>Add the beef broth to the instant pot and use a spoon to scrape the brown bits from the bottom of the pan.</li>
+<li>Add the Worcestershire sauce, garlic, onion, carrots, potatoes, and tomato sauce.</li>
+<li>Close the lid and steam valve on the instant pot.</li>
+<li>Cook on <strong>high</strong> pressure for <strong>35 minutes</strong>, then allow the pressure to release naturally for <strong>10 minutes</strong> before doing a quick release.</li>
+<li>Mix together the cornstarch and cold water in a small bowl and stir into the stew <em>while it’s still piping hot</em> until thickened.</li>
+</ul>
+<h3 id="taco-soup"><a class="header" href="#taco-soup">Taco Soup</a></h3>
+<hr>
+<ul>
+<li>1 can black beans</li>
+<li>1 can kidney beans</li>
+<li>2 cans petite diced tomatoes</li>
+<li>1 can corn</li>
+<li>1 packet of ranch mix</li>
+<li>1 packet of taco mix</li>
+<li>1 lb of ground beef</li>
+</ul>
+<hr>
+<ul>
+<li>Cook the beef separately.</li>
+<li>Drain all cans.</li>
+<li>Put everything in a pot. Add 1 can of water if you want a more soup-ey consistency.</li>
+<li>Heat up.</li>
+<li>Add anything you want in it:
+<ul>
+<li>chips</li>
+<li>avocado</li>
+<li>sour cream</li>
+<li>etc.</li>
+</ul>
+</li>
+</ul>
+<h3 id="barbecue-chicken-pizza-bagels"><a class="header" href="#barbecue-chicken-pizza-bagels">Barbecue Chicken Pizza Bagels</a></h3>
+<hr>
+<ul>
+<li>Plain white bagels, sliced</li>
+<li>1 Chicken breast</li>
+<li>BBQ sauce (like Sweet Baby Ray’s)</li>
+<li>Lots of grated mozzarella</li>
+<li>Diced red onion</li>
+</ul>
+<hr>
+<ul>
+<li>Cook, then cube the chicken</li>
+<li>Preheat oven to 425\(^\circ\)</li>
+<li>Layer on each bagel slice in following order, starting from the bottom:
+<ul>
+<li>Chicken</li>
+<li>BBQ sauce</li>
+<li>Mozzarella</li>
+<li>Onion</li>
+</ul>
+</li>
+<li>Bake in oven for \(\approx\) 10-15 minutes, until cheese is melted.</li>
+</ul>
+<h3 id="buffalo-dip"><a class="header" href="#buffalo-dip">Buffalo Dip</a></h3>
+<hr>
+<ul>
+<li>\(\frac{3}{4}\) cup of Frank buffalo hot sauce</li>
+<li>1 cup of ranch dressing</li>
+<li>16-oz of softened cream cheese</li>
+<li>2 cans of canned chicken (drained)</li>
+<li>2 cups of shredded cheddar cheese</li>
+</ul>
+<hr>
+<ul>
+<li>Preheat oven to 350\(^\circ\)</li>
+<li>Drain chicken and mix with hot sauce</li>
+<li>In a separate bowl, mix the ranch and cream cheese</li>
+<li>Mix everything together</li>
+<li>Grease the bottom of a small, square pan.</li>
+<li>Pour mixture into pan, then sprinkle cheddar cheese on top</li>
+<li>Bake for 25 minutes.</li>
+</ul>
+<h3 id="white-chicken-chili-crockpot"><a class="header" href="#white-chicken-chili-crockpot">White Chicken Chili (Crockpot)</a></h3>
+<p><em>Single recipe serves 5+.</em></p>
+<hr>
+<ul>
+<li>2 frozen (or fresh) boneless chicken breasts</li>
+<li>1 can of corn</li>
+<li>1 can of black beans</li>
+<li>\(1\times 10\)-oz can of “original” or “mild” Rotel tomatoes</li>
+<li>1 package of Hidden Valley ranch dressing mix (1-oz size)</li>
+<li>1 teaspoon of cumin</li>
+<li>1 teaspoon of chili powder</li>
+<li>1 teaspoon of onion powder</li>
+<li>\(1\times 8\)-oz block of cream cheese</li>
+</ul>
+<hr>
+<ul>
+<li>Get out your crockpot</li>
+<li>Place the chicken at the bottom</li>
+<li>Mix in the corn (undrained), black beans (drained), tomatoes, and mix/powders</li>
+<li>Place cream cheese on top</li>
+<li>Cook on <em>low</em> for 4 hours, but 3 hours in, remove the chicken to break it up before placing it back in and mixing up the cream cheese</li>
+<li>Serve over rice or with tortilla chips!</li>
+</ul>
+<h3 id="white-chicken-chili-instant-pot"><a class="header" href="#white-chicken-chili-instant-pot">White Chicken Chili (Instant Pot)</a></h3>
+<p><em>Serves 8 people. 30 min prep + 20 min cook.</em></p>
+<hr>
+<ul>
+<li>2 large <em>thawed</em> chicken breasts</li>
+<li>1 can of corn</li>
+<li>1 can of black beans</li>
+<li>\(1\times 10\)-oz can of “original” or “mild” Rotel tomatoes</li>
+<li>1 package of Hidden Valley ranch dressing mix (1-oz size)</li>
+<li>1 teaspoon of cumin</li>
+<li>1 teaspoon of chili powder</li>
+<li>1 teaspoon of onion powder</li>
+<li>\(1\times 8\)-oz block of cream cheese</li>
+<li>\(\frac{1}{2}\) cup of chicken broth or stock</li>
+</ul>
+<hr>
+<ul>
+<li>Place ingredients in the instant pot bowl in this order:
+<ul>
+<li>chicken</li>
+<li>beans</li>
+<li>corn</li>
+<li>tomatoes</li>
+<li>broth</li>
+</ul>
+</li>
+<li>Add the spices and powders.</li>
+<li>Stir everything together; make sure some juice gets underneath the chicken to prevent scorching.</li>
+<li>Slice the cream cheese into six large pieces and place over the top.</li>
+<li>Cook on <strong>high pressure</strong> for <strong>20 minutes</strong>.</li>
+<li><strong>Depressurize</strong> for <strong>10</strong> minutes, <em>then</em> turn the valve to the <strong>venting</strong> position.</li>
+<li>Remove and shred the chicken breasts, then return them to the pot and stir everything together, melting the cream cheese.</li>
+<li>Serve over rice or with tortilla chips!</li>
+</ul>
+<h3 id="creamy-macaroni-and-cheese"><a class="header" href="#creamy-macaroni-and-cheese">Creamy Macaroni and Cheese</a></h3>
+<p><em>Makes 6 servings. Prep 20 min., cook 15 min., bake 20 min.</em></p>
+<hr>
+<ul>
+<li>1 (8-oz) package of elbow macaroni</li>
+<li>\(\frac{1}{4}\) cup of butter or margarine</li>
+<li>\(\frac{1}{4}\) cup of all-purpose flour</li>
+<li>\(\frac{1}{4}\) teaspoon of salt</li>
+<li>\(\frac{1}{4}\) teaspoon of ground black pepper</li>
+<li>\(\frac{1}{8}\) teaspoon of ground red pepper</li>
+<li>\(\frac{1}{8}\) teaspoon of granulated garlic</li>
+<li>1 cup of half-and-half</li>
+<li>1 cup of milk</li>
+<li>\(\frac{1}{2}\) (10-oz) block of extra-sharp Cheddar cheese, <em>shredded</em></li>
+<li>1 (10-oz) block of sharp Cheddar cheese, <em>shredded and divided</em></li>
+</ul>
+<hr>
+<ul>
+<li>Prepare pasta according to package directions; drain and set aside</li>
+<li>Preheat oven to 375\(^\circ\)</li>
+<li>Melt butter in a large skillet over medium-high heat. Gradually whisk in flour until smooth; cook, whisking constantly, 2 minutes. Stir in salt and next 3 ingredients. Gradually whisk in half-and-half and milk; cook, whisking constantly, 8-10 minutes or until thickened.</li>
+<li>Stir in extra-sharp cheese and <em>half</em> of sharp cheese until smooth. Remove from heat.</li>
+<li>Combine pasta and cheese mixture and pour into 6 lightly greased (6-oz) ramekins <em>or</em> 1 (8 in\(^2\)) baking dish. Sprinkle evenly with remaining sharp Cheddar cheese.</li>
+<li>Bake for 20 minutes. Optionally add 15 minutes for a crusty top.</li>
+</ul>
+<h3 id="pasta-bolognese"><a class="header" href="#pasta-bolognese">Pasta Bolognese</a></h3>
+<p><em>4 servings</em>.</p>
+<hr>
+<ul>
+<li>2 tablespoons of butter</li>
+<li>\(\frac{1}{4}\) pound of sliced bacon, cut crosswise into \(\frac{1}{4}\)-inch strips</li>
+<li>1 onion, finely chopped</li>
+<li>1 pound of ground beef</li>
+<li>1 cup of canned low-sodium beef or chicken broth</li>
+<li>\(\frac{1}{2}\) cup of dry white wine (or apple cider vinegar)</li>
+<li>2 tablespoons of tomato paste</li>
+<li>\(\frac{1}{2}\) teaspoon of dried oregano</li>
+<li>\(\frac{3}{4}\) teaspoon of salt</li>
+<li>\(\frac{1}{4}\) teaspoon of fresh-ground black pepper</li>
+<li>\(\frac{1}{2}\) cup of heavy cream</li>
+<li>1 pound of spaghetti</li>
+<li>2 tablespoons of chopped fresh parsley (optional)</li>
+</ul>
+<hr>
+<ul>
+<li>In a large frying pan, heat butter and bacon over moderately low heat, until bacon renders some of its fat (\(&gt;3\) minutes)</li>
+<li>Add onion and stir occasionally until starting to soften (\(&gt;3\) minutes)</li>
+<li>Stir in ground beef and cook until meat no longer pink (\(\approx 2\) minutes)</li>
+<li>Add broth, wine, tomato paste, oregano, salt, pepper</li>
+<li>Simmer on very low heat, stirring occasionally, until sauce thickens (\(\approx 1\) hour)</li>
+<li>When ready to serve, stir in cream and remove from heat</li>
+</ul>
+<hr>
+<ul>
+<li>In large pot of boiling, salted water, cook spaghetti until just done (\(\approx 12\) minutes)</li>
+<li>Drain and toss with sauce and parsley</li>
+</ul>
+<h3 id="super-simple-salmon"><a class="header" href="#super-simple-salmon">Super Simple Salmon</a></h3>
+<hr>
+<ul>
+<li>1 tablespoon of garlic powder</li>
+<li>1 tablespoon of dried basil leaves</li>
+<li>\(\frac{1}{2}\) teaspoon of table salt</li>
+<li>\(4\times 6\)-oz salmon</li>
+<li>2 tablespoons of salted butter</li>
+<li>4 raw lemon wedges</li>
+</ul>
+<hr>
+<ul>
+<li>Stir garlic powder, basil, and salt in a small bowl</li>
+<li>Rub the powder mix in equal amounts onto the salmon fillets</li>
+<li>Melt butter in skillet over medium heat</li>
+<li>Cook the salmon in the butter until browned and flaky (about <em>5 minutes</em> per side)</li>
+<li>Serve each salmon piece with a lemon wedge</li>
+</ul>
+<h3 id="cuban-black-beans"><a class="header" href="#cuban-black-beans">Cuban Black Beans</a></h3>
+<hr>
+<ul>
+<li>Avocado oil (enough to cover the bottom of a frying pan in a thin layer</li>
+<li>\(\frac{1}{2}\) tablespoon of minced garlic</li>
+<li>2 Bay leaves</li>
+<li>1 can of black beans</li>
+<li>salt</li>
+<li>black pepper</li>
+<li>cumin</li>
+<li>\(1\frac{1}{2}\) cap-fulls of white vinegar</li>
+</ul>
+<hr>
+<ul>
+<li>Heat up the oil in a frying pan on medium heat for 2-3 minutes</li>
+<li>Add a minced garlic and two bay leaves to the oil and stir until fragrant</li>
+<li>Empty half of the liquid from the can of black beans, then poor what’s left in the can (beans and remaining liquid) into the pan</li>
+<li>Sprinkle on the salt, pepper, and cumin, then stir</li>
+<li>Add vinegar and stir</li>
+<li>Let simmering for another 2-3 minutes. It will start bubbling when done</li>
+<li>Remove from heat and serve. You’ll want to remove the bay leaves.</li>
+</ul>
+<h3 id="filet-mignon"><a class="header" href="#filet-mignon">Filet Mignon</a></h3>
+<hr>
+<p>For <em>one</em> piece of meat:</p>
+<ul>
+<li>\(1\times 6\)-oz filet mignon</li>
+<li>coarse salt to taste</li>
+<li>freshly ground black pepper to taste</li>
+<li>1 tablespoon of grapeseed oil\(^*\)</li>
+<li>2 tablespoons of unsalted butter</li>
+<li>2 sprigs of fresh rosemary</li>
+<li>1 clove of garlic</li>
+</ul>
+<p>\(^*\)You can substitute in another high-heat, neutral oil of choice.</p>
+<hr>
+<ul>
+<li>On a cutting board, pat the filet dry with paper towels and let sit at room temperature for 20-30 minutes</li>
+<li>Preheat oven to 450\(^\circ\)</li>
+<li>Generously season all sides of the filet with salt and pepper</li>
+<li>Heat a medium, oven-safe stainless steel or cast iron skillet over high heat for 5 minutes and add the oil</li>
+<li>Once the oil begins to smoke, add the filet to the pan. Cook without moving for 2–3 minutes, until a crust has formed</li>
+<li>Use tongs to flip the steak over, then add the butter, rosemary, and garlic to the pan</li>
+<li>Tilt the pan and spoon the butter continuously over the steak for 2-3 minutes</li>
+<li>Transfer the pan to the oven for <em>7 minutes</em> for a <em>medium rare</em> steak</li>
+<li>Transfer the steak to a cutting board and let rest for at least 10 minutes before slicing</li>
+</ul>
+<h3 id="fish-tacos"><a class="header" href="#fish-tacos">Fish Tacos</a></h3>
+<hr>
+<ul>
+<li>1 pound of lean white fish fillets (like tilapia)</li>
+<li>Salt</li>
+<li>Black pepper</li>
+<li>Lime juice</li>
+<li>2 tablespoons of vegetable or canola oil</li>
+<li>1 clove of minced garlic</li>
+<li>1 \(\frac{1}{2}\) teaspoons of chili powder</li>
+<li>1 \(\frac{1}{2}\) teaspoons of ground cumin</li>
+<li>\(\frac{1}{2}\) teaspoon of paprika</li>
+<li>Flour tortillas</li>
+<li>\(\frac{1}{2}\) cup of sour cream</li>
+<li>\(\frac{1}{3}\) cup of mayonnaise</li>
+<li>\(\frac{1}{2}\) teaspoon of garlic powder</li>
+<li>1 teaspoon of buffalo sauce</li>
+<li>shredded cheese</li>
+<li>shredded lettuce</li>
+<li>avocado</li>
+</ul>
+<hr>
+<ul>
+<li>Season the fish with a little salt and pepper on both sides</li>
+<li>In a mixing bowl, whisk together the oil, some lime juice, garlic, chili powder, cumin (1 teaspoon), and paprika</li>
+<li>Place fish and mixed marinade in a large ziplock bag, seal, and let sit in the fridge for 20-30 minutes</li>
+<li>Meanwhile, make the sauce with the sour cream, mayonnaise, some lime juice, garlic powder, cumin (1/2 teaspoon), salt (1/4 teaspoon), and buffalo sauce. Mix well and place in the fridge.</li>
+<li>Preheat grill to medium-high heat. Grill fish filets for about 3-4 minutes on each side, flipping only once.</li>
+<li>Warm up tortillas, gather everything together, and enjoy!</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../Recipes/Dessert.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../Recipes/Quick_Stats.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../Recipes/Dessert.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../Recipes/Quick_Stats.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

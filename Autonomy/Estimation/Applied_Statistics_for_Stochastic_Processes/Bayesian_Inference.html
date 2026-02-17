@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Bayesian Inference - Andrew&#x27;s Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-3d639fc2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-d0f23d9a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Andrew&#x27;s Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="bayesian-inference"><a class="header" href="#bayesian-inference">Bayesian Inference</a></h1>
+<p><em>Fundamental theory of recovering state information from noisy data.</em></p>
+<h2 id="bayesian-networks-and-their-joint-distributions"><a class="header" href="#bayesian-networks-and-their-joint-distributions">Bayesian Networks and Their Joint Distributions</a></h2>
+<p>Inference is the mechanism by which observations are translated into useful data, and probabilistic inference is necessary to deal with uncertainty in both your sources of information and in your models. <strong>Bayes nets</strong> provide a way to visualize and think about arbitrary inference models. They represent these relationships with acyclic graphs (since it doesn’t make sense to have a circular inference relationship) like the one below:</p>
+<img src="../../../img/estimation/pdf_alphabet.svg" width="300" style="display: block; margin-left: auto; margin-right: auto;">
+<p>where \(A\), \(B\), \(C\), \(D\), \(E\), \(F\), and \(G\) are all random variables (not just Gaussian, but arbitrary distributions) whose relationships are dictated by the edges in the graph. For example, an edge connecting \(A\) to \(D\) indicates an inference/generative/measurement model for \(D\) given an observation of \(A\). Take a second to think a little bit more about this relationship. There should be a function \(h(a\in A)\) that defines the \(D\) distribution as a function of the \(A\) distribution. So once \(A\) (and \(B\)) have been observed or input as priors, then we can calculate what \(D\) looks like as a distribution. <em>But there’s another possibility</em>. Say we suddenly got a direct observation of \(D\) and wanted to use that to infer about what \(A\) should look like, we could do so using Bayes’ rule:</p>
+<p>$$P(A|D)=\frac{P(D|A)P(A)}{P(D)}=\eta P(D|A)P(A).$$</p>
+<p>In the formula above, \(P(A|D)\) can be thought of as a posterior distribution for \(A\) (a refined version of the prior belief, \(P(A)\)) given the conditional encoded by \(h(a\in A)\) in the \(D\) node, which is formally expressed as \(P(D|A)\). This means that we can “reverse” the arrow in a sense to refine our knowledge of \(A\) given \(D\). It’s actually a little more complicated since \(B\) also feeds into \(D\), but we’re ignoring that for clarity. So in a Bayes net, the belief of a parent node both influences the shape of its child node‘s belief according to a measurement model and also can be refined by observations made on the child node via Bayes’ rule (also thanks to the measurement model). It’s very important to understand this concept for probabilistic intuition. That being said, it’s actually possible to get by without that intuition since the process for solving a query given observations on leaf nodes will essentially have Bayes’ rule baked into it. More on that later.</p>
+<p>In aggregate, the entire net encodes the <em>joint</em> distribution of all of its random variables, \(P(A,B,C,D,E,F,G)\), which assigns a probability value to every possible permutation of the variables.</p>
+<p>The shape of the Bayes net helps us calculate its joint distribution, but first we need to understand some fundamental principles:</p>
+<hr>
+<ul>
+<li><strong>(Conditional) Independence:</strong> If \(A\) and \(B\) are independent, then their joint is just \(P(A,B)=P(A)P(B)\). Otherwise, it is given by \(P(A,B)=P(A|B)P(B)=P(B|A)P(A)\). Furthermore, in a Bayes net, <em>each node is independent of all other nodes, given its parents and children</em>.</li>
+<li><strong>Chain Rule:</strong> The conditional probability rule can be repeatedly applied to break up a large joint distribution: \(P(A,B,C)=P(A|B,C)P(B,C)=P(A|B,C)P(B|C)P(C)\)</li>
+</ul>
+<hr>
+<p>Applying these rules to the net above, we get its joint distribution:</p>
+<p>$$P(A,B,C,D,E,F,G)=P(F|C,D)P(G|D,E)P(D|A,B)P(A)P(B)P(C)P(E)$$</p>
+<h2 id="constraint-satisfaction-problems-and-their-application-to-solving-bayes-net-queries"><a class="header" href="#constraint-satisfaction-problems-and-their-application-to-solving-bayes-net-queries">Constraint Satisfaction Problems and Their Application to Solving Bayes Net Queries</a></h2>
+<p>It’s great that we can derive joint distributions from a Bayes net, but what we usually actually care about is answering <em>queries</em>. That is, deducing the probabilities of arbitrary random variables in the net given some observations. In order to answer queries, we need to think of Bayes net as one giant constraint satisfaction problem (CSP). In essence, we can think of the individual probability distributions as “flexible” constraints, where the flexibility is afforded by uncertainty. Imagine if there were no process/measurement noise on any of the variables in a net. Then there would be ONE rigid/brittle explanation for a set of observations, and the explanation would be found by solving a CSP. In fact, lots of reasoning tasks can be cast as CSP’s, like sets of logical propositions, systems of linear equations, and, of course, Bayes nets for probabilistic inference.</p>
+<p>All CSP’s can be solved with the same methodology, which can be summarized thus:</p>
+<hr>
+<p><strong>Given:</strong> A set of variables, corresponding variable domains, a family of constraints (together consisting a “knowledge base”), and some variable value observations.</p>
+<p><strong>Desired:</strong> The allowable values of the specified variable(s) of interest that were not directly observed.</p>
+<p>Perform the following steps*:</p>
+<ul>
+<li><strong>Determine all sets of variable value combinations that satisfy the entire family of constraints:</strong> This is done with a <em>join</em> operation on all of the constraints to create one giant (self-consistent) constraint, with the extraneous constraints automatically dropped.</li>
+<li><strong>Query to obtain only the value(s) of the variable(s) of interest:</strong> This is done with a series of <em>project</em> operations to eliminate all of the assigned variable values from the giant constraint set.</li>
+</ul>
+<p>*If the structure of the knowledge base allows, you can interweave the join and project steps to avoid doing a massive join operation (or even allow for a recursive query algorithm to appear!).</p>
+<hr>
+<p>This process is like solving a system of equations, but allowing for multiple/many different solutions. It doesn’t get more general than that when it comes to constraints. An algorithmic manifestation of this process is called <em>bucket elimination</em>. So, what do these join and project operations look like when applied to Bayes Nets? This table will explain:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>CSP Terminology</th><th>Bayes Version</th></tr>
+</thead>
+<tbody>
+<tr><td>Variables</td><td>Random variables</td></tr>
+<tr><td>Variable Domains</td><td>All possible (discrete or continuous) values of the random variables</td></tr>
+<tr><td>Join</td><td>Creation of a joint distribution</td></tr>
+<tr><td>Project</td><td>Marginalization of random variables that haven’t been observed and aren’t part of the query set.</td></tr>
+</tbody>
+</table>
+</div>
+<p>You can also use Bayes rule to condition on variables whose values are actually knowable. Luckily, the conditional independence properties of Bayes nets also allows for interweaving the join/project operations via factoring. For example, take the Bayes net from the first section. Say we wanted to do a query to get the joint distribution of a subset of the variables, \(P(A,B,F,G)\). We would first start with the big join operation over all constraints (which are the inference models encoded by the graph) to get the global joint distribution:</p>
+<p>$$P(A,B,C,D,E,F,G)=P(F|C,D)P(G|D,E)P(D|A,B)P(A)P(B)P(C)P(E)$$</p>
+<p>Then we would marginalize out the un-queried variables to get our query answer:</p>
+<p>$$P(A,B,F,G)=P(A)P(B)\sum_D P(D|A,B) \sum_C P(F|C,D)P(C) \sum_E P(G|D,E) P(E)$$</p>
+<p>Notice how we intelligently rearranged the factors of the joint so that the summations from right to left feed into each successive sum.</p>
+<h2 id="dynamic-bayes-nets"><a class="header" href="#dynamic-bayes-nets">Dynamic Bayes Nets</a></h2>
+<p>A special case of the Bayes net is the dynamic Bayes net, which is also referred to as a hidden Markov model (HMM). Here’s an example of an HMM:</p>
+<img src="../../../img/estimation/pdf_dynamic.svg" width="300" style="display: block; margin-left: auto; margin-right: auto;">
+<p>which encodes the joint probability distribution</p>
+<p>$$P(Y_3|X_3)P(X_3|X_2)P(Y_2|X_2)P(X_2|X_1)P(Y_1|X_1)P(X_1|X_0)P(X_0)$$</p>
+<p>Most <em>dynamic</em> (i.e. with a moving robot) robotics estimation problems can be cast into this form, where \(Y_i\) is a sensor observation, \(X_i\) is the robot state, and \(h(x)\) and \(f(x,u)\) are the measurement and dynamic models, respectively. The random variables \(X_i,Y_i\) need not be Gaussian, though they are often assumed to be. \(h(x)\) and \(f(x,u)\) define the mean and variance (and perhaps other properties, in the non-Gaussian case) for the \(Y_i\) and \(X_i\) distributions, which are all thought of as conditional (since they’re all child nodes) with \(i&gt;0\).</p>
+<p>Let’s apply the join/project CSP technique to our HMM to derive some of the most important inference algorithms: <em>filtering</em> and <em>smoothing</em> for hidden (unobserved) state queries/estimation.</p>
+<h3 id="derivation-of-filtering-query-algorithm"><a class="header" href="#derivation-of-filtering-query-algorithm">Derivation of Filtering Query Algorithm</a></h3>
+<p>Let’s apply the filtering paradigm to the HMM above. For the filter calculation, we have available to us observations of \(Y_1\), \(Y_2\), and \(Y_3\), and wish to know the PDF of the most recent hidden state, \(X_3\). This basically means that we want \(P(X_3,Y_1,Y_2,Y_3)\) since it’s proportional to \(P(X_3|Y_1,Y_2,Y_3)\) via the law of independence.</p>
+<p>Once again, step one is to begin with the join operation to get the joint of all constraints (distributions), which we already have:</p>
+<p>$$P(X_i,Y_i)=P(Y_3|X_3)P(X_3|X_2)P(Y_2|X_2)P(X_2|X_1)P(Y_1|X_1)P(X_1|X_0)P(X_0)$$</p>
+<p>The next step is to elminimate all variables that aren’t part of the query ($X_3,Y_1,Y_2,Y_3$) via marginalization:</p>
+<p>$$P(X_3,Y_1,Y_2,Y_3)=P(Y_3|X_3)\sum_{X_2}P(X_3|X_2)P(Y_2|X_2)\sum_{X_1}P(X_2|X_1)P(Y_1|X_1)\sum_{X_0}P(X_1|X_0)P(X_0)$$</p>
+<p>\[ =P(Y_3|X_3)\sum_{X_2}P(X_3|X_2)P(Y_2|X_2)\sum_{X_1}P(X_2|X_1)P(Y_1|X_1)P(X_1) \]</p>
+<p>\[ =P(Y_3|X_3)\sum_{X_2}P(X_3|X_2)P(Y_2|X_2)\sum_{X_1}P(X_2|X_1)P(X_1,Y_1) \]</p>
+<p>\[ =P(Y_3|X_3)\sum_{X_2}P(X_3|X_2)P(Y_2|X_2)P(X_2)P(Y_1) \]</p>
+<p>\[ =P(Y_3|X_3)\sum_{X_2}P(X_3|X_2)P(X_2,Y_1,Y_2) \]</p>
+<p>\[ =P(Y_3|X_3)P(X_3)P(Y_2)P(Y_1) \]</p>
+<p>\[ =P(X_3,Y_1,Y_2,Y_3). \]</p>
+<p>In the expansions above, the inter-variable (in)dependence relationships dictated by the HMM structure determine how individual PDF’s should be multiplied together. The expansions were also done to demonstrate a recursive relationship afforded by the fact that we ordered the summations intelligently.</p>
+<p>The filtering algorithm can thus be summarized with the following recursive relation.</p>
+<hr>
+<p>$$k=0,1,\dots$$</p>
+<p>$$P(X_k|Y_{1:k})=\eta P(X_k,Y_{1:k})=\eta P(Y_k|X_k)\sum_{X_{k-1}}[P(X_k|X_{k-1})P(X_{k-1}|Y_{1:k-1})],$$</p>
+<p>$$P(X_0|Y_0)=P(X_0)~\text{(Prior)}.$$</p>
+<hr>
+<p>When the random variables are continuous, we substitute in integrals for the summations. We’ll also differentiate a prediction and update step for practical application:</p>
+<hr>
+<p>\[ k=0,1,\dots \]</p>
+<p>\[ \text{Prediction Step:} \]</p>
+<p>\[ \hat{x}^{-}_k=\int P(X_k|X_{k-1}=x)\hat{x}^{+}_{k-1}(X_{k-1}=x)dx \]</p>
+<p>\[ x_k=\int P(X_k|X_{k-1})x_{k-1}(X_{k-1})dx \]</p>
+<p>$$\text{Update Step:}$$</p>
+<p>$$\hat{x}^+_k=\eta P(Y_k|X_k)\hat{x}^-_k$$</p>
+<hr>
+<p>where \( \hat{x}_k \triangleq P(X_k|Y_{1:k}) \). <strong>Particle filtering</strong> directly approximates this algorithm using Monte Carlo integration.</p>
+<h3 id="derivation-of-smoothing-query-algorithm"><a class="header" href="#derivation-of-smoothing-query-algorithm">Derivation of Smoothing Query Algorithm</a></h3>
+<p>We will now do a very similar derivation of the smoothing algorithm for HMM’s. This time, we have the same measurements \(Y_1\), \(Y_2\), \(Y_3\) available, but want to deduce \(X_1\), which is in the “past”. Similarly to above, what we want to find is \(P(X_1,Y_1,Y_2,Y_3)\) since it’s proportional to \(P(X_1|Y_1,Y_2,Y_3)\).</p>
+<p>We start off with the same joint distribution as with the filtering derivation. First, notice that we can just apply the filtering algorithm up to \(X_1\) to obtain \(P(X_1,Y_1)\) so that we only have to deal with the terms with \(i&gt;1\). Next, the main difference here is that we are querying for a different hidden state, so we need to marginalize out \(X_2\) and \(X_3\) instead of \(X_1\) and \(X_2\) from the remaining joint terms:</p>
+<p>$$P(Y_3|X_3)P(X_3|X_2)P(Y_2|X_2)P(X_2|X_1)$$</p>
+<p>The marginalization is most easily done with a re-ordering of terms since we’ll need to start at \(i=3\) to end up back at \(X_1\):</p>
+<p>$$\sum_{X_2}P(Y_2|X_2)P(X_2|X_1)\sum_{X_3}P(Y_3|X_3)P(X_3|X_2)=P(X_1,Y_2,Y_3).$$</p>
+<p>This is the term encompassing the contribution of <em>future</em> measurements to the belief on \(X_1\). To get the final answer, multiply a normalization term with \(P(X_1,Y_1)\) and \(P(X_1,Y_2,Y_3)\) (since they’re conditionally independent distributions) to get the full \(P(X_1|Y_1,Y_2,Y_3)\).</p>
+<p>With discrete probability distributions, the recursive algorithm can be summarized as</p>
+<hr>
+<p><strong>Query:</strong> \(X_N~~,~N\geq 1\)</p>
+<p><strong>Observations:</strong> \(Y_1,\cdots,Y_M~~,~M&gt;N\)</p>
+<ul>
+<li>Filter to obtain \(P(X_N|Y_{1:N})\)</li>
+<li>Obtain smoothing term \(P(X_N,Y_{N+1:M})\) through the recursive relationship:</li>
+</ul>
+<p>$$k=M,M-1,\cdots,N+1$$</p>
+<p>$$P(X_{k-1},Y_{k:M})=\eta \sum_{X_k}P(Y_k|X_k)P(X_k|X_{k-1})P(X_k,Y_{k+1:M}),$$</p>
+<p>$$P(X_{M-1},Y_{M:M})=\eta \sum_{X_M}P(Y_M|X_M)P(X_M|X_{M-1}).$$</p>
+<p><strong>Answer:</strong> \(\eta P(X_N,Y_{N+1:M})P(X_N|Y_{1:N})\)</p>
+<hr>
+<h2 id="static-bayes-nets"><a class="header" href="#static-bayes-nets">Static Bayes Nets</a></h2>
+<p>Contrast the dynamic Bayes net with that of a static process (where the “robot” state has no dynamics), pictured below:</p>
+<img src="../../../img/estimation/pdf_static.svg" width="200" style="display: block; margin-left: auto; margin-right: auto;">
+<p>This net is also referred to as a <a href="https://en.wikipedia.org/wiki/Naive_Bayes_classifier">naive Bayes classifier</a>, an important tool in the world of statistics. The joint for this static configuration is given by</p>
+<p>$$P(X_0,Y_1,Y_2,Y_3)=P(Y_3|X_0)P(Y_2|X_0)P(Y_1|X_0)P(X_0)$$</p>
+<p>and querying for \(X_0\) given \(Y_i\) is conceptually simple; you just take the joint distribution as your answer, as there is no need to marginalize with no hidden states. While this is conceptually simple, practically there are different algorithmic approaches to take.</p>
+<p>In robotics, if the random variables are Gaussian and the measurement models \(h_i(x) \sim P(Y_i|X_0)\) are linear, then we can use <em>linear static estimation</em> techniques (like weighted linear least squares) for queries on \(X_0\) given \(Y_i\). With Gaussian variables and nonlinear measurement models, we can use <em>nonlinear static estimation</em> techniques (like weighted nonlinear least squares) for such queries.</p>
+<h2 id="beyond-the-basics"><a class="header" href="#beyond-the-basics">Beyond the Basics</a></h2>
+<p>There are many algorithms used in different domains that leverage (or can be related directly to) Bayesian inference. Here are some that you will see pop up in robotics:</p>
+<ul>
+<li>Sequential Monte Carlo (Particle Filtering)</li>
+<li>The Kalman filter and its variants</li>
+<li>Weighted least squares regression</li>
+<li>Markov Chain Monte Carlo</li>
+</ul>
+<p>A pretty good discussion on Bayesian inference, sequential Monte Carlo, and Markov Chain Monte Carlo can be found in <em>UPCcourse-handouts.pdf</em> from <a href="http://hedibert.org/markov-chain-monte-carlo-and-sequential-monte-carlo-methods-in-dynamic-models-and-stochastic-volatility-models/">this course website</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../Autonomy/Estimation/Applied_Statistics_for_Stochastic_Processes/Applied_Statistics_for_Stochastic_Processes.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../Autonomy/Estimation/Filter-Based_Estimation_Algorithms/Filter-Based_Estimation_Algorithms.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../Autonomy/Estimation/Applied_Statistics_for_Stochastic_Processes/Applied_Statistics_for_Stochastic_Processes.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../Autonomy/Estimation/Filter-Based_Estimation_Algorithms/Filter-Based_Estimation_Algorithms.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>

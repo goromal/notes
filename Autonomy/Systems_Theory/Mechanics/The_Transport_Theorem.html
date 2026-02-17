@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The Transport Theorem - Andrew&#x27;s Notes</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-2459343d.css">
+        <link rel="stylesheet" href="../../../css/chrome-ae938929.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+        <!-- MathJax -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-3d639fc2.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-d0f23d9a.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Andrew&#x27;s Notes</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="the-transport-theorem-and-fictitious-forces"><a class="header" href="#the-transport-theorem-and-fictitious-forces">The Transport Theorem and “Fictitious Forces”</a></h1>
+<h2 id="newtons-laws-and-inertial-reference-frames"><a class="header" href="#newtons-laws-and-inertial-reference-frames">Newton’s Laws and Inertial Reference Frames</a></h2>
+<p><a href="https://en.wikipedia.org/wiki/Newton%27s_laws_of_motion">Newton’s Laws of Motion</a></p>
+<p>Newton’s second law is usually introduced to engineering students (or the curious general public) in the following form:</p>
+<p>$$\sum\mathbf{F}=m\mathbf{a}=m\frac{d\mathbf{v}}{dt},$$</p>
+<p>which is all well and good, except that it could be re-written to more precisely communicate an oft-unspoken precondition implied by Newton’s first law: that the “observer” (or the one noting the net forces and their effects) must be observing from and <em>inertial reference frame.</em> An inertial reference frame is a reference frame that is not accelerating (including through rotation). To make this precondition explicit, we can denote \(W\) (“World”) as the canonical inertial frame for our applications and re-write the second law as</p>
+<p>$$\sum\mathbf{F}^W=m\mathbf{a}^W=m\frac{d\mathbf{v}^W}{dt^W},$$</p>
+<p>where \(\frac{d\square^W}{dt^W}\) is the simple derivative we all know and love, lending itself to e.g., standard numerical differentiation techniques:</p>
+<p>$$\frac{d\square^W}{dt^W}=\lim_{\Delta t\rightarrow 0}\frac{\square(t+\Delta t)-\square(t)}{\Delta t}.$$</p>
+<p>Here we chose to express \(\mathbf{F}^W\) in the inertial frame, but the inertial observer precondition does not actually constrain us to do so. We can denote \(B\) as a reference frame that’s rotating with respect to \(W\) as defined by the arbitrary time-dependent function \(\mathbf{\omega}^{B}_{B/W}(t)\). And we can re-express Newton’s second law for forces expressed in \(B\):</p>
+<p>$$\sum\mathbf{F}^B=m\mathbf{a}^B=m\frac{d\mathbf{v}^B}{dt^W},$$</p>
+<p>but what does \(\frac{d\mathbf{v}^B}{dt^W}\) mean? It’s an inertial observer’s account of the total derivative of an evolving vector expressed in a different, perhaps non-inertial reference frame. It’s certainly not a straightforward derivative, unlike its all-inertial-frame counterpart.</p>
+<h2 id="the-transport-theorem"><a class="header" href="#the-transport-theorem">The Transport Theorem</a></h2>
+<p>The transport theorem specifies how to calculate \(\frac{d\square^B}{dt^W}\) when \(B\) is a rotating reference frame described by \(\mathbf{\omega}^{B}_{B/W}(t)\):</p>
+<blockquote>
+<p>$$\frac{d\square^B}{dt^W}=\frac{d\square^B}{dt^B}+\mathbf{\omega}^{B}_{B/W}\times\square^B.$$</p>
+</blockquote>
+<p>In other words, an inertial observer’s account of the time derivative is equal to a non-inertial observer’s naive account of the time derivative (\(\frac{d\square^B}{dt^B}\)) plus the inertial-frame accelerations that are implied by the rotating reference frame (\(\mathbf{\omega}^{B}_{B/W}\times\square^B\)). The same logic applies to linearly accelerating reference frames, which would add another corrective term to the equation above to account for the acceleration implied by a linearly accelerating reference frame.</p>
+<p>Newton’s second law can thus be fully written out for vectors expressed in rotating reference frames as</p>
+<blockquote>
+<p>$$\sum\mathbf{F}^B=m\mathbf{a}^B=m\frac{d\mathbf{v}^B}{dt^W}=m\left(\frac{d\mathbf{v}^B}{dt^B}+\mathbf{\omega}^{B}_{B/W}\times\mathbf{v}^B\right).$$</p>
+</blockquote>
+<h2 id="fictitious-forces-from-rotating-reference-frames"><a class="header" href="#fictitious-forces-from-rotating-reference-frames">Fictitious Forces from Rotating Reference Frames</a></h2>
+<h3 id="application-of-the-transport-theorem-from-velocity"><a class="header" href="#application-of-the-transport-theorem-from-velocity">Application of the Transport Theorem from Velocity</a></h3>
+<p>The main reason why Newton’s second law has the inertial observer precondition is that non-inertial reference frames introduce <a href="https://en.wikipedia.org/wiki/Rotating_reference_frame#Fictitious_forces">fictitious forces</a> (e.g., centrifugal, Coriolis, and Euler forces) that break Newton’s first law. Luckily, we don’t have to keep track of all of the details of these fictitious forces, because the transport theorem accurately describes all fictitious forces when they arise.</p>
+<p>There is some nuance when using the transport theorem to calculate fictitious forces, however, and it’s important to understand those nuances to avoid getting confused. The simplest example to illustrate this nuance is a point mass expressed in a non-inertial reference frame that’s rotating in a 2D plane. There are two ways to conceptualize this problem. The first way (scenario <strong>A</strong>, left in the figure below) is to picture the point mass being propelled through space while anchored to the origin of the rotating reference frame by a massless string. The second way (scenario <strong>B</strong>, right in the figure below) is to remove the string, though the reference frame is still rotating in the same manner.</p>
+<img src="../../../img/mechanics/fictitious_forces_frames.svg" width="525" style="display: block; margin-left: auto; margin-right: auto;">
+<p>Some relevant observations about both scenarios:</p>
+<ul>
+<li>Scenario <strong>A</strong> has <em>actual forces</em> acting on the point mass (coming from the tension in the string) whereas scenario <strong>B</strong> has no real forces acting anywhere.</li>
+<li>The point mass in scenario <strong>A</strong> looks like it’s being acted on by a force to an inertial observer, whereas the point mass in scenario <strong>B</strong> looks like it’s being acted on by a force only to an observer who lives within the rotating reference frame.</li>
+<li>The actual force in scenario <strong>A</strong> is <em>equal and opposite</em> to the fictitious force in scenario <strong>B</strong>, assuming that the rotational speeds and velocities are equal between the two.</li>
+</ul>
+<p>Observations 1-3 highlight the generalizable differences between “real” and “fictitious” forces. For scenarios <strong>A</strong> and <strong>B</strong>, the real and fictitious forces are the centripetal and centrifugal force, respectively. A centripetal force is a real force; it’s the force the string is imposing on the mass to <em>make</em> it rotate instead of move in a straight line as it would normally do, and this is observable to a non-rotating, inertial observer. The centrifugal force is imaginary, apparent only to an observer who’s rotating with the non-inertial reference frame; an inertial observer can easily see that the point mass is not actually veering unnaturally from its original trajectory. The centripetal and centrifugal forces are equal and opposite, which is why the centrifugal force is often referred to as a “reaction force” in scenario <strong>A</strong>.</p>
+<p>The transport theorem can (and should) be used to understand and calculate both types of forces. Picture a point mass \(m\) no longer confined to the plane, but moving within an arbitrarily rotating reference frame \(B\) in 3D space. We can do all of our analysis with vectors expressed in the \(B\) frame, as those quantities are often more readily measurable.</p>
+<p>Applying scenario <strong>A</strong>-like conditions to this general case, we picture the point mass moving with a scalar constant velocity \(v\) as it is constrained by some non-zero, <em>real</em> net force \(\sum\mathbf{F}^B\) (whatever it may be–another massless string?) to rotate rigidly with the same angular velocity as \(B\). We thus know the following:</p>
+<ul>
+<li>\(\sum\mathbf{F}^B\neq 0\) (what is it?)</li>
+<li>To an observer who lives in \(B\), the point mass’s velocity is not changing over time: \(\frac{d\mathbf{v}^B}{dt^B}=0\)</li>
+</ul>
+<p>which gives, when applying the transport theorem:</p>
+<blockquote>
+<p>$$\sum\mathbf{F}^B=m\left(\mathbf{\omega}_{B/W}^B\times\mathbf{v}^B\right).$$</p>
+</blockquote>
+<p>This gives us a way to calculate centripetal force for the generalized scenario <strong>A</strong>.</p>
+<p>Scenario <strong>B</strong> is often a more common thing to worry about in the generalized case, especially considering that on the planet Earth we are not inertial observers, but rather observers rigidly attached to a rapidly rotating reference frame. Thus, we’re beholden to observe imaginary forces like centrifugal and Coriolis forces–can we calculate the acceleration effects of these fake but convincing-looking forces according to our non-inertial vantage point? For the generalized scenario <strong>B</strong>, the following is true:</p>
+<ul>
+<li>There is no actual force acting: \(\sum\mathbf{F}^B= 0\)</li>
+<li>Because of the above, to an <em>inertial</em> observer, the point mass’s velocity is not changing over time: \(\frac{d\mathbf{v}^B}{dt^W}=0\)</li>
+</ul>
+<p>which gives, when applying the transport theorem and moving some terms to the other side of the equals sign:</p>
+<blockquote>
+<p>$$\frac{d\mathbf{v}^B}{dt^B}=-\mathbf{\omega}_{B/W}^B\times\mathbf{v}^B.$$</p>
+</blockquote>
+<p>This gives us a way to calculate apparent accelerations from fake forces resulting from observing from a rotating reference frame, including the famous centrifugal and Coriolis forces we observe on Earth.</p>
+<p>The transport theorem is a powerful paradigm through which to conceptualize both real and fictitious forces that arise in rotating reference frames such as our own spinning planet.</p>
+<h3 id="caveat-double-application-of-the-transport-theorem"><a class="header" href="#caveat-double-application-of-the-transport-theorem">Caveat: Double Application of the Transport Theorem</a></h3>
+<p>The previous section wraps up all fictitious forces into one concise equation above, but an implicit assumption was made for the sake of simplicity: we took \(\mathbf{v}^B\) for granted–that is, we just thought of it as some time-varying vector quantity, but <em>didn’t dive into any special effects that a rotating reference frame might have on constraining the apparent nature of such a velocity</em>. Thus, we obscured the explicit characterization of the fictitious centrifugal force (which is partially dependent on position, a quantity that’s obscured when you take a velocity as a given, un-characterized term in your equation), focusing instead on Coriolis effects, which are dependent on velocity and rotation alone.</p>
+<p>We can amend this obscurity by not taking \(\mathbf{v}^B\) for granted and instead starting our analysis with the most fundamental quantity, position \(\mathbf{p}^B_{P/B}(t)\). \(P\) is denoted as the body-fixed reference frame of the particle, and \(\mathbf{p}\) gives the position of the origin of \(P\) relative to the origin of the rotating reference frame \(B\). Instead of taking velocity for granted, we will take position for granted as an arbitrarily time-varying quantity. This is okay, because there are no physical states “hidden behind” position, unlike with velocity–position is the most fundamental unit for translational mechanics (same as with attitude for rotational mechanics). This perspective will allow for maximal observability of all fictitious forces resulting from a rotating, non-inertial observer of an arbitrarily-moving particle; we just need to apply the transport theorem twice instead of once in order to get to the acceleration term in Newton’s second law!</p>
+<p>We place ourselves once again in the perspective of a rotating observer and apply the transport theorem a first time, which gets us to a first-order differential equation:</p>
+<p>$$\mathbf{v}^B_{P/B}=\frac{d\mathbf{p}^B_{P/B}}{dt^W}=\frac{d\mathbf{p}^B_{P/B}}{dt^B}+\mathbf{\omega}^B_{B/W}\times\mathbf{p}^B_{P/B}.$$</p>
+<p>Now we apply the transport theorem a second time to obtain acceleration. We need the inertial derivative of velocity, \(\frac{d\mathbf{v}^B_{P/B}}{dt^W}\). Applying the transport theorem to \(\mathbf{v}^B_{P/B}\):</p>
+<p>$$\mathbf{a}^B_{P/B}=\frac{d\mathbf{v}^B_{P/B}}{dt^W}=\frac{d\mathbf{v}^B_{P/B}}{dt^B}+\mathbf{\omega}^B_{B/W}\times\mathbf{v}^B_{P/B}.$$</p>
+<p>We already have an expression for \(\mathbf{v}^B_{P/B}\) from the first application. To expand the \(\frac{d\mathbf{v}^B_{P/B}}{dt^B}\) term, we take the body-frame derivative of our velocity expression (assuming constant \(\mathbf{\omega}^B_{B/W}\) for simplicity):</p>
+<p>$$\frac{d\mathbf{v}^B_{P/B}}{dt^B}=\frac{d^2\mathbf{p}^B_{P/B}}{(dt^B)^2}+\mathbf{\omega}^B_{B/W}\times\frac{d\mathbf{p}^B_{P/B}}{dt^B}.$$</p>
+<p>Substituting both results into the acceleration equation:</p>
+<p>$$\mathbf{a}^B_{P/B}=\frac{d^2\mathbf{p}^B_{P/B}}{(dt^B)^2}+\mathbf{\omega}^B_{B/W}\times\frac{d\mathbf{p}^B_{P/B}}{dt^B}+\mathbf{\omega}^B_{B/W}\times\left(\frac{d\mathbf{p}^B_{P/B}}{dt^B}+\mathbf{\omega}^B_{B/W}\times\mathbf{p}^B_{P/B}\right).$$</p>
+<p>Distributing the cross product and collecting terms:</p>
+<blockquote>
+<p>$$\mathbf{a}^B_{P/B}=\frac{d^2\mathbf{p}^B_{P/B}}{(dt^B)^2}+2\mathbf{\omega}^B_{B/W}\times\frac{d\mathbf{p}^B_{P/B}}{dt^B}+\mathbf{\omega}^B_{B/W}\times\left(\mathbf{\omega}^B_{B/W}\times\mathbf{p}^B_{P/B}\right).$$</p>
+</blockquote>
+<p>This is the full inertial acceleration as seen from the rotating frame, and each term has a clear physical interpretation:</p>
+<ul>
+<li>\(\frac{d^2\mathbf{p}^B_{P/B}}{(dt^B)^2}\) is the acceleration as naively observed by the rotating observer.</li>
+<li>\(2\mathbf{\omega}^B_{B/W}\times\frac{d\mathbf{p}^B_{P/B}}{dt^B}\) is the <strong>Coriolis acceleration</strong>, dependent on the body-frame velocity of the particle and the angular velocity of the rotating frame.</li>
+<li>\(\mathbf{\omega}^B_{B/W}\times\left(\mathbf{\omega}^B_{B/W}\times\mathbf{p}^B_{P/B}\right)\) is the <strong>centrifugal acceleration</strong>, dependent on the position of the particle within the rotating frame.</li>
+</ul>
+<p>For the generalized scenario <strong>B</strong> (no real forces), \(\mathbf{a}^B_{P/B}=0\), so the apparent acceleration observed in the rotating frame is</p>
+<blockquote>
+<p>$$\frac{d^2\mathbf{p}^B_{P/B}}{(dt^B)^2}=-2\mathbf{\omega}^B_{B/W}\times\frac{d\mathbf{p}^B_{P/B}}{dt^B}-\mathbf{\omega}^B_{B/W}\times\left(\mathbf{\omega}^B_{B/W}\times\mathbf{p}^B_{P/B}\right),$$</p>
+</blockquote>
+<p>which decomposes the fictitious acceleration into its Coriolis and centrifugal components explicitly. This is the result that was obscured when we took velocity as a given in the previous section–by starting from position and applying the transport theorem twice, the centrifugal term emerges naturally alongside the Coriolis term.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../Autonomy/Systems_Theory/Mechanics/Mechanics.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../Autonomy/Systems_Theory/Signals/Signals.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../Autonomy/Systems_Theory/Mechanics/Mechanics.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../Autonomy/Systems_Theory/Signals/Signals.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-c2a407aa.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+
+    </div>
+    </body>
+</html>
