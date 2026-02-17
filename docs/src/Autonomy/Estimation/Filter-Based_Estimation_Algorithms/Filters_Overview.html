@@ -207,6 +207,63 @@
             vertical-align: middle;
         }
 
+        .cross-cutting {
+            margin-top: 50px;
+            margin-bottom: 40px;
+        }
+
+        .cross-cutting h2 {
+            color: #2d3748;
+            font-size: 1.6em;
+            margin-bottom: 6px;
+        }
+
+        .cross-cutting .section-subtitle {
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 1em;
+        }
+
+        .principle-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .principle-card .principle-title {
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+
+        .principle-card .principle-body {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .principle-card .principle-body p {
+            margin-bottom: 10px;
+        }
+
+        .principle-card .principle-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .principle-card .principle-examples {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+
+        .principle-card .principle-examples li {
+            color: #4a5568;
+            margin-bottom: 4px;
+            line-height: 1.6;
+        }
+
         .footer-note {
             background: #edf2f7;
             padding: 20px;
@@ -686,6 +743,14 @@
                         <span class="tag tag-iir">IIR</span>
                     </div>
                 </div>
+                <div class="filter-card" data-filter="mahony">
+                    <div class="card-title">Mahony Filter</div>
+                    <div class="card-detail">Nonlinear complementary filter for attitude estimation on SO(3)</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-recursive">Recursive</span>
+                    </div>
+                </div>
                 <div class="filter-card" data-filter="matched">
                     <div class="card-title">Matched Filter</div>
                     <div class="card-detail">Maximizes SNR for detecting a known pulse shape in noise</div>
@@ -738,6 +803,24 @@
                 linear phase, but require many taps for sharp cutoffs. IIR filters are computationally efficient
                 but can be unstable and introduce phase distortion. Understanding this trade-off is the foundation
                 of all digital filter design.
+            </div>
+        </div>
+
+        <div class="cross-cutting">
+            <h2>Cross-Cutting Design Principles</h2>
+            <p class="section-subtitle">Considerations that cut across every tier and influence filter selection regardless of category</p>
+
+            <div class="principle-card">
+                <div class="principle-title">Statistical Consistency</div>
+                <div class="principle-body">
+                    <p>Statistical consistency is about properly representing the statistical distribution of your input &mdash; often in parametric form &mdash; to your downstream consumer. What this really comes down to is your filter's ability to accurately represent probability.</p>
+                    <p>This is a spectrum, not a binary property. At one end, the <strong>Kalman filter</strong> commits fully: it assumes unbiased Gaussian distributions and propagates exact covariances, so its output is only statistically consistent when those assumptions hold. At the other end, the <strong>particle filter</strong> can represent an arbitrarily complex likelihood function in theory, giving it the flexibility to remain consistent under non-Gaussian, multimodal, or heavily skewed distributions. In between, the <strong>complementary filter</strong> works well for the opposite reason entirely: it makes no claims about the statistical model of its input and does not claim to be analytically optimal. It simply cannot be statistically <em>in</em>consistent, because it never promised consistency in the first place.</p>
+                    <ul class="principle-examples">
+                        <li><strong>Kalman filter:</strong> Restricted to unbiased Gaussian probabilities &mdash; statistically consistent only when that assumption is met</li>
+                        <li><strong>Particle filter:</strong> Can define arbitrarily complex likelihood functions, so it can maintain consistency in a much wider range of scenarios</li>
+                        <li><strong>Complementary filter:</strong> Agnostic to the statistical model &mdash; no optimality claims, so no consistency guarantees to violate</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -1438,6 +1521,63 @@
                             <li><strong>Smartphone orientation:</strong> Combining gyro, accel, and magnetometer in AHRS</li>
                             <li><strong>Camera stabilization:</strong> Gimbal controllers fusing rate gyros with horizon references</li>
                             <li><strong>Balancing robots:</strong> Estimating tilt angle from IMU for PID control</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'mahony': {
+                title: 'Mahony Filter',
+                content: `
+                    <p>The Mahony filter is a nonlinear complementary filter that estimates orientation (attitude) directly on the rotation group SO(3). It fuses gyroscope and accelerometer (and optionally magnetometer) data using a proportional-integral correction scheme applied to the rotation kinematics, avoiding the singularities and linearization errors of Euler-angle or quaternion-based EKFs.</p>
+
+                    <p><strong>Core idea:</strong> Integrate gyroscope angular velocity to propagate the attitude estimate, then correct drift using the error between the predicted and measured gravity (and magnetic field) directions.</p>
+
+                    <p><strong>Error metric (vector cross-product):</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{e} = \\hat{\\mathbf{v}} \\times \\mathbf{a}_{\\text{meas}}$$
+                    </div>
+                    <p>where \\(\\hat{\\mathbf{v}}\\) is the estimated gravity direction (from the current attitude) and \\(\\mathbf{a}_{\\text{meas}}\\) is the normalized accelerometer reading. This cross-product is approximately proportional to the attitude error for small errors.</p>
+
+                    <p><strong>Corrected gyroscope rate:</strong></p>
+                    <div class="formula-block">
+                        $$\\boldsymbol{\\omega}_{\\text{corr}} = \\boldsymbol{\\omega}_{\\text{gyro}} + K_p \\mathbf{e} + K_i \\int \\mathbf{e} \\, dt$$
+                    </div>
+
+                    <p><strong>Quaternion integration:</strong></p>
+                    <div class="formula-block">
+                        $$\\dot{\\mathbf{q}} = \\tfrac{1}{2} \\mathbf{q} \\otimes \\begin{bmatrix} 0 \\\\ \\boldsymbol{\\omega}_{\\text{corr}} \\end{bmatrix}$$
+                    </div>
+
+                    <p>The proportional gain <strong>K<sub>p</sub></strong> controls how aggressively the accelerometer corrects drift (analogous to &alpha; in the linear complementary filter). The integral gain <strong>K<sub>i</sub></strong> estimates and removes gyroscope bias online.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Works directly on SO(3) &mdash; no gimbal lock or singularities</li>
+                                <li>Very lightweight: no matrices, no covariance propagation</li>
+                                <li>Built-in gyroscope bias estimation via the integral term</li>
+                                <li>Proven stability guarantees on the rotation manifold</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>No formal uncertainty output (unlike a Kalman filter)</li>
+                                <li>Two gains to tune (K<sub>p</sub>, K<sub>i</sub>) with limited systematic guidance</li>
+                                <li>Accelerometer correction assumes quasi-static conditions (degrades under sustained linear acceleration)</li>
+                                <li>Cannot easily fuse additional sensor types beyond the IMU triad</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Multirotor flight controllers:</strong> Default AHRS in many open-source autopilots (ArduPilot, Betaflight, PX4)</li>
+                            <li><strong>Wearable motion capture:</strong> Real-time limb orientation from body-worn IMUs</li>
+                            <li><strong>Handheld camera stabilization:</strong> Gimbal controllers estimating camera attitude from 6-axis IMU</li>
+                            <li><strong>Underwater vehicles:</strong> Attitude estimation where GPS is unavailable and computational budget is tight</li>
                         </ul>
                     </div>
                 `

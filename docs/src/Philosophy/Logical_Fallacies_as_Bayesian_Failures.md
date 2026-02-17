@@ -42,7 +42,7 @@ Consider the following simple net:
 </svg>
 </div>
 
-This net asserts that \\(A\\) and \\(B\\) are independent root nodes and that \\(C\\) depends on both, giving a joint of \\(P(A,B,C) = P(C|A,B)\,P(A)\,P(B)\\). Three things must be correct for inferences from this model to be sound:
+This net asserts that \\(A\\) and \\(B\\) are independent root nodes and that \\(C\\) depends on both, giving a joint of \\(P(A,B,C) = P(C|A,B) P(A) P(B)\\). Three things must be correct for inferences from this model to be sound:
 
   1. **Structure:** The edges must reflect genuine causal or generative relationships, and no relevant variables may be missing.
   2. **Domains:** Each variable's sample space must include all values it can actually take.
@@ -148,9 +148,9 @@ which is a fixed-point equation, not a generative model. There is no uncondition
 
 In the assumed model, the reasoner computes \\(P(B|A)\\) using a direct conditional \\(P(B|A)\\). In the true model, \\(A\\) and \\(B\\) are *conditionally independent* given the confounder \\(C\\):
 
-$$P(A,B|C) = P(A|C)\,P(B|C).$$
+$$P(A,B|C) = P(A|C) P(B|C).$$
 
-Their marginal correlation \\(P(A,B) = \sum_C P(A|C)\,P(B|C)\,P(C) \neq P(A)\,P(B)\\) is real but not causal. The correlation vanishes once \\(C\\) is observed. This is why controlled experiments---which hold \\(C\\) fixed---are essential for establishing causation.
+Their marginal correlation \\(P(A,B) = \sum_C P(A|C) P(B|C) P(C) \neq P(A) P(B)\\) is real but not causal. The correlation vanishes once \\(C\\) is observed. This is why controlled experiments---which hold \\(C\\) fixed---are essential for establishing causation.
 
 ### Survivorship Bias --- Conditioning on a Collider
 
@@ -181,9 +181,9 @@ Their marginal correlation \\(P(A,B) = \sum_C P(A|C)\,P(B|C)\,P(C) \neq P(A)\,P(
 
 This is known in statistics as *Berkson's paradox*. Formally, \\(A \perp B\\) marginally, but \\(A \not\perp B \mid S\\). The joint factors as:
 
-$$P(A,B,S) = P(S|A,B)\,P(A)\,P(B)$$
+$$P(A,B,S) = P(S|A,B) P(A) P(B)$$
 
-and conditioning on \\(S\\) yields \\(P(A,B|S) = \eta\, P(S|A,B)\,P(A)\,P(B)\\), which generally does *not* factor into \\(P(A|S)\,P(B|S)\\). Knowing that \\(S\\) occurred and that \\(A\\) did not contribute makes \\(B\\) more likely as an explanation---hence the spurious correlation.
+and conditioning on \\(S\\) yields \\(P(A,B|S) = \eta  P(S|A,B) P(A) P(B)\\), which generally does *not* factor into \\(P(A|S) P(B|S)\\). Knowing that \\(S\\) occurred and that \\(A\\) did not contribute makes \\(B\\) more likely as an explanation---hence the spurious correlation.
 
 **Example:** Among admitted university students (\\(S\\) = admitted), academic talent (\\(A\\)) and athletic talent (\\(B\\)) may appear negatively correlated---not because they are, but because admissions selected for at least one.
 
@@ -226,7 +226,7 @@ These fallacies arise from confusing the direction of conditional probability---
 
 Bayes' rule provides the correct inversion:
 
-$$P(A|B) = \frac{P(B|A)\,P(A)}{P(B)} = \frac{P(B|A)\,P(A)}{\sum_{a} P(B|A=a)\,P(A=a)}.$$
+$$P(A|B) = \frac{P(B|A) P(A)}{P(B)} = \frac{P(B|A) P(A)}{\sum_{a} P(B|A=a) P(A=a)}.$$
 
 The key insight is that \\(P(A|B)\\) depends critically on the *prior* \\(P(A)\\) and on all other possible causes of \\(B\\) (captured in the denominator). The fallacy of affirming the consequent amounts to setting \\(P(A) = 1\\) and ignoring alternative explanations, which is equivalent to asserting that \\(A\\) is the *only* possible cause of \\(B\\).
 
@@ -240,7 +240,7 @@ $$P(C | A, B) \neq P(C | A).$$
 
 Even when \\(A\\) is observed to be false (\\(A = 0\\)), the child \\(C\\) can still be true if another parent \\(B\\) is active:
 
-$$P(C=1 | A=0) = \sum_b P(C=1|A=0, B=b)\,P(B=b).$$
+$$P(C=1 | A=0) = \sum_b P(C=1|A=0, B=b) P(B=b).$$
 
 This is generally nonzero. The fallacy is a structural error: the reasoner's graph is *missing parent nodes*. By leaving out \\(B\\), the model artificially couples \\(C\\)'s fate entirely to \\(A\\), making \\(\neg A \Rightarrow \neg C\\) seem valid when it is not.
 
@@ -277,7 +277,7 @@ which inflates the probabilities of \\(a\\) and \\(b\\) at the expense of the mi
 </svg>
 </div>
 
-In practice, the false dilemma distorts every conditional in which \\(X\\) participates. If a downstream node \\(Y\\) depends on \\(X\\), then \\(P(Y) = \sum_x P(Y|X=x)\,P(X=x)\\) is computed over the wrong support, yielding incorrect marginals for \\(Y\\) as well. The error propagates through the entire graph.
+In practice, the false dilemma distorts every conditional in which \\(X\\) participates. If a downstream node \\(Y\\) depends on \\(X\\), then \\(P(Y) = \sum_x P(Y|X=x) P(X=x)\\) is computed over the wrong support, yielding incorrect marginals for \\(Y\\) as well. The error propagates through the entire graph.
 
 ### The Straw Man --- Substituting the Query Variable
 
@@ -339,7 +339,7 @@ Even when the graph topology and variable domains are correct, inference fails i
 
 Bayes' rule gives:
 
-$$P(D|T^+) = \frac{P(T^+|D)\,P(D)}{P(T^+|D)\,P(D) + P(T^+|\neg D)\,P(\neg D)} = \frac{0.99 \times 0.001}{0.99 \times 0.001 + 0.05 \times 0.999} \approx 0.019.$$
+$$P(D|T^+) = \frac{P(T^+|D) P(D)}{P(T^+|D) P(D) + P(T^+|\neg D) P(\neg D)} = \frac{0.99 \times 0.001}{0.99 \times 0.001 + 0.05 \times 0.999} \approx 0.019.$$
 
 Despite the 99% sensitivity, the posterior probability of disease given a positive test is only about 2%---because the disease is rare (\\(P(D) = 0.001\\)). The base-rate-neglecting reasoner, effectively substituting \\(P(D|T^+) \approx P(T^+|D) = 0.99\\), is off by a factor of fifty. This is precisely the error of ignoring the prior in the Bayesian update.
 
@@ -408,7 +408,7 @@ In Bayes net terms, the reasoner has constructed a model where the joint distrib
 
 **Bayesian diagnosis:** Consider a static Bayes net (a naive Bayes classifier) where a hidden state \\(X\\) generates observations \\(Y_1, Y_2, \dots, Y_n\\). The posterior after \\(n\\) observations is
 
-$$P(X|Y_1, \dots, Y_n) = \eta\, P(X) \prod_{i=1}^{n} P(Y_i|X).$$
+$$P(X|Y_1, \dots, Y_n) = \eta  P(X) \prod_{i=1}^{n} P(Y_i|X).$$
 
 When \\(n\\) is small, the posterior is dominated by the prior and the few observations. With only \\(n = 2\\) observations, the likelihood ratio \\(\prod P(Y_i|X=x)/P(Y_i|X=\bar{x})\\) may strongly favor one hypothesis, but the *confidence* in this conclusion should be low---the posterior is broad, not sharply peaked.
 
@@ -424,7 +424,7 @@ The hasty generalizer treats a weakly updated posterior as if it were a delta fu
 
 **Bayesian diagnosis:** The reasoner's implicit model is a Markov chain \\(A \to B \to C \to D \to E\\), where each conditional \\(P(X_{k+1}|X_k)\\) has some probability \\(p_k < 1\\) of the "bad" transition occurring. The probability of the final catastrophe is the *product* of these conditionals:
 
-$$P(E|A) = \sum_{B,C,D} P(E|D)\,P(D|C)\,P(C|B)\,P(B|A).$$
+$$P(E|A) = \sum_{B,C,D} P(E|D) P(D|C) P(C|B) P(B|A).$$
 
 <div style="text-align:center; margin: 1.5em 0;">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 165" width="520">
@@ -474,13 +474,13 @@ The dashed ellipses in the diagram represent the growing uncertainty envelope ar
 
 The unifying thesis of this article is simple: **all reasoning is inference, and all inference has a model**. When that model is implicit---as it always is in everyday human reasoning---its assumptions go unexamined, and errors creep in. The classical logical fallacies are not arbitrary categories of bad thinking. They are a remarkably systematic taxonomy of the ways a probabilistic model can be wrong:
 
-| Failure Mode | What's Wrong | Example Fallacies |
-|---|---|---|
-| Wrong graph structure | Missing nodes, extra edges, or cycles | Circular reasoning, Post hoc, Survivorship bias |
-| Wrong edge direction | Confusing \\(P(B\|A)\\) with \\(P(A\|B)\\) | Affirming the consequent, Denying the antecedent |
-| Wrong variable domains | Truncated sample spaces, substituted variables | False dilemma, Straw man, Equivocation |
-| Wrong distributions | Ignored priors, fabricated dependencies | Base rate neglect, Gambler's fallacy, Conjunction fallacy |
-| Wrong chain inference | Treating uncertain chains as deterministic | Slippery slope |
+| Failure Mode           | What's Wrong                                   | Example Fallacies                                         |
+| ---------------------- | ---------------------------------------------- | --------------------------------------------------------- |
+| Wrong graph structure  | Missing nodes, extra edges, or cycles          | Circular reasoning, Post hoc, Survivorship bias           |
+| Wrong edge direction   | Confusing \\(P(B\|A)\\) with \\(P(A\|B)\\)     | Affirming the consequent, Denying the antecedent          |
+| Wrong variable domains | Truncated sample spaces, substituted variables | False dilemma, Straw man, Equivocation                    |
+| Wrong distributions    | Ignored priors, fabricated dependencies        | Base rate neglect, Gambler's fallacy, Conjunction fallacy |
+| Wrong chain inference  | Treating uncertain chains as deterministic     | Slippery slope                                            |
 
 The Bayesian framework does not merely *classify* these errors---it *quantifies* them. For each fallacy, there is a precise mathematical statement of what the reasoner assumed versus what is true, and Bayes' rule provides the corrective. Learning to recognize these failure modes is, in effect, learning to build better mental models of the world: models with the right variables, the right structure, and honestly calibrated uncertainty.
 
