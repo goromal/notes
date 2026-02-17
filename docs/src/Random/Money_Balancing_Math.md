@@ -69,7 +69,7 @@ It's when \\(n>=4\\) that things start to get a little hairier, since now we ope
 
 A neat visualization of this optimal solution is to picture \\(n\\) water columns with different heights, initially segregated from each other (imagine connecting pipes with negligible cross-sectional area) by closed valves. Once the valves open, the water will auto-distribute itself to make it so that all the column heights regress to the mean. And if the connecting pipes have a small enough cross-section, then the inter-column transfer will be slow enough that the water will seamlessly transfer between columns in an optimal fashion such that no unnecessary water molecules are moved:
 
-<img src="./img/money_bal_col.svg" width="600" style="display: block; margin-left: auto; margin-right: auto;">
+<img src="../img/money_bal_col.svg" width="600" style="display: block; margin-left: auto; margin-right: auto;">
 
 The same effect can be achieved for arbitrary values of \\(n\\) by formulating a [constrained linear program](https://en.wikipedia.org/wiki/Linear_programming) where we minimize the sum of all balancing *a posteriori* transactions and constrain each party sum (i.e., initial amounts spent \\(x_i\\) plus any balancing transactions for each respective party) to be equal to \\(\mu\\). Since computers can solve linear programs in their sleep, here's a Python script that will:
 
