@@ -13,6 +13,8 @@ I've implemented many of these concepts in a [C++ library](https://github.com/go
 
 ## Introduction: Conventions
 
+> 📓 **Companion notebook:** [§1 Conventions overview](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) demonstrates each of the five axes (O, H, F, D, P) with runnable cells; [§6 Named conventions](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) covers the Hamilton / Shuster–JPL / *My Lab* groupings introduced below.
+
 Often ignored or omitted from documentation are the hidden conventions associated with a rotation representation implementation--particularly implementations that allow for converting between different representations. But conventions are very important to get right in order to ensure consistency and correctness, as well as prevent needless hours of debugging. This guide attempts to aggregate most, if not all, possible conventions for the various representations in one place. Here are the types of conventions relevant to rotational representations:
 
   * **Ordering:** Pure semantics--in what order are the components stored in memory and notationally?
@@ -44,6 +46,8 @@ See Table 1 of the [Flipped Quaternion Paper](https://arxiv.org/abs/1801.07478) 
 
 ## Introduction: Notions of Distance
 
+> 📓 **Companion notebook:** distance metrics are demonstrated per representation — [§2 Rotation Matrix](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) (geodesic & chordal) and [§5 Quaternions](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) (sign-aware quaternion distance).
+
 A distance metric \\(\text{dist}(a,b)\\) must satisfy the following properties:
 
   * *non-negativity*: \\(\text{dist}(a,b) \geq 0\\)
@@ -54,6 +58,8 @@ A distance metric \\(\text{dist}(a,b)\\) must satisfy the following properties:
 There are many possible choices depending on analytical/computational convenience, particularly for rotations. A good review of metrics can be found in *R. Hartley, J. Trumpf, Y. Dai, and H. Li. Rotation averaging. IJCV, 103(3):267-305, 2013.*.
 
 ## Rotation Matrix
+
+> 📓 **Companion notebook:** [§2 Rotation Matrix](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) — construction, conversions, action (with 3D visualization), composition, ⊕/⊖ perturbations, distance, derivatives, and the convention unit tests, each cross-checked against `geometry`.
 
 ### Construction Techniques
 
@@ -409,6 +415,8 @@ $$\mathbf{R}\_W^B(t+\Delta t)\approx Exp(-\boldsymbol{\omega}^B\Delta t)\cdot\ma
 
 ## Euler Angles
 
+> 📓 **Companion notebook:** [§3 Euler Angles](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) — successive vs. fixed construction, all D/F/H conversions, a numerical intrinsic↔extrinsic reversal proof, the Euler-rate map, and a gimbal-lock plot.
+
 *Assuming 3-2-1 ordering.*
 ### Construction Techniques
 
@@ -535,6 +543,8 @@ $$\boldsymbol{\Theta}(t+\Delta t)\approx\boldsymbol{\Theta}(t)+\dot{\boldsymbol{
 4. **F and D**: Apply the resulting rotation matrix to a known vector and use the rotation matrix unit tests above to determine function and directionality.
 
 ## Euler/Rodrigues
+
+> 📓 **Companion notebook:** [§4 Rodrigues / Axis-Angle](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) — the exponential/log maps, BCH composition, left/right Jacobians, and manifold integration.
 
 ### Construction Techniques
 
@@ -665,6 +675,8 @@ $$\boldsymbol{\theta}(t+\Delta t)=Log\left(Exp(\boldsymbol{\theta}(t))\cdot Exp(
 4. Verify \\(Exp(\boldsymbol{\theta})\cdot Exp(-\boldsymbol{\theta})=\mathbf{I}\\).
 
 ## Quaternions
+
+> 📓 **Companion notebook:** [§5 Quaternions](https://github.com/goromal/scratchpad/blob/master/transforms/rotations_field_guide.ipynb) — `C_H`/`C_S` conversions, the sandwich action, `[q]_L`/`[q]_R` for all four H×O combinations, ⊕/⊖, kinematics, and the correctness unit tests.
 
 ### Construction Techniques
 
