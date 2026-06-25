@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controllers Overview</title>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .legend {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 45px;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .tier {
+            display: grid;
+            grid-template-columns: 200px 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .tier-label {
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.05em;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .tier-label .tier-subtitle {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-top: 6px;
+            opacity: 0.85;
+        }
+
+        .tier-fundamental .tier-label {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        }
+
+        .tier-classical .tier-label {
+            background: linear-gradient(135deg, #1565c0 0%, #2196f3 100%);
+            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.4);
+        }
+
+        .tier-statespace .tier-label {
+            background: linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.4);
+        }
+
+        .tier-advanced .tier-label {
+            background: linear-gradient(135deg, #bf360c 0%, #e64a19 100%);
+            box-shadow: 0 4px 15px rgba(191, 54, 12, 0.4);
+        }
+
+        .tier-principles .tier-label {
+            background: linear-gradient(135deg, #37474f 0%, #607d8b 100%);
+            box-shadow: 0 4px 15px rgba(55, 71, 79, 0.4);
+        }
+
+        .tier-components {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .ctrl-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .ctrl-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #2563a8;
+        }
+
+        .ctrl-card .card-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .ctrl-card .card-detail {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .ctrl-card .card-tags {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.72em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .tag-linear {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-nonlinear {
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .tag-optimal {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .tag-robust {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .tag-model {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .tag-adaptive {
+            background: #fce4ec;
+            color: #880e4f;
+        }
+
+        .explanation {
+            background: #eff6ff;
+            border-left: 4px solid #2563a8;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .explanation h3 {
+            color: #1e56b0;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .arrow {
+            text-align: center;
+            margin: 0;
+            line-height: 0;
+            padding: 4px 0;
+        }
+
+        .arrow svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .footer-note {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 40px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .footer-note strong {
+            color: #2d3748;
+        }
+
+        .design-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .design-section h2 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .principle-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 24px;
+            line-height: 1.6;
+        }
+
+        .principle-card h3 {
+            color: #1e56b0;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .principle-card p {
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .principle-card .principle-example {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #92400e;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #2d3748;
+        }
+
+        .modal-title {
+            color: #1e56b0;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2563a8;
+            padding-right: 40px;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.8;
+            font-size: 1.02em;
+        }
+
+        .modal-body p {
+            margin-bottom: 14px;
+        }
+
+        .modal-body strong {
+            color: #1e56b0;
+        }
+
+        .modal-body .formula-block {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            text-align: center;
+            font-size: 1.05em;
+            overflow-x: auto;
+        }
+
+        .modal-body .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .modal-body .pros, .modal-body .cons {
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 0.95em;
+        }
+
+        .modal-body .pros {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .modal-body .cons {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .modal-body .pros h4 {
+            color: #166534;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .cons h4 {
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .pros li, .modal-body .cons li {
+            margin-bottom: 4px;
+            margin-left: 16px;
+        }
+
+        .modal-body .examples {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 16px 0;
+        }
+
+        .modal-body .examples h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .examples li {
+            margin-bottom: 4px;
+            margin-left: 16px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 10px;
+            }
+
+            .legend {
+                margin-bottom: 30px;
+            }
+
+            .tier {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .tier-label {
+                padding: 15px;
+                font-size: 1em;
+                min-height: auto;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .tier-label .tier-subtitle {
+                margin-top: 0;
+            }
+
+            .ctrl-card {
+                padding: 12px 15px;
+            }
+
+            .ctrl-card .card-title {
+                font-size: 0.95em;
+            }
+
+            .ctrl-card .card-detail {
+                font-size: 0.85em;
+            }
+
+            .explanation {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                padding: 25px;
+                width: 95%;
+                max-width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-title {
+                font-size: 1.3em;
+            }
+
+            .modal-body {
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .modal-body .pros-cons {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .close {
+                right: 15px;
+                top: 15px;
+                font-size: 28px;
+            }
+        }
+
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .tier {
+                grid-template-columns: 150px 1fr 280px;
+                gap: 20px;
+            }
+
+            .tier-label {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .explanation {
+                font-size: 0.9em;
+            }
+
+            .principles-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .ctrl-card {
+                padding: 15px 18px;
+                margin: 3px 0;
+            }
+
+            .ctrl-card:active {
+                transform: scale(0.98);
+                background: #edf2f7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Controllers</h1>
+        <p class="subtitle">A practical overview of feedback controllers, organized from simple to advanced</p>
+        <p class="legend">Click any controller for detailed formulas, pros &amp; cons, and real-world applications</p>
+
+        <!-- Tier 1: Fundamental / Single-Loop -->
+        <div class="tier tier-fundamental">
+            <div class="tier-label">
+                FUNDAMENTAL
+                <span class="tier-subtitle">Single-Loop</span>
+            </div>
+            <div class="tier-components">
+                <div class="ctrl-card" data-ctrl="bangbang">
+                    <div class="card-title">Bang-Bang (On-Off) Controller</div>
+                    <div class="card-detail">Output switches between two states based on error sign</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="p">
+                    <div class="card-title">Proportional (P) Controller</div>
+                    <div class="card-detail">Output proportional to error &mdash; the simplest linear controller</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="pid">
+                    <div class="card-title">PID Controller</div>
+                    <div class="card-detail">Proportional + Integral + Derivative &mdash; the workhorse of industry</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>Why Start Here</h3>
+                These controllers require no mathematical model of the plant. They operate directly on the error
+                signal (desired minus measured) and produce a corrective output. Despite their simplicity, PID
+                alone accounts for over 90% of industrial control loops. Most engineers never need anything beyond
+                a well-tuned PID.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 2: Classical / Frequency-Domain -->
+        <div class="tier tier-classical">
+            <div class="tier-label">
+                CLASSICAL
+                <span class="tier-subtitle">Frequency-Domain</span>
+            </div>
+            <div class="tier-components">
+                <div class="ctrl-card" data-ctrl="lead">
+                    <div class="card-title">Lead Compensator</div>
+                    <div class="card-detail">Adds phase lead near crossover to increase stability margins</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="lag">
+                    <div class="card-title">Lag Compensator</div>
+                    <div class="card-detail">Boosts low-frequency gain to reduce steady-state error</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="leadlag">
+                    <div class="card-title">Lead-Lag Compensator</div>
+                    <div class="card-detail">Combines lead and lag to simultaneously improve transient and steady-state response</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>The Frequency-Domain Toolkit</h3>
+                Classical compensators are designed using Bode plots, root locus, and Nyquist diagrams. They shape
+                the open-loop transfer function to achieve desired gain margin, phase margin, and bandwidth. This is
+                the language of control engineering textbooks and remains the standard approach when the plant can be
+                adequately described by a transfer function.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 3: State-Space / Model-Based -->
+        <div class="tier tier-statespace">
+            <div class="tier-label">
+                STATE-SPACE
+                <span class="tier-subtitle">Model-Based</span>
+            </div>
+            <div class="tier-components">
+                <div class="ctrl-card" data-ctrl="poleplacement">
+                    <div class="card-title">Full-State Feedback (Pole Placement)</div>
+                    <div class="card-detail">Places closed-loop poles at desired locations via state feedback gain K</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="lqr">
+                    <div class="card-title">Linear Quadratic Regulator (LQR)</div>
+                    <div class="card-detail">Optimal state feedback minimizing a quadratic cost on states and inputs</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                        <span class="tag tag-optimal">Optimal</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="lqg">
+                    <div class="card-title">LQG (LQR + Kalman Filter)</div>
+                    <div class="card-detail">Optimal control with optimal estimation &mdash; the separation principle in action</div>
+                    <div class="card-tags">
+                        <span class="tag tag-linear">Linear</span>
+                        <span class="tag tag-optimal">Optimal</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>The Power of Models</h3>
+                State-space methods use an explicit mathematical model of the plant (matrices A, B, C, D) to
+                compute control laws with guaranteed properties. Pole placement gives direct control over dynamics;
+                LQR finds the best trade-off between performance and effort; LQG handles noisy measurements.
+                These methods require the system to be controllable and (for LQG) observable.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 4: Advanced / Nonlinear & Robust -->
+        <div class="tier tier-advanced">
+            <div class="tier-label">
+                ADVANCED
+                <span class="tier-subtitle">Nonlinear &amp; Robust</span>
+            </div>
+            <div class="tier-components">
+                <div class="ctrl-card" data-ctrl="slidingmode">
+                    <div class="card-title">Sliding Mode Control</div>
+                    <div class="card-detail">Forces state onto a sliding surface &mdash; robust to matched uncertainties</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-robust">Robust</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="mpc">
+                    <div class="card-title">Model Predictive Control (MPC)</div>
+                    <div class="card-detail">Solves an optimization problem at each timestep over a receding horizon</div>
+                    <div class="card-tags">
+                        <span class="tag tag-optimal">Optimal</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="feedbacklin">
+                    <div class="card-title">Feedback Linearization (NDI)</div>
+                    <div class="card-detail">Cancels nonlinearities algebraically to yield a linear closed-loop system</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="indi">
+                    <div class="card-title">Incremental NDI (INDI)</div>
+                    <div class="card-detail">Sensor-based incremental correction &mdash; wraps unmodeled disturbances into measurements</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-robust">Robust</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="geometric">
+                    <div class="card-title">Geometric Control</div>
+                    <div class="card-detail">Control on Lie groups (SO(3), SE(3)) &mdash; avoids singularities of local coordinates</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-model">Model-Based</span>
+                    </div>
+                </div>
+                <div class="ctrl-card" data-ctrl="backstepping">
+                    <div class="card-title">Backstepping</div>
+                    <div class="card-detail">Recursively constructs a Lyapunov function for strict-feedback nonlinear systems</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-adaptive">Adaptive</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>When Is Nonlinear Control Necessary?</h3>
+                Real systems are generally second-order and nonlinear. No matter the approach, a restoring force
+                (P term) and damping (D term) are always required. So when do you need <em>more</em>?
+                <ul style="margin: 8px 0 0 16px; font-size: 0.95em;">
+                    <li>Systems underactuated w.r.t. the desired trajectory, where the gap is too large for simple feedforward/integrator terms (e.g., aggressive quadrotor trajectories)</li>
+                    <li>Complex and/or non-holonomic constraints (friction, contact dynamics, car-like vehicles, cost coupling over a manifold)</li>
+                    <li>Strong unmodeled disturbances</li>
+                    <li>Topology mismatch with the mathematical representation (see Geometric Control)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 5: Design Principles -->
+        <div class="design-section">
+            <h2>General Design Principles</h2>
+
+            <div class="principles-grid">
+                <div class="principle-card">
+                    <h3>The Fundamental Trade-off: Performance vs. Robustness</h3>
+                    <p>Every controller navigates a tension between aggressive performance (fast response, tight tracking)
+                    and robustness (tolerance of modeling errors, disturbances, noise). High gain gives fast response but
+                    amplifies noise and can destabilize uncertain plants. The Bode sensitivity integral (waterbed effect)
+                    makes this precise: reducing sensitivity at one frequency <em>must</em> increase it at another.</p>
+                    <div class="principle-example">
+                        A PID tuned for blazing speed on the nominal plant will often oscillate or go unstable when deployed
+                        on a real system with unmodeled dynamics. Back off the gains.
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <h3>The Internal Model Principle</h3>
+                    <p>To reject a disturbance or track a reference with zero steady-state error, the controller must
+                    contain an internal model of the signal it needs to handle. For step inputs, this means an integrator
+                    in the loop. For sinusoidal disturbances, a resonant pair. This is why the "I" in PID exists, and why
+                    repetitive controllers work for periodic disturbances.</p>
+                    <div class="principle-example">
+                        A P-only controller will always have steady-state error to a step reference. Adding integral
+                        action (PI) includes the model of a step (1/s) and eliminates the error &mdash; guaranteed by
+                        the internal model principle.
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <h3>Separation of Estimation and Control</h3>
+                    <p>For linear Gaussian systems, the optimal controller can be designed in two independent steps:
+                    first design a Kalman filter (optimal estimator), then design an LQR (optimal regulator) as if
+                    full state were available. The combined LQG controller is still optimal. This separation principle
+                    drastically simplifies design &mdash; but it does <em>not</em> hold for nonlinear systems or when
+                    robustness to model uncertainty is required.</p>
+                    <div class="principle-example">
+                        LQG has famously poor robustness guarantees despite being "optimal." This motivated the development
+                        of H-infinity and mu-synthesis methods that jointly consider performance and uncertainty.
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <h3>You Cannot Control What You Cannot Observe</h3>
+                    <p>Controllability and observability are binary prerequisites. If a state is uncontrollable, no
+                    control input can influence it. If unobservable, no sensor measurement reveals it. Before designing
+                    any controller, verify these structural properties from the (A, B) and (A, C) pairs. If the system
+                    fails either test, no amount of cleverness in the control law will compensate.</p>
+                    <div class="principle-example">
+                        A quadrotor has 12 states (position, velocity, orientation, angular rate) but only 4 actuators
+                        (rotor speeds). It is controllable &mdash; but only because the coupling through orientation makes
+                        all 12 states reachable. Lose that coupling (e.g., a planar model with no tilt) and you lose
+                        controllability of lateral position.
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <h3>Constraints Are Not Edge Cases</h3>
+                    <p>Real actuators saturate. Valves have limits, motors have torque bounds, control surfaces have
+                    deflection stops. A controller designed without accounting for constraints will command physically
+                    impossible inputs, causing integrator windup, loss of phase margin, or violent transients when the
+                    constraint releases. MPC handles constraints natively; for PID, anti-windup schemes are essential.</p>
+                    <div class="principle-example">
+                        An altitude-hold PID on a drone commands full throttle during a large descent. The integral term
+                        accumulates enormous positive error. When the drone reaches the setpoint, the wound-up integrator
+                        causes a massive overshoot before it unwinds. Anti-windup clamping prevents this.
+                    </div>
+                </div>
+
+                <div class="principle-card">
+                    <h3>Simplicity as a Design Goal</h3>
+                    <p>The best controller is the simplest one that meets the specification. PID before LQR. LQR before
+                    MPC. Gain scheduling before adaptive control. Complex controllers are harder to tune, harder to verify,
+                    harder to debug when something goes wrong at 2 AM, and more sensitive to implementation details
+                    (discretization, numerical precision, timing jitter). Every layer of complexity must earn its place
+                    by solving a problem that simpler approaches cannot.</p>
+                    <div class="principle-example">
+                        SpaceX's early Falcon 9 landing attempts used PID-based control for the final descent. The
+                        algorithm that lands orbital rockets on drone ships is not exotic &mdash; it is carefully
+                        engineered simplicity with gain scheduling for the changing dynamics.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <strong>Rule of thumb:</strong> Start with PID. Move to frequency-domain compensators when you need
+            precise phase/gain margin shaping. Reach for state-space methods when you have a reliable model and
+            multiple states to coordinate. Use MPC when constraints dominate. Use nonlinear control when the
+            operating envelope is too wide for any single linearization.
+        </div>
+    </div>
+
+    <script>
+        const controllers = {
+            'bangbang': {
+                title: 'Bang-Bang (On-Off) Controller',
+                content: `
+                    <p>The bang-bang controller is the simplest possible feedback controller. It has only two states: fully on or fully off (or equivalently, full positive and full negative). The output switches based on the sign of the error.</p>
+
+                    <div class="formula-block">
+                        $$u(t) = \\begin{cases} u_{\\max} & \\text{if } e(t) > 0 \\\\ u_{\\min} & \\text{if } e(t) < 0 \\end{cases}$$
+                    </div>
+
+                    <p>where \\(e(t) = r(t) - y(t)\\) is the error between the reference and the measured output.</p>
+
+                    <p><strong>Deadband variant:</strong> In practice, a deadband (hysteresis) is added around zero to prevent rapid chattering when the error is small:</p>
+
+                    <div class="formula-block">
+                        $$u(t) = \\begin{cases} u_{\\max} & \\text{if } e(t) > \\delta \\\\ u_{\\min} & \\text{if } e(t) < -\\delta \\\\ u_{\\text{prev}} & \\text{otherwise} \\end{cases}$$
+                    </div>
+
+                    <p>Despite being primitive, bang-bang control is actually <strong>time-optimal</strong> for double-integrator systems (e.g., moving a mass from point A to point B as fast as possible). This is proven by Pontryagin's minimum principle.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Trivially simple to implement (one comparison)</li>
+                                <li>No tuning parameters beyond the switching threshold</li>
+                                <li>Time-optimal for certain system classes</li>
+                                <li>Robust &mdash; works without any plant model</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Persistent oscillation (limit cycle) around the setpoint</li>
+                                <li>High-frequency switching wears out actuators</li>
+                                <li>No steady-state accuracy without hysteresis band</li>
+                                <li>Cannot shape the transient response</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Thermostat:</strong> Home heating turns fully on below setpoint, fully off above</li>
+                            <li><strong>Refrigerator compressor:</strong> On/off cycling to maintain temperature band</li>
+                            <li><strong>Spacecraft thrusters:</strong> Reaction control jets fire at full thrust or not at all</li>
+                            <li><strong>Iron/toaster:</strong> Heating element cycles on and off around target temperature</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'p': {
+                title: 'Proportional (P) Controller',
+                content: `
+                    <p>The proportional controller produces an output directly proportional to the error signal. It is the simplest linear controller and the building block of all classical control design.</p>
+
+                    <div class="formula-block">
+                        $$u(t) = K_p \\, e(t) = K_p \\big( r(t) - y(t) \\big)$$
+                    </div>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$C(s) = K_p$$
+                    </div>
+
+                    <p>The closed-loop transfer function for a plant G(s) becomes:</p>
+                    <div class="formula-block">
+                        $$T(s) = \\frac{K_p \\, G(s)}{1 + K_p \\, G(s)}$$
+                    </div>
+
+                    <p><strong>Steady-state error:</strong> For a unity-feedback system with a step input, the steady-state error is \\(e_{ss} = 1/(1 + K_p G(0))\\). This is never zero &mdash; the P controller always leaves a residual error called <strong>droop</strong> or <strong>offset</strong>. Increasing \\(K_p\\) reduces it but eventually destabilizes the system.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Single tuning parameter (K<sub>p</sub>)</li>
+                                <li>Immediate, predictable response to error</li>
+                                <li>Stable for most plants at moderate gains</li>
+                                <li>No derivative noise amplification or integral windup</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Non-zero steady-state error to step inputs (droop)</li>
+                                <li>Cannot reject constant disturbances</li>
+                                <li>High gain needed for small error &rarr; noise amplification and instability</li>
+                                <li>No anticipation of future error (unlike derivative action)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Cruise control (basic):</strong> Throttle proportional to speed error &mdash; works on flat roads, droops on hills</li>
+                            <li><strong>Volume knob:</strong> Audio gain is a proportional mapping from dial position to amplitude</li>
+                            <li><strong>Manual piloting:</strong> Human pilots effectively apply P control when correcting heading deviations</li>
+                            <li><strong>Liquid level control:</strong> Valve opening proportional to level error in process tanks</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'pid': {
+                title: 'PID Controller',
+                content: `
+                    <p>The PID (Proportional-Integral-Derivative) controller is the most widely used feedback controller in history. It combines three terms: proportional action for present error, integral action for accumulated past error, and derivative action for the predicted future trend of error.</p>
+
+                    <p><strong>Continuous-time (ideal) form:</strong></p>
+                    <div class="formula-block">
+                        $$u(t) = K_p \\left[ e(t) + \\frac{1}{T_i} \\int_0^t e(\\tau)\\,d\\tau + T_d \\frac{de(t)}{dt} \\right]$$
+                    </div>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$C(s) = K_p \\left(1 + \\frac{1}{T_i s} + T_d s\\right) = K_p + \\frac{K_i}{s} + K_d s$$
+                    </div>
+
+                    <p><strong>Discrete-time implementation:</strong></p>
+                    <div class="formula-block">
+                        $$u[k] = K_p \\, e[k] + K_i \\sum_{j=0}^{k} e[j]\\,\\Delta t + K_d \\frac{e[k] - e[k-1]}{\\Delta t}$$
+                    </div>
+
+                    <p><strong>Practical modifications:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li><strong>Derivative filter:</strong> \\(K_d s \\rightarrow K_d s / (1 + \\tau_f s)\\) to avoid amplifying high-frequency noise</li>
+                        <li><strong>Anti-windup:</strong> Clamp or back-calculate the integrator when the output saturates</li>
+                        <li><strong>Setpoint weighting:</strong> Apply P and D to measurement only, not reference, to reduce overshoot on step changes</li>
+                        <li><strong>Derivative kick prevention:</strong> Differentiate measurement instead of error to avoid spikes on setpoint changes</li>
+                    </ul>
+
+                    <p><strong>Tuning methods:</strong> Ziegler-Nichols (ultimate gain), Cohen-Coon, relay autotuning, SIMC (Skogestad), lambda tuning, or direct optimization of the ISE/IAE/ITAE cost.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Zero steady-state error for step inputs (integral action)</li>
+                                <li>Predictive capability reduces overshoot (derivative action)</li>
+                                <li>Three intuitive tuning knobs (K<sub>p</sub>, T<sub>i</sub>, T<sub>d</sub>)</li>
+                                <li>Vast library of tuning rules, autotuners, and practitioner knowledge</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Only three degrees of freedom &mdash; limits achievable loop shapes</li>
+                                <li>Derivative amplifies noise (requires filtering)</li>
+                                <li>Integral windup during saturation (requires anti-windup)</li>
+                                <li>SISO only &mdash; no native way to coordinate multiple inputs/outputs</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Industrial process control:</strong> Temperature, pressure, flow, and level in chemical plants</li>
+                            <li><strong>Drone flight controllers:</strong> Separate PID loops for roll, pitch, yaw rate, and altitude</li>
+                            <li><strong>3D printer motion:</strong> PID for hotend temperature; P for stepper motor position</li>
+                            <li><strong>Automotive:</strong> Cruise control, idle speed control, EGR valve control</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'lead': {
+                title: 'Lead Compensator',
+                content: `
+                    <p>A lead compensator adds positive phase (phase lead) in a targeted frequency range around the crossover frequency. This increases the phase margin of the open-loop system, improving stability and transient response (faster rise time, less overshoot) without significantly changing the low-frequency gain.</p>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$C(s) = K_c \\frac{s + z}{s + p} = K_c \\frac{\\tau s + 1}{\\alpha \\tau s + 1}, \\quad \\alpha < 1$$
+                    </div>
+
+                    <p>where \\(z = 1/\\tau\\) is the zero, \\(p = 1/(\\alpha\\tau)\\) is the pole, and \\(\\alpha = z/p < 1\\). The maximum phase lead occurs at \\(\\omega_m = 1/(\\tau\\sqrt{\\alpha})\\) and equals:</p>
+
+                    <div class="formula-block">
+                        $$\\phi_{\\max} = \\sin^{-1}\\frac{1-\\alpha}{1+\\alpha}$$
+                    </div>
+
+                    <p><strong>Design procedure (Bode):</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li>Determine the additional phase margin needed at the desired crossover frequency</li>
+                        <li>Compute \\(\\alpha\\) from the required \\(\\phi_{\\max}\\) (add 5&ndash;12&deg; safety margin because the gain increase shifts crossover)</li>
+                        <li>Place \\(\\omega_m\\) at the new desired crossover frequency</li>
+                        <li>Compute \\(K_c\\) to set the open-loop gain to 0 dB at the new crossover</li>
+                    </ol>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Increases phase margin (improves relative stability)</li>
+                                <li>Increases bandwidth (faster closed-loop response)</li>
+                                <li>Straightforward Bode-plot design procedure</li>
+                                <li>Easy to implement as a simple first-order transfer function</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Increases high-frequency gain (amplifies sensor noise)</li>
+                                <li>Maximum phase lead per stage is limited (~60&deg; practical max)</li>
+                                <li>Does not improve steady-state error</li>
+                                <li>Requires accurate knowledge of the plant's crossover region</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Servo systems:</strong> Adding phase margin to motor position loops for faster response</li>
+                            <li><strong>Op-amp circuits:</strong> Compensation networks to stabilize feedback amplifiers</li>
+                            <li><strong>Antenna tracking:</strong> Improving slew rate while maintaining stability in tracking loops</li>
+                            <li><strong>Power supplies:</strong> Stabilizing voltage regulators with right-half-plane zeros</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'lag': {
+                title: 'Lag Compensator',
+                content: `
+                    <p>A lag compensator increases the low-frequency gain (reducing steady-state error) without significantly affecting the crossover frequency or phase margin. It achieves this by placing a pole-zero pair at low frequencies, boosting the DC gain while the crossover region sees only a small (negative) phase contribution.</p>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$C(s) = K_c \\frac{s + z}{s + p} = K_c \\frac{\\tau s + 1}{\\beta \\tau s + 1}, \\quad \\beta > 1$$
+                    </div>
+
+                    <p>where \\(z = 1/\\tau\\), \\(p = 1/(\\beta\\tau)\\), and \\(\\beta > 1\\). The gain at DC is multiplied by \\(\\beta\\) compared to the gain at high frequencies.</p>
+
+                    <p><strong>Design idea:</strong> Place the pole-zero pair well below the crossover frequency (typically a decade below). The compensator has settled to its full DC gain boost at low frequencies, but at crossover the magnitude and phase contributions are negligible. The small phase lag at crossover (&minus;5&deg; to &minus;10&deg;) is acceptable.</p>
+
+                    <div class="formula-block">
+                        $$\\text{DC gain boost} = 20 \\log_{10}(\\beta) \\text{ dB}$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Reduces steady-state error by a factor of &beta;</li>
+                                <li>Minimal impact on transient response and stability margins</li>
+                                <li>Does not amplify high-frequency noise</li>
+                                <li>Simple first-order implementation</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Slows down the transient response if placed too close to crossover</li>
+                                <li>Adds a small amount of phase lag (can erode phase margin slightly)</li>
+                                <li>Slow pole can cause a long settling tail</li>
+                                <li>Cannot improve bandwidth or speed up the response</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Process control:</strong> Reducing steady-state offset in temperature and flow loops</li>
+                            <li><strong>Type 0 to Type 1 upgrade:</strong> Approximating integral action with a low-frequency lag</li>
+                            <li><strong>Satellite attitude control:</strong> Improving pointing accuracy without destabilizing flexible modes</li>
+                            <li><strong>Audio systems:</strong> Low-frequency shelving EQ is effectively a lag compensator</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'leadlag': {
+                title: 'Lead-Lag Compensator',
+                content: `
+                    <p>The lead-lag compensator is the series combination of a lead section and a lag section. It addresses both transient performance (via lead) and steady-state accuracy (via lag) simultaneously. This is the most common classical compensator topology in practice.</p>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$C(s) = K_c \\underbrace{\\frac{\\tau_1 s + 1}{\\alpha \\tau_1 s + 1}}_{\\text{Lead}} \\cdot \\underbrace{\\frac{\\tau_2 s + 1}{\\beta \\tau_2 s + 1}}_{\\text{Lag}}, \\quad \\alpha < 1,\\; \\beta > 1$$
+                    </div>
+
+                    <p><strong>Design procedure:</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li>Design the lead section first to achieve the desired phase margin and crossover frequency</li>
+                        <li>Design the lag section to provide the necessary DC gain boost for steady-state accuracy</li>
+                        <li>Place the lag pole-zero pair well below the crossover so it does not interfere with the lead design</li>
+                        <li>Verify the combined design on Bode/Nyquist plots and iterate if needed</li>
+                    </ol>
+
+                    <p><strong>Relationship to PID:</strong> A lead-lag compensator is structurally similar to a PID controller. The lead section approximates PD action, and the lag section approximates PI action. The difference is that lead-lag is designed in the frequency domain with explicit margin targets, while PID is tuned in the time domain.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Simultaneously improves transient response and steady-state accuracy</li>
+                                <li>Provides more design freedom than PID (independent placement of poles and zeros)</li>
+                                <li>Transparent frequency-domain design with explicit margin guarantees</li>
+                                <li>Can be cascaded for more complex loop shaping</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>More parameters to tune than PID (4+ vs. 3)</li>
+                                <li>Requires frequency response data or a transfer function model</li>
+                                <li>Lead section still amplifies high-frequency noise</li>
+                                <li>SISO only &mdash; same limitation as all classical methods</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Aerospace autopilots:</strong> Flight control loops shaped to meet MIL-spec gain/phase margins</li>
+                            <li><strong>Disk drive head positioning:</strong> Fast seek (lead) with precise track following (lag)</li>
+                            <li><strong>Industrial robots:</strong> Joint servo loops requiring both speed and accuracy</li>
+                            <li><strong>Power electronics:</strong> Voltage and current loop compensation in switch-mode converters</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'poleplacement': {
+                title: 'Full-State Feedback (Pole Placement)',
+                content: `
+                    <p>Pole placement (or eigenvalue assignment) computes a state-feedback gain matrix <strong>K</strong> such that the closed-loop system \\(\\dot{\\mathbf{x}} = (\\mathbf{A} - \\mathbf{B}\\mathbf{K})\\mathbf{x}\\) has its eigenvalues (poles) at arbitrary desired locations. This gives direct control over the closed-loop dynamics.</p>
+
+                    <p><strong>Control law:</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{u} = -\\mathbf{K}\\mathbf{x}$$
+                    </div>
+
+                    <p><strong>Closed-loop dynamics:</strong></p>
+                    <div class="formula-block">
+                        $$\\dot{\\mathbf{x}} = (\\mathbf{A} - \\mathbf{B}\\mathbf{K})\\mathbf{x}$$
+                    </div>
+
+                    <p><strong>Requirement:</strong> The system (A, B) must be <strong>controllable</strong>, i.e., the controllability matrix \\(\\mathcal{C} = [\\mathbf{B} \\; \\mathbf{AB} \\; \\cdots \\; \\mathbf{A}^{n-1}\\mathbf{B}]\\) must have full rank.</p>
+
+                    <p><strong>Ackermann's formula</strong> (single-input case):</p>
+                    <div class="formula-block">
+                        $$\\mathbf{K} = \\mathbf{e}_n^T \\mathcal{C}^{-1} \\, \\Delta(\\mathbf{A})$$
+                    </div>
+                    <p>where \\(\\Delta(s) = \\prod_i (s - p_i)\\) is the desired characteristic polynomial evaluated at the matrix A.</p>
+
+                    <p><strong>Observer:</strong> In practice, full state is rarely measured. An observer (e.g., Luenberger observer) reconstructs the state from outputs, and the control law becomes \\(\\mathbf{u} = -\\mathbf{K}\\hat{\\mathbf{x}}\\). The observer poles should be placed 2&ndash;5x faster than the controller poles.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Arbitrary pole placement (complete control over dynamics)</li>
+                                <li>Systematic, non-iterative design (compute K directly)</li>
+                                <li>Naturally handles MIMO systems</li>
+                                <li>Clear separation: controller design + observer design</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires a state-space model (A, B, C, D)</li>
+                                <li>Full-state measurement rarely available (need an observer)</li>
+                                <li>No guidance on <em>where</em> to place the poles (that's the art)</li>
+                                <li>No guarantee of robustness or actuator effort optimality</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Inverted pendulum:</strong> Classic demo &mdash; place poles for desired settling time and damping</li>
+                            <li><strong>Aircraft lateral control:</strong> Assigning dutch-roll and roll-mode poles to meet handling qualities</li>
+                            <li><strong>Active suspension:</strong> Placing poles to achieve desired ride comfort dynamics</li>
+                            <li><strong>Magnetic levitation:</strong> Stabilizing an inherently unstable open-loop system</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'lqr': {
+                title: 'Linear Quadratic Regulator (LQR)',
+                content: `
+                    <p>LQR finds the optimal state-feedback gain <strong>K</strong> that minimizes a quadratic cost function balancing state deviation and control effort. Unlike pole placement, LQR provides a principled answer to "where should the poles go?" by framing the question as an optimization problem.</p>
+
+                    <p><strong>Cost function (infinite horizon):</strong></p>
+                    <div class="formula-block">
+                        $$J = \\int_0^{\\infty} \\left( \\mathbf{x}^T \\mathbf{Q} \\mathbf{x} + \\mathbf{u}^T \\mathbf{R} \\mathbf{u} \\right) dt$$
+                    </div>
+
+                    <p>where \\(\\mathbf{Q} \\succeq 0\\) penalizes state deviation and \\(\\mathbf{R} \\succ 0\\) penalizes control effort.</p>
+
+                    <p><strong>Optimal gain:</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{K} = \\mathbf{R}^{-1} \\mathbf{B}^T \\mathbf{P}$$
+                    </div>
+
+                    <p>where <strong>P</strong> is the unique positive-definite solution to the <strong>continuous algebraic Riccati equation (CARE):</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{A}^T \\mathbf{P} + \\mathbf{P} \\mathbf{A} - \\mathbf{P} \\mathbf{B} \\mathbf{R}^{-1} \\mathbf{B}^T \\mathbf{P} + \\mathbf{Q} = 0$$
+                    </div>
+
+                    <p><strong>Guaranteed margins:</strong> LQR (with identity R) guarantees at least 60&deg; phase margin and infinite gain margin at <em>each</em> input channel independently. This is a remarkably strong robustness result for an "optimal" controller.</p>
+
+                    <p><strong>Tuning Q and R:</strong> Think of Q/R as a ratio. Large Q/R &rarr; aggressive (fast response, large control). Small Q/R &rarr; gentle (slow response, small control). A common starting point is \\(Q = \\text{diag}(1/x_{i,\\max}^2)\\) and \\(R = \\text{diag}(1/u_{i,\\max}^2)\\) (Bryson's rule).</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Optimal trade-off between performance and effort</li>
+                                <li>Strong guaranteed stability margins (at the input)</li>
+                                <li>Systematic: adjust Q and R, solve Riccati, done</li>
+                                <li>Naturally handles MIMO systems</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires accurate (A, B) model</li>
+                                <li>Full-state measurement assumed (combine with observer for output feedback)</li>
+                                <li>Q and R tuning is still an art (Bryson's rule is a starting point, not the answer)</li>
+                                <li>No constraint handling (ignores actuator limits)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Quadrotor attitude control:</strong> Balancing fast response against motor saturation</li>
+                            <li><strong>Autonomous vehicles:</strong> Lateral path-following with steering effort penalty</li>
+                            <li><strong>Spacecraft detumbling:</strong> Minimum-fuel reorientation with reaction wheels</li>
+                            <li><strong>Balancing robots:</strong> Segway-type platforms using LQR for tilt and velocity regulation</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'lqg': {
+                title: 'LQG (LQR + Kalman Filter)',
+                content: `
+                    <p>LQG combines the optimal controller (LQR) with the optimal estimator (Kalman filter) to handle systems where full state is not measured and measurements are corrupted by noise. The <strong>separation principle</strong> guarantees that designing the controller and estimator independently yields the overall optimal output-feedback controller.</p>
+
+                    <p><strong>Architecture:</strong></p>
+                    <div class="formula-block">
+                        $$\\text{Kalman filter: } \\dot{\\hat{\\mathbf{x}}} = \\mathbf{A}\\hat{\\mathbf{x}} + \\mathbf{B}\\mathbf{u} + \\mathbf{L}(\\mathbf{y} - \\mathbf{C}\\hat{\\mathbf{x}})$$
+                        $$\\text{LQR: } \\mathbf{u} = -\\mathbf{K}\\hat{\\mathbf{x}}$$
+                    </div>
+
+                    <p>where <strong>K</strong> is the LQR gain (from solving the control Riccati equation with Q, R) and <strong>L</strong> is the Kalman gain (from solving the estimation Riccati equation with process noise Q<sub>w</sub> and measurement noise R<sub>v</sub>).</p>
+
+                    <p><strong>Separation principle:</strong> The closed-loop poles are the union of the LQR poles (eigenvalues of A &minus; BK) and the Kalman filter poles (eigenvalues of A &minus; LC). They can be designed independently.</p>
+
+                    <p><strong>The robustness problem:</strong> Despite being "doubly optimal," LQG has notoriously poor robustness guarantees. The beautiful margins of LQR (60&deg; phase, infinite gain) are <em>destroyed</em> when the Kalman filter is inserted in the loop. An LQG controller can have arbitrarily small gain margin. This weakness motivated robust control theory (H-infinity, mu-synthesis).</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Optimal output-feedback controller for linear Gaussian systems</li>
+                                <li>Separation principle makes design tractable (two independent Riccati equations)</li>
+                                <li>Handles noisy measurements gracefully via the Kalman filter</li>
+                                <li>Systematic MIMO design with clear tuning knobs (Q, R, Q<sub>w</sub>, R<sub>v</sub>)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Poor robustness to model uncertainty (can have zero gain margin)</li>
+                                <li>Requires accurate A, B, C, D and noise covariance matrices</li>
+                                <li>No constraint handling</li>
+                                <li>Four matrices to tune (Q, R for LQR; Q<sub>w</sub>, R<sub>v</sub> for Kalman)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Aircraft autopilots:</strong> Longitudinal and lateral control with noisy air data sensors</li>
+                            <li><strong>Chemical process control:</strong> Regulating unmeasured internal states from output measurements</li>
+                            <li><strong>Telescope pointing:</strong> Controlling mount axes with noisy star-tracker feedback</li>
+                            <li><strong>Active vibration control:</strong> Estimating structural modes from accelerometers and applying counterforces</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'slidingmode': {
+                title: 'Sliding Mode Control (SMC)',
+                content: `
+                    <p>Sliding mode control is best understood in the context of feedback linearization. Just like in FBL, you define your "desired" system dynamics (here called a <strong>sliding surface</strong> in state space &mdash; if you keep your system adhering to these dynamics, you are "sliding" on the surface). The <strong>first part</strong> of the control law cancels your known dynamics, which is all that would be needed if you knew them perfectly (making it identical to FBL). However, real life is messy, so you tack on a <strong>discontinuous</strong> switching term that forces the system onto the surface via high-rate, high-gain control. This makes SMC more robust to disturbances than FBL, at the cost of actuator chattering.</p>
+
+                    <p><strong>Sliding surface</strong> (for a second-order system):</p>
+                    <div class="formula-block">
+                        $$\\sigma = \\dot{e} + \\lambda e = 0$$
+                    </div>
+                    <p>where \\(e = x - x_d\\) is the tracking error and \\(\\lambda > 0\\). On the surface, \\(\\dot{e} = -\\lambda e\\), so the error decays exponentially with time constant \\(1/\\lambda\\).</p>
+
+                    <p><strong>Control law:</strong></p>
+                    <div class="formula-block">
+                        $$u = \\underbrace{u_{\\text{eq}}}_{\\text{FBL-like cancellation}} - \\underbrace{k \\, \\text{sgn}(\\sigma)}_{\\text{discontinuous forcing}}$$
+                    </div>
+                    <p>where \\(u_{\\text{eq}}\\) is the equivalent control (the input needed to stay on the surface if already there) and \\(k\\, \\text{sgn}(\\sigma)\\) is the switching term that drives the state toward the surface.</p>
+
+                    <p><strong>Reaching condition:</strong> Choose k large enough so that \\(\\sigma \\dot{\\sigma} < 0\\) everywhere (the Lyapunov condition). This guarantees the state reaches the surface in finite time.</p>
+
+                    <p><strong>Chattering:</strong> The discontinuous sgn function causes high-frequency switching in practice. Mitigation: replace sgn with a saturation function or boundary layer (\\(\\text{sat}(\\sigma/\\phi)\\)), or use higher-order sliding modes (super-twisting algorithm). (TODO: How exactly does higher-order SMC eliminate chattering?)</p>
+
+                    <p><strong>The unmatched disturbance problem:</strong> SMC is only robust to <strong>matched</strong> disturbances &mdash; those entering the system through the same channel as the control input. Disturbances arising from unmodeled modes or entering through different channels are <em>unmatched</em>, meaning the discontinuous term cannot directly override them. In these cases, you either need to augment the model to include the offending modes, or turn to more general robust control methods like H<sub>&infin;</sub>, depending on the trade-offs you are willing to accept.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Invariant to matched uncertainties and disturbances once on the surface</li>
+                                <li>Finite-time convergence to the sliding surface</li>
+                                <li>Simple design: choose a surface, verify reaching condition</li>
+                                <li>Reduced-order dynamics on the surface are easy to analyze</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Chattering from high-frequency switching (actuator wear, excites unmodeled dynamics)</li>
+                                <li>Not robust to <em>unmatched</em> uncertainties (disturbances entering through different channels than the input)</li>
+                                <li>Boundary layer trades robustness for smoothness (finite steady-state error)</li>
+                                <li>Requires knowledge of uncertainty bounds for choosing k</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Electric motor drives:</strong> Current and speed control in variable-frequency drives</li>
+                            <li><strong>Robotic manipulators:</strong> Trajectory tracking with uncertain payload mass</li>
+                            <li><strong>Power converters:</strong> Voltage regulation in DC-DC converters (natural switching system)</li>
+                            <li><strong>Automotive ABS:</strong> Wheel slip control near the optimal braking point</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'mpc': {
+                title: 'Model Predictive Control (MPC)',
+                content: `
+                    <p>MPC solves a finite-horizon optimal control problem at every timestep, applies only the first control input, then re-solves at the next timestep with updated state measurements. This "receding horizon" strategy naturally handles constraints on states and inputs &mdash; the defining advantage of MPC over all other methods.</p>
+
+                    <p><strong>Optimization problem (at each timestep k):</strong></p>
+                    <div class="formula-block">
+                        $$\\min_{\\mathbf{u}_k, \\ldots, \\mathbf{u}_{k+N-1}} \\sum_{i=0}^{N-1} \\left( \\mathbf{x}_{k+i}^T \\mathbf{Q} \\mathbf{x}_{k+i} + \\mathbf{u}_{k+i}^T \\mathbf{R} \\mathbf{u}_{k+i} \\right) + \\mathbf{x}_{k+N}^T \\mathbf{P}_f \\mathbf{x}_{k+N}$$
+                    </div>
+                    <div class="formula-block">
+                        $$\\text{subject to:} \\quad \\mathbf{x}_{k+i+1} = \\mathbf{A}\\mathbf{x}_{k+i} + \\mathbf{B}\\mathbf{u}_{k+i}$$
+                        $$\\mathbf{u}_{\\min} \\leq \\mathbf{u}_{k+i} \\leq \\mathbf{u}_{\\max}$$
+                        $$\\mathbf{x}_{\\min} \\leq \\mathbf{x}_{k+i} \\leq \\mathbf{x}_{\\max}$$
+                    </div>
+
+                    <p>For linear systems with quadratic cost and linear constraints, this is a <strong>quadratic program (QP)</strong> that can be solved in milliseconds with specialized solvers (OSQP, qpOASES).</p>
+
+                    <p><strong>Nonlinear MPC (NMPC):</strong> Uses a nonlinear model \\(\\mathbf{x}_{k+1} = f(\\mathbf{x}_k, \\mathbf{u}_k)\\). The optimization becomes a nonlinear program (NLP), which is harder but solvable in real time for many applications with methods like multiple shooting and tools like CasADi/acados.</p>
+
+                    <p><strong>Stability guarantee:</strong> With a terminal cost \\(P_f\\) (from the Riccati equation) and a terminal constraint set, MPC is provably stable (Lyapunov argument via the cost function as a Lyapunov function).</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Handles input and state constraints natively</li>
+                                <li>Previews future reference trajectories (anticipatory action)</li>
+                                <li>Naturally handles MIMO and coupled systems</li>
+                                <li>Systematic: the cost function and constraints encode the specification directly</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Computationally expensive (solve an optimization at every timestep)</li>
+                                <li>Requires a predictive model (garbage model &rarr; garbage control)</li>
+                                <li>Tuning the horizon length, Q, R, and terminal ingredients is non-trivial</li>
+                                <li>Harder to certify for safety-critical applications (solver convergence guarantees)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Chemical process control:</strong> Refinery optimization with temperature, pressure, and flow constraints</li>
+                            <li><strong>Autonomous driving:</strong> Path planning and tracking with obstacle avoidance and steering limits</li>
+                            <li><strong>Building HVAC:</strong> Minimizing energy while maintaining comfort temperature bounds</li>
+                            <li><strong>Rocket landing:</strong> SpaceX uses convex MPC (powered descent guidance) for propellant-optimal landing</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'feedbacklin': {
+                title: 'Feedback Linearization (NDI)',
+                content: `
+                    <p>Feedback linearization (also called <strong>Nonlinear Dynamic Inversion</strong>, NDI) uses a nonlinear coordinate change and a nonlinear control law to exactly cancel the plant's nonlinearities, producing an equivalent linear system in the new coordinates. Linear control techniques (pole placement, LQR) are then applied to the linearized system. In essence, it assumes your model is good enough to cancel the nonlinear dynamics exactly.</p>
+
+                    <p><strong>Input-output linearization</strong> for a SISO system \\(\\dot{\\mathbf{x}} = f(\\mathbf{x}) + g(\\mathbf{x})u\\), \\(y = h(\\mathbf{x})\\):</p>
+
+                    <p>Differentiate the output until the input u appears explicitly:</p>
+                    <div class="formula-block">
+                        $$y^{(r)} = L_f^r h(\\mathbf{x}) + L_g L_f^{r-1} h(\\mathbf{x}) \\cdot u$$
+                    </div>
+                    <p>where \\(r\\) is the <strong>relative degree</strong>, \\(L_f\\) denotes the Lie derivative along f, and the term \\(L_g L_f^{r-1} h \\neq 0\\).</p>
+
+                    <p><strong>Linearizing control law:</strong></p>
+                    <div class="formula-block">
+                        $$u = \\frac{1}{L_g L_f^{r-1} h} \\left( v - L_f^r h \\right)$$
+                    </div>
+                    <p>This yields \\(y^{(r)} = v\\), a chain of r integrators. The new input v can be chosen by any linear control law.</p>
+
+                    <p><strong>Zero dynamics:</strong> If \\(r < n\\) (relative degree less than system order), there are \\(n - r\\) internal dynamics that are unaffected by the linearizing transformation. These <strong>zero dynamics</strong> must be stable (the system must be <strong>minimum phase</strong>) for the approach to work.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Exact linearization (not an approximation around an operating point)</li>
+                                <li>Converts nonlinear design into a well-understood linear problem</li>
+                                <li>Global validity (not restricted to a neighborhood)</li>
+                                <li>Elegant Lie-algebraic theory with clear necessary/sufficient conditions</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires exact knowledge of f(x) and g(x) &mdash; very sensitive to model error</li>
+                                <li>Cancelling nonlinearities can require large control effort</li>
+                                <li>Unstable zero dynamics make the method inapplicable (non-minimum phase systems)</li>
+                                <li>Does not address input constraints or disturbances</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Robotic manipulators:</strong> Computed torque control cancels Coriolis and gravity terms</li>
+                            <li><strong>Quadrotor control:</strong> Linearizing the attitude dynamics for aggressive maneuvering</li>
+                            <li><strong>Power systems:</strong> Excitation control of synchronous generators</li>
+                            <li><strong>Chemical reactors:</strong> Controlling nonlinear reaction dynamics via input-output linearization</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'indi': {
+                title: 'Incremental Nonlinear Dynamic Inversion (INDI)',
+                content: `
+                    <p>INDI is a sensor-based variant of feedback linearization that replaces the model-dependent cancellation with <strong>measured</strong> actuation. Instead of computing what the dynamics <em>should</em> be from a model, INDI measures what they <em>actually are</em> and applies an incremental correction. This wraps all unmodeled nonlinearities and disturbances into the measurement, adding substantial robustness over standard NDI.</p>
+
+                    <p><strong>Core idea:</strong></p>
+                    <div class="formula-block">
+                        $$u = u_{\\text{current}} + G^{-1}\\big(\\ddot{x}_{\\text{desired}} - \\ddot{x}_{\\text{measured}}\\big)$$
+                    </div>
+                    <p>The second term is the <strong>increment</strong> at each timestep. The "actuation" being measured depends on the loop:</p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li><strong>Inner loop (attitude):</strong> measured actuation can be motor RPM or angular acceleration from the gyroscope</li>
+                        <li><strong>Outer loop (position):</strong> measured actuation is acceleration, which for quadrotors depends on both IMU and motor speed measurements as external disturbances are considered</li>
+                    </ul>
+
+                    <p><strong>Why it works far from equilibrium:</strong> Although the control law looks like linear control about an operating point, the key insight is that <em>all</em> nonlinearities and disturbances are lumped into the measurement term. The controller does not need to model them &mdash; it just measures their net effect and corrects incrementally. This is what makes INDI work far from equilibrium, unlike Jacobian linearization.</p>
+
+                    <p><strong>Comparison with PID:</strong> INDI is especially effective against fast, unpredictable disturbances because it reacts to measured actuation directly, rather than waiting for error to accumulate. PID may be more analytically stable with a good tune, but cannot be as directly reactive to sudden disturbance onset.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Highly robust to unmodeled dynamics and disturbances (they show up in the measurement)</li>
+                                <li>Works far from equilibrium despite looking like local linear control</li>
+                                <li>Minimal model dependency &mdash; only the control-to-actuation mapping (G) is needed</li>
+                                <li>"Unmatched disturbances" are less of a concern than in SMC, since most real-world disturbances are detectable by sensors like the IMU</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires low-noise, high-bandwidth sensors (phase lag between measurement and reality is the enemy)</li>
+                                <li>Actuators must be fast enough to track the rapidly changing commands</li>
+                                <li>Computational overhead from inverting the control-to-actuation mapping</li>
+                                <li>Disturbances can still push the system into a less controllable regime</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Quadrotor attitude control:</strong> Inner-loop angular rate control with gyro-measured angular acceleration</li>
+                            <li><strong>Fixed-wing flight control:</strong> INDI-based autopilots for aerobatic and fault-tolerant flight (TU Delft)</li>
+                            <li><strong>Quadrotor position control:</strong> Outer-loop using IMU-measured acceleration to reject wind gusts</li>
+                            <li><strong>Tail-sitter VTOL:</strong> Transition flight where aerodynamic models are highly uncertain</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'geometric': {
+                title: 'Geometric Control',
+                content: `
+                    <p>Geometric control methods design control laws directly on the manifold where the system state lives (e.g., SO(3) for rotation, SE(3) for rigid-body pose), rather than using local coordinates like Euler angles or quaternions that introduce singularities or ambiguities. The key insight is that the "right" error metrics and control laws come from the geometry of the Lie group itself.</p>
+
+                    <p><strong>Why does it always look like PD control?</strong></p>
+                    <p>On SO(3), the most natural way to express orientation error is through a Lie-group-consistent potential function (e.g., \\(\\Psi(R) = \\frac{1}{2}\\text{tr}(I - R_d^T R)\\)). When you take the gradient of that error to build a stabilizing controller, you always get what looks like a <strong>proportional term</strong> in the rotation error \\(e_R\\) plus a <strong>derivative term</strong> in the angular velocity error \\(e_\\Omega\\):</p>
+
+                    <div class="formula-block">
+                        $$\\boldsymbol{\\tau} = -K_R \\, e_R - K_\\Omega \\, e_\\Omega + \\text{feedforward terms}$$
+                    </div>
+
+                    <p>This PD-like structure is not a simplification &mdash; it is a consequence of the geometry. The error function is defined intrinsically on the manifold, so no coordinate singularities arise, and the resulting controller is almost globally asymptotically stable (the "almost" comes from the unavoidable topological obstruction on SO(3)).</p>
+
+                    <p><strong>When you still need more:</strong> Geometric control solves the topology problem, but the system remains subject to all the other challenges discussed in the nonlinear control prelude: underactuation, non-holonomic constraints, and unmodeled disturbances still require additional techniques (feedforward, integral action, adaptive methods) layered on top of the geometric framework.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>No singularities (unlike Euler angles) or ambiguity (unlike quaternion double-cover)</li>
+                                <li>Almost-global stability guarantees on the full manifold</li>
+                                <li>Error metrics derived from the group structure are physically meaningful</li>
+                                <li>Clean, coordinate-free formulation enables rigorous Lyapunov analysis</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires familiarity with Lie groups and differential geometry</li>
+                                <li>Topological obstruction: no <em>globally</em> stable continuous controller on SO(3) exists</li>
+                                <li>Still needs additional techniques for disturbance rejection, constraints, underactuation</li>
+                                <li>Implementation requires careful attention to exponential/logarithmic maps</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Quadrotor attitude control:</strong> SO(3)-based controllers for aggressive flight without gimbal lock</li>
+                            <li><strong>Spacecraft attitude control:</strong> Large-angle slew maneuvers where Euler angles would singular</li>
+                            <li><strong>Robotic manipulation on SE(3):</strong> End-effector pose control respecting the group structure</li>
+                            <li><strong>Underwater vehicles:</strong> Full SE(3) control for 6-DOF pose regulation</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'backstepping': {
+                title: 'Backstepping',
+                content: `
+                    <p>Backstepping is a recursive Lyapunov-based design technique for nonlinear systems in <strong>strict-feedback form</strong>. It builds a stabilizing controller and a Lyapunov function simultaneously, one state at a time, starting from the "innermost" subsystem and stepping backward to the actual control input.</p>
+
+                    <p><strong>Strict-feedback form:</strong></p>
+                    <div class="formula-block">
+                        $$\\dot{x}_1 = f_1(x_1) + g_1(x_1) x_2$$
+                        $$\\dot{x}_2 = f_2(x_1, x_2) + g_2(x_1, x_2) x_3$$
+                        $$\\vdots$$
+                        $$\\dot{x}_n = f_n(x_1, \\ldots, x_n) + g_n(x_1, \\ldots, x_n) u$$
+                    </div>
+
+                    <p><strong>Design idea (two-step example):</strong></p>
+                    <ol style="margin: 10px 0 10px 20px;">
+                        <li><strong>Step 1:</strong> Treat \\(x_2\\) as a virtual control for the \\(\\dot{x}_1\\) subsystem. Design \\(x_2 = \\alpha_1(x_1)\\) to stabilize \\(\\dot{x}_1\\) and find a Lyapunov function \\(V_1(x_1)\\).</li>
+                        <li><strong>Step 2:</strong> Define the error \\(z_2 = x_2 - \\alpha_1(x_1)\\). Augment the Lyapunov function to \\(V_2 = V_1 + \\frac{1}{2}z_2^2\\). Choose the actual input u to make \\(\\dot{V}_2 < 0\\).</li>
+                    </ol>
+
+                    <p>Each step adds one state, one error variable, and extends the Lyapunov function. The final control law guarantees global asymptotic stability by construction.</p>
+
+                    <p><strong>Adaptive backstepping:</strong> If the system contains unknown parameters \\(\\theta\\), a parameter estimate \\(\\hat{\\theta}\\) and update law can be incorporated into each backstep, yielding a controller that adapts to parametric uncertainty.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Constructive: produces both the controller and the stability proof</li>
+                                <li>Global stability (not just local)</li>
+                                <li>Handles parametric uncertainty via adaptive extensions</li>
+                                <li>Avoids cancelling useful nonlinearities (unlike feedback linearization)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Restricted to strict-feedback (or pure-feedback) structure</li>
+                                <li>Control law complexity grows rapidly with system order ("explosion of terms")</li>
+                                <li>Requires analytic expressions for f and g functions</li>
+                                <li>Resulting controller is often complex and non-intuitive</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Underactuated marine vehicles:</strong> Path following for ships and AUVs with uncertain hydrodynamics</li>
+                            <li><strong>Flexible-joint robots:</strong> Controlling motor+link cascaded dynamics</li>
+                            <li><strong>Power electronics:</strong> Boost converter control where the cascaded structure is natural</li>
+                            <li><strong>Flight control:</strong> Adaptive backstepping for aircraft with uncertain aerodynamic coefficients</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.ctrl-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const key = this.getAttribute('data-ctrl');
+                const info = controllers[key];
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalBody.innerHTML = info.content;
+                    modal.style.display = 'block';
+                    if (window.MathJax) {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, modalBody]);
+                    }
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
