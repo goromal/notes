@@ -81,4 +81,27 @@
   - Place broccoli florets in a single layer onto the prepared baking sheet. Add olive oil and garlic; season with salt and pepper, to taste. Gently toss to combine.
   - Place into oven and bake for 10-12 minutes, or until tender.
   - Serve immediately, sprinkled with Parmesan and lemon juice.
- 
+
+### Black Beans
+
+*Makes a great dinner side.*
+
+----
+
+  * Avocado oil (enough to cover the bottom of a saucepan)
+  * 1 tablespoon of minced garlic
+  * 1 bay leaf
+  * 1 can of black beans
+  * 1 pinch of salt
+  * 1 pinch of cumin
+  * 1 pinch of sugar
+  * 1 splash of vinegar
+
+----
+
+  - Cover the bottom of a saucepan with avocado oil.
+  - Add the minced garlic and bay leaf; heat over medium-low heat until browned.
+  - Drain just a little water from the can of black beans, then add the beans to the pan.
+  - Add the salt, cumin, sugar, and a splash of vinegar.
+  - Heat until it boils, stirring periodically, then remove from heat.
+  - Let it cool down and serve.
