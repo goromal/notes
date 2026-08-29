@@ -105,3 +105,24 @@
   - Add the salt, cumin, sugar, and a splash of vinegar.
   - Heat until it boils, stirring periodically, then remove from heat.
   - Let it cool down and serve.
+
+### Baked Potatoes
+
+*Makes a great dinner side. Makes 4 servings. Prep 10 min., cook 45-60 min.*
+
+----
+
+  * 4 medium russet potatoes
+  * Olive oil
+  * Sea or kosher salt
+
+----
+
+  - Preheat oven to 425\\(^\circ\\) F and line a baking sheet with parchment paper.
+  - Scrub the potatoes well and pat them dry with a kitchen towel.
+  - Poke each potato with a fork a few times to create small holes.
+  - Rub the potatoes all over with olive oil, then sprinkle them liberally with salt.
+    - The salt coating is what makes the skins extra-crispy and flavorful.
+  - Place on the baking sheet and bake for 45-60 minutes, until the skins are crisp and puffy and a fork pierces them easily. Larger potatoes take longer.
+    - **Don't wrap them in foil** — the skins will shrivel and soften instead of crisping.
+  - Slice open, fluff the insides with a fork, and serve.
