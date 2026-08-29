@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamental Algorithms — Sorting & Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4a1942 0%, #8b2fc9 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 50px;
+            font-size: 1.1em;
+        }
+
+        /* Section heading */
+        .section-heading {
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #a0aec0;
+            margin: 40px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section-heading:first-of-type {
+            margin-top: 0;
+        }
+
+        /* Card grid */
+        .ds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 8px;
+        }
+
+        .ds-card {
+            border-radius: 14px;
+            padding: 22px 20px 18px;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ds-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Complexity badge in top-right */
+        .complexity-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+            letter-spacing: 0.03em;
+            background: rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.95);
+        }
+
+        .ds-card-icon {
+            font-size: 1.9em;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .ds-card-name {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .ds-card-tagline {
+            font-size: 0.82em;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .ds-card-ops {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .op-tag {
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.22);
+            color: rgba(255,255,255,0.95);
+            letter-spacing: 0.02em;
+        }
+
+        /* Card colour themes */
+        .card-insertion  { background: linear-gradient(135deg, #2b6cb0, #3182ce); box-shadow: 0 4px 18px rgba(49,130,206,0.35); }
+        .card-insertion:hover { box-shadow: 0 8px 28px rgba(49,130,206,0.5); }
+
+        .card-selection  { background: linear-gradient(135deg, #0369a1, #0284c7); box-shadow: 0 4px 18px rgba(2,132,199,0.35); }
+        .card-selection:hover { box-shadow: 0 8px 28px rgba(2,132,199,0.5); }
+
+        .card-merge      { background: linear-gradient(135deg, #276749, #38a169); box-shadow: 0 4px 18px rgba(56,161,105,0.35); }
+        .card-merge:hover { box-shadow: 0 8px 28px rgba(56,161,105,0.5); }
+
+        .card-quick      { background: linear-gradient(135deg, #881337, #e11d48); box-shadow: 0 4px 18px rgba(225,29,72,0.35); }
+        .card-quick:hover { box-shadow: 0 8px 28px rgba(225,29,72,0.5); }
+
+        .card-heap       { background: linear-gradient(135deg, #92400e, #d97706); box-shadow: 0 4px 18px rgba(217,119,6,0.35); }
+        .card-heap:hover { box-shadow: 0 8px 28px rgba(217,119,6,0.5); }
+
+        .card-counting   { background: linear-gradient(135deg, #6b21a8, #9333ea); box-shadow: 0 4px 18px rgba(147,51,234,0.35); }
+        .card-counting:hover { box-shadow: 0 8px 28px rgba(147,51,234,0.5); }
+
+        .card-radix      { background: linear-gradient(135deg, #7e22ce, #a855f7); box-shadow: 0 4px 18px rgba(168,85,247,0.35); }
+        .card-radix:hover { box-shadow: 0 8px 28px rgba(168,85,247,0.5); }
+
+        .card-linear     { background: linear-gradient(135deg, #4a5568, #718096); box-shadow: 0 4px 18px rgba(113,128,150,0.35); }
+        .card-linear:hover { box-shadow: 0 8px 28px rgba(113,128,150,0.5); }
+
+        .card-binary     { background: linear-gradient(135deg, #065f46, #059669); box-shadow: 0 4px 18px rgba(5,150,105,0.35); }
+        .card-binary:hover { box-shadow: 0 8px 28px rgba(5,150,105,0.5); }
+
+        .card-interp     { background: linear-gradient(135deg, #0f766e, #14b8a6); box-shadow: 0 4px 18px rgba(20,184,166,0.35); }
+        .card-interp:hover { box-shadow: 0 8px 28px rgba(20,184,166,0.5); }
+
+        .card-expo       { background: linear-gradient(135deg, #1d4ed8, #2563eb); box-shadow: 0 4px 18px rgba(37,99,235,0.35); }
+        .card-expo:hover { box-shadow: 0 8px 28px rgba(37,99,235,0.5); }
+
+        /* Summary bar */
+        .summary-bar {
+            background: #edf2f7;
+            padding: 16px 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 36px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.25s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 6% auto;
+            padding: 40px;
+            border-radius: 16px;
+            width: 84%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.25s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-36px); opacity: 0; }
+            to   { transform: translateY(0);     opacity: 1; }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 18px;
+            font-size: 34px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .close:hover { color: #2d3748; }
+
+        .modal-title {
+            color: #7c3aed;
+            font-size: 1.6em;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #8b2fc9;
+            padding-right: 40px;
+            line-height: 1.3;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.82;
+            font-size: 1.01em;
+        }
+
+        .modal-body p   { margin-bottom: 14px; }
+        .modal-body strong { color: #7c3aed; }
+        .modal-body ul  { margin: 0 0 14px 22px; }
+        .modal-body li  { margin-bottom: 5px; }
+        .modal-body code {
+            background: #edf2f7;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+            font-size: 0.91em;
+            color: #2d3748;
+        }
+        .modal-body h3 {
+            color: #2d3748;
+            font-size: 1.05em;
+            margin: 18px 0 6px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 700px) {
+            body { padding: 20px 10px; }
+            .container { padding: 22px 14px; border-radius: 12px; }
+            h1 { font-size: 1.6em; }
+            .ds-grid { grid-template-columns: 1fr; }
+            .modal-content { margin: 4% auto; padding: 24px 18px; width: 96%; max-width: 96%; max-height: 90vh; }
+            .modal-title { font-size: 1.25em; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .ds-card:active { transform: scale(0.97); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Fundamental Algorithms</h1>
+        <p class="subtitle">Sorting and search — the algorithmic building blocks of computer science, ordered by increasing sophistication</p>
+
+        <!-- ── SECTION 1: ELEMENTARY SORTS ── -->
+        <div class="section-heading">Elementary Sorts</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-insertion" data-info="insertion-sort">
+                <div class="complexity-badge">O(n&sup2;) worst</div>
+                <div class="ds-card-icon">&#x25B7;</div>
+                <div class="ds-card-name">Insertion Sort</div>
+                <div class="ds-card-tagline">Builds the sorted array one element at a time by inserting each into its correct position. Adaptive, stable, and optimal for small or nearly-sorted inputs.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(n)</span>
+                    <span class="op-tag">Avg O(n&sup2;)</span>
+                    <span class="op-tag">Space O(1)</span>
+                    <span class="op-tag">Stable</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-selection" data-info="selection-sort">
+                <div class="complexity-badge">O(n&sup2;) always</div>
+                <div class="ds-card-icon">&#x25CB;</div>
+                <div class="ds-card-name">Selection Sort</div>
+                <div class="ds-card-tagline">Repeatedly finds the minimum from the unsorted portion and swaps it into place. Simple, but always quadratic — no adaptivity.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(n&sup2;)</span>
+                    <span class="op-tag">Avg O(n&sup2;)</span>
+                    <span class="op-tag">Space O(1)</span>
+                    <span class="op-tag">Not Stable</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 2: EFFICIENT COMPARISON SORTS ── -->
+        <div class="section-heading">Efficient Comparison Sorts</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-merge" data-info="merge-sort">
+                <div class="complexity-badge">O(n log n)</div>
+                <div class="ds-card-icon">&#x2194;</div>
+                <div class="ds-card-name">Merge Sort</div>
+                <div class="ds-card-tagline">Divide-and-conquer: split in half, sort each recursively, merge the sorted halves. Guaranteed O(n log n) and stable — the gold standard when stability matters.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(n log n)</span>
+                    <span class="op-tag">Worst O(n log n)</span>
+                    <span class="op-tag">Space O(n)</span>
+                    <span class="op-tag">Stable</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-quick" data-info="quick-sort">
+                <div class="complexity-badge">O(n log n) avg</div>
+                <div class="ds-card-icon">&#x26A1;</div>
+                <div class="ds-card-name">Quick Sort</div>
+                <div class="ds-card-tagline">Pick a pivot, partition around it, recurse on each side. The fastest comparison sort in practice thanks to cache locality and small constants.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(n log n)</span>
+                    <span class="op-tag">Worst O(n&sup2;)</span>
+                    <span class="op-tag">Space O(log n)</span>
+                    <span class="op-tag">Not Stable</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-heap" data-info="heap-sort">
+                <div class="complexity-badge">O(n log n)</div>
+                <div class="ds-card-icon">&#x25B3;</div>
+                <div class="ds-card-name">Heap Sort</div>
+                <div class="ds-card-tagline">Build a max-heap, then repeatedly extract the maximum. Guaranteed O(n log n) and in-place — the worst-case optimal comparison sort for memory-constrained systems.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(n log n)</span>
+                    <span class="op-tag">Worst O(n log n)</span>
+                    <span class="op-tag">Space O(1)</span>
+                    <span class="op-tag">Not Stable</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 3: NON-COMPARISON SORTS ── -->
+        <div class="section-heading">Non-Comparison Sorts</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-counting" data-info="counting-sort">
+                <div class="complexity-badge">O(n + k)</div>
+                <div class="ds-card-icon">&#x2116;</div>
+                <div class="ds-card-name">Counting Sort</div>
+                <div class="ds-card-tagline">Counts occurrences of each value, then reconstructs the sorted output. Beats the O(n log n) comparison lower bound when the key range k is small.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Time O(n + k)</span>
+                    <span class="op-tag">Space O(n + k)</span>
+                    <span class="op-tag">Stable</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-radix" data-info="radix-sort">
+                <div class="complexity-badge">O(d(n + k))</div>
+                <div class="ds-card-icon">&#x2261;</div>
+                <div class="ds-card-name">Radix Sort</div>
+                <div class="ds-card-tagline">Sort digit by digit from least significant to most, using a stable sub-sort (counting sort) at each level. Linear time for fixed-width keys.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Time O(d(n+k))</span>
+                    <span class="op-tag">Space O(n + k)</span>
+                    <span class="op-tag">Stable</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 4: SEARCH ALGORITHMS ── -->
+        <div class="section-heading">Search Algorithms</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-linear" data-info="linear-search">
+                <div class="complexity-badge">O(n)</div>
+                <div class="ds-card-icon">&#x2192;</div>
+                <div class="ds-card-name">Linear Search</div>
+                <div class="ds-card-tagline">Scan every element from start to end until the target is found or the array is exhausted. No preconditions — works on any collection.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(1)</span>
+                    <span class="op-tag">Avg O(n)</span>
+                    <span class="op-tag">Worst O(n)</span>
+                    <span class="op-tag">Unsorted OK</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-binary" data-info="binary-search">
+                <div class="complexity-badge">O(log n)</div>
+                <div class="ds-card-icon">&#x00BD;</div>
+                <div class="ds-card-name">Binary Search</div>
+                <div class="ds-card-tagline">Halve the search space at each step by comparing the target to the middle element. The fundamental algorithm for sorted data and monotonic decision problems.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(1)</span>
+                    <span class="op-tag">Avg O(log n)</span>
+                    <span class="op-tag">Worst O(log n)</span>
+                    <span class="op-tag">Sorted Only</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-interp" data-info="interpolation-search">
+                <div class="complexity-badge">O(log log n) avg</div>
+                <div class="ds-card-icon">&#x223F;</div>
+                <div class="ds-card-name">Interpolation Search</div>
+                <div class="ds-card-tagline">Estimates the target's position using value distribution rather than always probing the midpoint. Sub-logarithmic on uniformly distributed data.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(1)</span>
+                    <span class="op-tag">Avg O(log log n)</span>
+                    <span class="op-tag">Worst O(n)</span>
+                    <span class="op-tag">Uniform Data</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-expo" data-info="exponential-search">
+                <div class="complexity-badge">O(log n)</div>
+                <div class="ds-card-icon">&#x00D7;2</div>
+                <div class="ds-card-name">Exponential Search</div>
+                <div class="ds-card-tagline">Double the search range until the target is bracketed, then binary search within that range. Optimal when the target is near the beginning of an unbounded or very large sorted sequence.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Best O(1)</span>
+                    <span class="op-tag">Worst O(log n)</span>
+                    <span class="op-tag">Unbounded OK</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="summary-bar">
+            Click any card to explore the full algorithm, motivation, and real-world application examples.
+        </div>
+    </div>
+
+    <script>
+    const explanations = {
+
+        /* ══════════════════════════════════════════
+           ELEMENTARY SORTS
+           ══════════════════════════════════════════ */
+
+        'insertion-sort': {
+            title: 'Insertion Sort',
+            content: `
+                <p><strong>What it is:</strong> Insertion sort maintains a sorted prefix and grows it by one element at each step. It takes the next unsorted element, scans backward through the sorted prefix, shifts larger elements right, and inserts the new element in its correct position.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>Start with the first element (trivially sorted).</li>
+                    <li>For each subsequent element <code>key = a[i]</code>:</li>
+                    <li>Compare <code>key</code> with elements <code>a[i-1], a[i-2], …</code> moving right until the correct position is found.</li>
+                    <li>Insert <code>key</code> there. One pass through the array; inner loop does the shifting.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Best case O(n):</strong> The array is already sorted — the inner loop never executes. This makes insertion sort <em>adaptive</em>: it runs in O(n + d) where d is the number of inversions.</li>
+                    <li><strong>Average and worst case O(n&sup2;):</strong> Random data has O(n&sup2;) inversions; reverse-sorted data is the worst case.</li>
+                    <li><strong>Space:</strong> O(1) — in-place.</li>
+                    <li><strong>Stability:</strong> Stable — equal elements maintain their original order because we only shift strictly greater elements.</li>
+                </ul>
+
+                <h3>Why It Matters</h3>
+                <p>Insertion sort has the lowest overhead of any sorting algorithm. For small arrays (n &lt; 20–50), its simplicity and cache-friendly sequential access pattern make it faster than quicksort or merge sort despite the quadratic asymptotic bound. This is why every serious sorting library (glibc's <code>qsort</code>, Python's Timsort, Java's dual-pivot sort) switches to insertion sort for small subarrays.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Timsort's inner loop (Python, Java):</strong> Timsort — the default sort in Python and Java — identifies naturally sorted "runs" in the data and merges them. Within each small run, it uses binary insertion sort. Nearly-sorted data hits the O(n) best case.</li>
+                    <li><strong>Small-array base case in quicksort/mergesort:</strong> GCC's <code>std::sort</code> switches to insertion sort when the partition size drops below ~16 elements. This eliminates recursive call overhead and exploits the nearly-sorted state of small partitions.</li>
+                    <li><strong>Online sorting (streaming data):</strong> Insertion sort naturally handles data arriving one element at a time — each insertion is O(n) worst case, but maintaining a sorted buffer of recent items is practical for small windows.</li>
+                    <li><strong>Card sorting (the human analogy):</strong> The way most people sort a hand of playing cards — pick up one card, slide it into the right place among the cards already held — is exactly insertion sort.</li>
+                    <li><strong>Embedded systems with tiny arrays:</strong> Microcontrollers sorting 8–16 sensor readings use insertion sort because it compiles to minimal code, uses no extra memory, and beats asymptotically faster algorithms at these sizes.</li>
+                </ul>
+            `
+        },
+
+        'selection-sort': {
+            title: 'Selection Sort',
+            content: `
+                <p><strong>What it is:</strong> Selection sort divides the array into a sorted prefix and an unsorted suffix. On each pass, it scans the unsorted suffix to find the minimum element and swaps it into the first unsorted position. After n−1 passes, the array is sorted.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>For <code>i = 0</code> to <code>n-2</code>:</li>
+                    <li>Find the index <code>min_idx</code> of the minimum element in <code>a[i..n-1]</code>.</li>
+                    <li>Swap <code>a[i]</code> and <code>a[min_idx]</code>.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>All cases O(n&sup2;):</strong> Always performs exactly n(n−1)/2 comparisons regardless of input order. Not adaptive.</li>
+                    <li><strong>Swaps:</strong> At most n−1 swaps — the minimum number possible. This is selection sort's only advantage: it minimises data movement.</li>
+                    <li><strong>Space:</strong> O(1) — in-place.</li>
+                    <li><strong>Stability:</strong> Not stable in the standard swap-based form (swapping can jump equal elements over each other). A stable variant exists using shifts instead of swaps, but then it becomes insertion sort.</li>
+                </ul>
+
+                <h3>Why It Matters</h3>
+                <p>Selection sort is primarily a teaching algorithm. Its value lies in demonstrating the <em>selection</em> paradigm (finding the extremum) and in its O(n) swap count, which matters when writes are much more expensive than reads — for example, when sorting large records on flash memory with limited write cycles.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Minimising writes to flash/EEPROM:</strong> On flash memory with limited write endurance (~10,000 cycles), selection sort's O(n) swaps versus insertion sort's O(n&sup2;) shifts can extend the memory's usable life — relevant in IoT sensor logging.</li>
+                    <li><strong>Sorting very large records by small keys:</strong> When each element is a multi-megabyte blob and copying is expensive, selection sort's minimal swap count reduces I/O. (In practice, you'd sort an index array instead.)</li>
+                    <li><strong>Pedagogical foundation:</strong> Selection sort is the canonical algorithm for teaching loop invariants: "after iteration i, the first i elements are the i smallest in sorted order." Every algorithms textbook begins here.</li>
+                    <li><strong>Tournament selection in evolutionary algorithms:</strong> Genetic algorithms use tournament selection — repeatedly picking the fittest from a small random subset — which is the selection sort principle applied to one position at a time.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           EFFICIENT COMPARISON SORTS
+           ══════════════════════════════════════════ */
+
+        'merge-sort': {
+            title: 'Merge Sort',
+            content: `
+                <p><strong>What it is:</strong> Merge sort is a divide-and-conquer algorithm. Split the array in half, recursively sort each half, then merge the two sorted halves into a single sorted array. The merge step does all the work: it scans both halves with two pointers, always copying the smaller element into the output.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li><strong>Divide:</strong> Split the array at the midpoint into left and right halves.</li>
+                    <li><strong>Conquer:</strong> Recursively sort each half. Base case: a single element is already sorted.</li>
+                    <li><strong>Merge:</strong> Two-pointer merge of two sorted arrays into one. Compare the front elements of each half; copy the smaller; advance that pointer. O(n) per merge level, O(log n) levels → O(n log n) total.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>All cases O(n log n):</strong> The recursion tree always has log n levels, each doing O(n) work. No degradation on any input.</li>
+                    <li><strong>Space:</strong> O(n) for the auxiliary merge buffer. This is the primary downside compared to quicksort. In-place merge sort exists but is complex and slower in practice.</li>
+                    <li><strong>Stability:</strong> Stable — the merge step preserves the order of equal elements by always taking from the left half first on ties.</li>
+                </ul>
+
+                <h3>The Comparison Sort Lower Bound</h3>
+                <p>Any comparison-based sort must make at least <code>&lceil;log&sub2;(n!)&rceil; &asymp; n log n</code> comparisons in the worst case — because there are n! possible orderings and each comparison eliminates at most half. Merge sort matches this lower bound: it is <em>asymptotically optimal</em> among comparison sorts.</p>
+
+                <h3>Variants</h3>
+                <ul>
+                    <li><strong>Bottom-up merge sort:</strong> Iterative. Merge pairs of size 1 into sorted pairs, then merge pairs of size 2 into sorted runs of 4, and so on. No recursion overhead; same O(n log n).</li>
+                    <li><strong>Natural merge sort / Timsort:</strong> Detect existing sorted runs in the data and merge them. Timsort is the dominant modern variant — O(n) on nearly-sorted data.</li>
+                    <li><strong>Merge sort on linked lists:</strong> O(n log n) with O(log n) stack space and no extra array — splitting is O(n) with slow/fast pointers, merging is pointer rewiring. The preferred sort for linked lists.</li>
+                    <li><strong>External merge sort:</strong> For data too large to fit in RAM. Sort chunks that fit in memory, write sorted runs to disk, then k-way merge the runs using a priority queue. The basis of all large-scale sorting (databases, MapReduce).</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Python's sort / Java's Arrays.sort for objects:</strong> Timsort (a natural merge sort) is the default sort in CPython and OpenJDK for objects. It exploits pre-existing order, achieving O(n) on nearly-sorted data and worst-case O(n log n).</li>
+                    <li><strong>Database external sort:</strong> When <code>ORDER BY</code> operates on more data than fits in memory, PostgreSQL and MySQL perform external merge sort: sort in-memory chunks, flush to temp files, then multi-way merge.</li>
+                    <li><strong>MapReduce shuffle phase:</strong> Hadoop and Spark sort mapper output by key using external merge sort before feeding it to reducers. This is the largest-scale sorting in the world — petabytes of data sorted across thousands of machines.</li>
+                    <li><strong>Inversion counting:</strong> The number of inversions (out-of-order pairs) in an array can be counted in O(n log n) by modifying merge sort's merge step to count splits. Used in ranking correlation (Kendall tau distance).</li>
+                    <li><strong>Git diff and merge:</strong> Git's merge algorithm (recursive three-way merge) uses patience sorting and merge-like operations to align file content. The underlying merge logic is structurally the same as merge sort's merge step.</li>
+                </ul>
+            `
+        },
+
+        'quick-sort': {
+            title: 'Quick Sort',
+            content: `
+                <p><strong>What it is:</strong> Quick sort selects a <em>pivot</em> element, partitions the array so that all elements less than the pivot come before it and all greater elements come after, then recursively sorts the two partitions. The key insight: the pivot is in its final sorted position after partitioning — no merge step needed.</p>
+
+                <h3>The Algorithm (Lomuto Partition)</h3>
+                <ul>
+                    <li>Choose a pivot (last element, random, or median-of-three).</li>
+                    <li>Maintain index <code>i</code> = boundary of "less than pivot" region.</li>
+                    <li>Scan <code>j</code> from left to right: if <code>a[j] &lt; pivot</code>, swap <code>a[j]</code> with <code>a[i]</code> and increment <code>i</code>.</li>
+                    <li>Swap pivot into position <code>i</code>. Now <code>a[0..i-1] &lt; pivot &le; a[i+1..n-1]</code>.</li>
+                    <li>Recurse on both sides.</li>
+                </ul>
+
+                <h3>Hoare Partition</h3>
+                <p>Hoare's original scheme uses two pointers that converge from both ends. It performs fewer swaps on average than Lomuto and handles repeated elements more gracefully. Most production implementations use Hoare or a dual-pivot variant.</p>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Average case O(n log n):</strong> A random pivot splits the array into roughly equal halves with high probability. The expected number of comparisons is ~1.39 n log n — about 39% more than merge sort, but the constant factor is lower due to cache locality.</li>
+                    <li><strong>Worst case O(n&sup2;):</strong> Occurs when the pivot is always the smallest or largest element (already-sorted input with naive pivot choice). Randomised pivot selection or median-of-three makes this astronomically unlikely.</li>
+                    <li><strong>Space:</strong> O(log n) for the recursion stack (tail-call optimise the larger partition). Worst case O(n) without tail-call optimisation.</li>
+                    <li><strong>Stability:</strong> Not stable — the partition swaps can reorder equal elements.</li>
+                </ul>
+
+                <h3>Variants &amp; Improvements</h3>
+                <ul>
+                    <li><strong>Introsort (C++ std::sort):</strong> Start with quicksort; if recursion depth exceeds 2 log n, switch to heapsort to guarantee O(n log n) worst case. Use insertion sort for small partitions. This is the standard in GCC and MSVC.</li>
+                    <li><strong>Dual-pivot quicksort (Java):</strong> Java's <code>Arrays.sort</code> for primitives uses Yaroslavskiy's dual-pivot quicksort: two pivots create three partitions, reducing the number of comparisons and improving cache performance.</li>
+                    <li><strong>Three-way partition (Dutch National Flag):</strong> Partition into &lt; pivot, = pivot, &gt; pivot. Essential for arrays with many duplicates — reduces the problem size by excluding all copies of the pivot from recursion.</li>
+                    <li><strong>Quickselect (selection):</strong> Quicksort's partition step alone finds the k-th smallest element in O(n) average time — only recurse into the partition containing position k.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>C++ <code>std::sort</code> (Introsort):</strong> GCC's libstdc++ and LLVM's libc++ both implement <code>std::sort</code> as introsort — quicksort with heapsort fallback and insertion sort for small ranges. The fastest general-purpose sort for primitive types.</li>
+                    <li><strong>Java <code>Arrays.sort</code> for primitives:</strong> Uses dual-pivot quicksort. Benchmarks show 10–20% fewer comparisons and better cache utilisation than classic single-pivot quicksort.</li>
+                    <li><strong>qsort in C standard library:</strong> glibc's <code>qsort()</code> is a quicksort with median-of-three pivot and insertion sort fallback. The workhorse sort for C programs.</li>
+                    <li><strong>Database in-memory sort:</strong> When the data fits in memory, database engines (PostgreSQL, DuckDB) use quicksort variants for <code>ORDER BY</code> because the cache-friendly access pattern outperforms merge sort at these scales.</li>
+                    <li><strong>Quickselect in percentile computation:</strong> Computing the median, p95 latency, or any order statistic of a dataset uses quickselect — quicksort's partition without full sorting. NumPy's <code>np.percentile</code> uses this internally.</li>
+                </ul>
+            `
+        },
+
+        'heap-sort': {
+            title: 'Heap Sort',
+            content: `
+                <p><strong>What it is:</strong> Heap sort leverages the binary heap data structure. First, build a max-heap from the array in O(n). Then, repeatedly extract the maximum (swap root with the last element, reduce heap size by one, sift down the new root). After n−1 extractions, the array is sorted in ascending order.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li><strong>Build max-heap:</strong> Call sift-down on nodes from <code>n/2</code> down to <code>1</code>. Each sift-down is O(log n), but the total work is O(n) because most nodes are near the leaves. (A subtle but important result — proved via a geometric series on the heights.)</li>
+                    <li><strong>Extract-max loop:</strong> For <code>i = n-1</code> down to <code>1</code>: swap <code>a[0]</code> with <code>a[i]</code> (placing the max at the end), then sift down <code>a[0]</code> in the reduced heap <code>a[0..i-1]</code>. Each extraction is O(log n); n−1 extractions → O(n log n).</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>All cases O(n log n):</strong> No input can cause degradation. The build phase is O(n) and the extraction phase is always O(n log n).</li>
+                    <li><strong>Space:</strong> O(1) — fully in-place. The heap is built within the array itself. This makes heapsort the only O(n log n) comparison sort with O(1) auxiliary space.</li>
+                    <li><strong>Stability:</strong> Not stable — the initial heap construction and root-to-end swaps disrupt the order of equal elements.</li>
+                    <li><strong>Cache performance:</strong> Worse than quicksort. Sift-down jumps to child indices <code>2i</code> and <code>2i+1</code>, causing non-sequential memory access patterns that thrash CPU caches. This is why heapsort is ~2–3× slower than quicksort in practice despite the same asymptotic bound.</li>
+                </ul>
+
+                <h3>Why It Matters</h3>
+                <p>Heapsort provides the <em>tightest guarantees</em> of any comparison sort: O(n log n) worst case, O(1) space, no recursion needed. It is the fallback sort when guarantees matter more than average-case speed. Introsort (used in C++ <code>std::sort</code>) switches to heapsort precisely when quicksort's recursion depth signals potential O(n&sup2;) behaviour.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Introsort fallback (C++ std::sort):</strong> When quicksort's recursion depth exceeds 2 log n, introsort switches to heapsort to guarantee O(n log n). This is the safety net that makes <code>std::sort</code> both fast and worst-case safe.</li>
+                    <li><strong>Embedded real-time systems:</strong> Systems with strict worst-case timing requirements (avionics, medical devices) use heapsort because its execution time is deterministic — no pathological inputs can cause a slowdown.</li>
+                    <li><strong>Linux kernel (partial sort):</strong> The kernel uses heap-based operations for priority scheduling and timer management where the heap structure's O(log n) insert/extract is the primary operation, not full sorting.</li>
+                    <li><strong>Selection of top-k elements:</strong> Build a min-heap of size k, then scan the remaining n−k elements: replace the root whenever a larger element is found. O(n log k) time, O(k) space. Used in search engine ranking (retrieve the top 10 results from millions of candidates).</li>
+                    <li><strong>Memory-constrained environments:</strong> When the auxiliary O(n) buffer needed by merge sort is unacceptable (deeply embedded systems, bootloaders), heapsort is the only option that guarantees O(n log n) with O(1) extra memory.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           NON-COMPARISON SORTS
+           ══════════════════════════════════════════ */
+
+        'counting-sort': {
+            title: 'Counting Sort',
+            content: `
+                <p><strong>What it is:</strong> Counting sort is a non-comparison sorting algorithm. Instead of comparing pairs of elements, it counts the number of occurrences of each distinct key value, then uses these counts to place each element directly into its sorted position. It requires that keys are integers (or can be mapped to integers) within a known range [0, k).</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li><strong>Count:</strong> Allocate an array <code>count[0..k-1]</code>, initialised to zero. For each element <code>a[i]</code>, increment <code>count[a[i]]</code>.</li>
+                    <li><strong>Prefix sums:</strong> Compute cumulative sums: <code>count[j] += count[j-1]</code> for <code>j = 1..k-1</code>. Now <code>count[v]</code> tells you the index where the last copy of value <code>v</code> should be placed.</li>
+                    <li><strong>Place:</strong> Traverse the input in reverse (for stability). For each element <code>a[i]</code>: decrement <code>count[a[i]]</code>, and place <code>a[i]</code> at <code>output[count[a[i]]]</code>.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Time:</strong> O(n + k) — one pass to count, one pass for prefix sums, one pass to place. Linear in input size plus key range.</li>
+                    <li><strong>Space:</strong> O(n + k) — output array of size n plus count array of size k.</li>
+                    <li><strong>Stability:</strong> Stable — the reverse-order placement pass ensures equal keys retain their original order. This stability is what makes counting sort useful as a subroutine in radix sort.</li>
+                </ul>
+
+                <h3>Breaking the Comparison Lower Bound</h3>
+                <p>The O(n log n) lower bound applies only to comparison-based sorts. Counting sort avoids comparisons entirely — it exploits the structure of integer keys. When k = O(n), counting sort runs in O(n), beating the comparison bound. The tradeoff: it only works for discrete keys with a bounded range.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Radix sort subroutine:</strong> Radix sort calls counting sort once per digit. This is the most important use — counting sort's stability ensures that sorting by digit <em>d</em> does not disturb the order established by digit <em>d−1</em>.</li>
+                    <li><strong>Histogram computation:</strong> The "count" phase of counting sort is exactly a histogram. Image processing computes pixel intensity histograms (256 bins for 8-bit images) in O(n) as the first step of histogram equalisation, Otsu's thresholding, and colour analysis.</li>
+                    <li><strong>Suffix array construction:</strong> The SA-IS and DC3 algorithms for building suffix arrays in O(n) use counting sort on character values at each stage. This underlies full-text indexing in bioinformatics and search engines.</li>
+                    <li><strong>Sorting exam scores or ages:</strong> When keys come from a small, known domain (exam scores 0–100, ages 0–150), counting sort is the natural O(n) solution. Grade distribution reports at universities use exactly this.</li>
+                    <li><strong>Network packet classification:</strong> Sorting packets by 8-bit Type of Service (ToS) or DSCP fields uses counting sort — 256 or 64 buckets, one O(n) pass. Routers use this for QoS classification at line rate.</li>
+                </ul>
+            `
+        },
+
+        'radix-sort': {
+            title: 'Radix Sort',
+            content: `
+                <p><strong>What it is:</strong> Radix sort processes integer keys one digit at a time, from the least significant digit (LSD) to the most significant. At each digit position, it uses a stable sort (typically counting sort) to reorder elements by that digit alone. After processing all <em>d</em> digits, the array is fully sorted.</p>
+
+                <h3>The Algorithm (LSD Radix Sort)</h3>
+                <ul>
+                    <li>Choose a radix (base) <em>b</em>. Common choices: b = 10 (decimal digits), b = 256 (bytes), b = 65536 (16-bit chunks).</li>
+                    <li>For each digit position <code>d = 0, 1, …, D-1</code> (from least to most significant):</li>
+                    <li>Extract digit <code>d</code> of each key: <code>digit = (key / b^d) mod b</code>.</li>
+                    <li>Apply counting sort on the extracted digits. The stability of counting sort preserves the order established by previous (less significant) digits.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Time:</strong> O(d(n + k)) where d is the number of digit positions and k is the radix (number of possible digit values). For 32-bit integers with radix 256: d = 4, k = 256, giving O(4(n + 256)) = O(n). Linear!</li>
+                    <li><strong>Space:</strong> O(n + k) — same as counting sort.</li>
+                    <li><strong>Stability:</strong> Stable — inherits from the stable counting sort subroutine.</li>
+                </ul>
+
+                <h3>LSD vs. MSD Radix Sort</h3>
+                <ul>
+                    <li><strong>LSD (Least Significant Digit first):</strong> Process digits right to left. Simpler; always examines all d digits. Works well for fixed-width keys.</li>
+                    <li><strong>MSD (Most Significant Digit first):</strong> Process digits left to right, recursively sorting each bucket. Can short-circuit for variable-length keys (e.g. strings). Essentially a trie-based sort. Used in string sorting.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Sorting large integer datasets:</strong> When sorting millions of 32-bit or 64-bit integers, radix sort (with radix 256, processing 1 byte at a time) outperforms quicksort by 2–5×. It makes 4 or 8 linear passes instead of O(n log n) comparisons with branch mispredictions.</li>
+                    <li><strong>Database integer column sorting:</strong> Columnar databases (DuckDB, ClickHouse) use radix sort for integer and fixed-width columns because the predictable memory access pattern and linear time dominate comparison sorts at scale.</li>
+                    <li><strong>GPU sorting (CUB/Thrust):</strong> NVIDIA's CUB library implements radix sort as the primary GPU sort. Radix sort's regular, data-independent access pattern maps perfectly to GPU parallelism — each digit pass is a massively parallel scatter. It is the fastest known GPU sort.</li>
+                    <li><strong>Suffix array construction:</strong> The DC3/Skew algorithm builds suffix arrays in O(n) using radix sort to sort triples of characters. This is foundational to bioinformatics (genome alignment) and full-text search indexes.</li>
+                    <li><strong>Network packet sorting by IP address:</strong> Sorting IPv4 packets by 32-bit source or destination address is a natural fit for radix sort with radix 256 — four passes over the four octets, O(n) total.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           SEARCH ALGORITHMS
+           ══════════════════════════════════════════ */
+
+        'linear-search': {
+            title: 'Linear Search',
+            content: `
+                <p><strong>What it is:</strong> Linear search (sequential search) examines each element of a collection one by one, from first to last, until the target is found or the collection is exhausted. It is the simplest possible search algorithm and the only option when the data has no exploitable structure.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>For <code>i = 0</code> to <code>n-1</code>:</li>
+                    <li>If <code>a[i] == target</code>, return <code>i</code>.</li>
+                    <li>If the loop completes without a match, return "not found."</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Best case O(1):</strong> Target is the first element.</li>
+                    <li><strong>Average case O(n):</strong> On average, examine n/2 elements (assuming the target is equally likely to be at any position, or absent).</li>
+                    <li><strong>Worst case O(n):</strong> Target is the last element or absent.</li>
+                    <li><strong>Space:</strong> O(1).</li>
+                    <li><strong>Preconditions:</strong> None. Works on unsorted data, linked lists, streams — anything iterable.</li>
+                </ul>
+
+                <h3>Sentinel Optimisation</h3>
+                <p>Place the target value at the end of the array as a <em>sentinel</em>. This eliminates the bounds check (<code>i &lt; n</code>) from the inner loop — the search is guaranteed to terminate at the sentinel. After the loop, check whether the found index is the sentinel position. This halves the number of comparisons per iteration, improving real-world performance by ~30% despite the same asymptotic bound.</p>
+
+                <h3>Why It Matters</h3>
+                <p>Linear search is the baseline. Every other search algorithm is an optimisation that trades some precondition (sorted order, hash function, tree structure) for sub-linear time. Understanding linear search precisely — its simplicity, its universality, and its limitations — is the foundation for understanding <em>why</em> we need sorted data or index structures at all.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Small collections (n &lt; ~64):</strong> For tiny arrays, linear search is faster than binary search because it avoids the overhead of computing midpoints and has perfect sequential cache access. Standard library <code>find()</code> implementations use linear search for small containers.</li>
+                    <li><strong>Unsorted / streaming data:</strong> Searching a network packet stream for a specific pattern, scanning log lines for an error message, or finding a value in an unindexed JSON array — all linear search. You cannot sort a stream.</li>
+                    <li><strong>Linked list traversal:</strong> Linked lists do not support random access, so binary search is impossible. Linear search is the only option: <code>std::find</code> on a <code>std::list</code>, walking a linked hash bucket, or traversing a DOM tree.</li>
+                    <li><strong>grep / string matching inner loop:</strong> At the lowest level, <code>grep</code> scans each line byte by byte (with SIMD acceleration) looking for a pattern match. The outer loop over lines is a linear search for matching lines.</li>
+                    <li><strong>Brute-force nearest neighbour:</strong> Without a spatial index (k-d tree, ball tree), finding the closest point in a point cloud requires scanning all n points and tracking the minimum distance. This O(n) per query is acceptable for small datasets or as a correctness baseline.</li>
+                </ul>
+            `
+        },
+
+        'binary-search': {
+            title: 'Binary Search',
+            content: `
+                <p><strong>What it is:</strong> Binary search halves the search space at each step. Given a sorted array and a target value, compare the target to the middle element. If equal, found. If less, recurse on the left half. If greater, recurse on the right half. Each comparison eliminates half the remaining elements.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>Maintain two pointers: <code>lo = 0</code>, <code>hi = n - 1</code>.</li>
+                    <li>While <code>lo &le; hi</code>:</li>
+                    <li>Compute <code>mid = lo + (hi - lo) / 2</code> (avoids integer overflow vs. <code>(lo + hi) / 2</code>).</li>
+                    <li>If <code>a[mid] == target</code>, return <code>mid</code>.</li>
+                    <li>If <code>a[mid] &lt; target</code>, set <code>lo = mid + 1</code>.</li>
+                    <li>If <code>a[mid] &gt; target</code>, set <code>hi = mid - 1</code>.</li>
+                    <li>If the loop exits, the target is not present. <code>lo</code> is the insertion point.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Time:</strong> O(log n). Each comparison halves the search space: n → n/2 → n/4 → … → 1, taking log&sub2;(n) steps.</li>
+                    <li><strong>Space:</strong> O(1) iterative; O(log n) recursive.</li>
+                    <li><strong>Precondition:</strong> The array must be sorted (or more generally, the search predicate must be monotonic).</li>
+                </ul>
+
+                <h3>Variants &amp; Generalisations</h3>
+                <ul>
+                    <li><strong>Lower bound (leftmost):</strong> Find the first index where <code>a[i] &ge; target</code>. When there are duplicates, this gives the leftmost occurrence. C++ <code>std::lower_bound</code>, Python <code>bisect.bisect_left</code>.</li>
+                    <li><strong>Upper bound (rightmost):</strong> Find the first index where <code>a[i] &gt; target</code>. Together with lower bound, gives the range of equal elements.</li>
+                    <li><strong>Binary search on the answer:</strong> When the answer space is monotonic (e.g. "can we achieve throughput X?"), binary search over possible answers rather than array indices. A powerful technique in optimisation and competitive programming.</li>
+                    <li><strong>Bisection method (numerical analysis):</strong> Find a root of a continuous function f(x) by binary searching on the interval where f changes sign. Converges linearly; used as a robust fallback in root-finding libraries.</li>
+                </ul>
+
+                <h3>The Off-by-One Trap</h3>
+                <p>Binary search is notoriously easy to get wrong. Knuth noted that the first correct published binary search appeared in 1946, but the first bug-free implementation didn't appear until 1962 — 16 years of off-by-one errors. Java's <code>Arrays.binarySearch</code> had an integer overflow bug (<code>(lo + hi) / 2</code>) that went undetected for 9 years. Always use <code>lo + (hi - lo) / 2</code>.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Database index lookup (B-tree search):</strong> B-tree nodes are sorted arrays. At each node, binary search finds the correct child pointer. This is the inner loop of every database query that uses an index — billions of binary searches per second globally.</li>
+                    <li><strong>Standard library search functions:</strong> C's <code>bsearch()</code>, Python's <code>bisect</code> module, Java's <code>Arrays.binarySearch</code>, C++'s <code>std::lower_bound</code> — all binary search.</li>
+                    <li><strong>Git bisect:</strong> <code>git bisect</code> uses binary search over the commit history to find the exact commit that introduced a bug. If there are 1024 commits, it takes at most 10 tests instead of 1024.</li>
+                    <li><strong>IP routing table lookup:</strong> Longest-prefix match on sorted prefix tables uses binary search variants. DPDK and kernel routing stacks use this for fast forwarding decisions.</li>
+                    <li><strong>Binary search on the answer (optimisation):</strong> "What is the minimum cable length such that we can connect k cities?" — binary search over possible lengths, checking feasibility at each candidate. This pattern appears throughout operations research and competitive programming.</li>
+                    <li><strong>Machine learning hyperparameter tuning:</strong> When a metric is monotonic in a parameter (e.g. regularisation strength), binary search on the parameter finds the optimal value in O(log n) evaluations instead of grid search's O(n).</li>
+                </ul>
+            `
+        },
+
+        'interpolation-search': {
+            title: 'Interpolation Search',
+            content: `
+                <p><strong>What it is:</strong> Interpolation search improves on binary search by estimating where the target is likely to be, based on the distribution of values. Instead of always probing the midpoint, it probes at a position proportional to the target's value relative to the current bounds. If the data is uniformly distributed, this converges much faster than binary search.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>Maintain bounds <code>lo</code> and <code>hi</code> as in binary search.</li>
+                    <li>Estimate the probe position using linear interpolation:</li>
+                    <li><code>pos = lo + ((target - a[lo]) / (a[hi] - a[lo])) &times; (hi - lo)</code></li>
+                    <li>Compare <code>a[pos]</code> with the target and adjust bounds, exactly as in binary search.</li>
+                    <li>Guard against <code>a[hi] == a[lo]</code> (division by zero) and <code>pos</code> falling outside <code>[lo, hi]</code>.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Average case O(log log n):</strong> On uniformly distributed data, each probe eliminates a <em>multiplicative</em> fraction of the search space proportional to <code>1/&radic;n</code>, yielding doubly-logarithmic convergence. This is provably optimal for uniform data.</li>
+                    <li><strong>Worst case O(n):</strong> If the data is highly non-uniform (e.g. exponentially distributed), the interpolation estimate can be wildly wrong, and the algorithm degenerates to linear search. In the worst case, every probe reduces the search space by only 1.</li>
+                    <li><strong>Space:</strong> O(1).</li>
+                    <li><strong>Precondition:</strong> The array must be sorted, and the algorithm assumes roughly uniform distribution of values for its speed advantage.</li>
+                </ul>
+
+                <h3>Interpolation vs. Binary Search</h3>
+                <ul>
+                    <li><strong>Uniform data:</strong> Interpolation search makes ~log log n probes vs. binary search's log n. For n = 10&sup6;, that's ~4 probes vs. ~20 — a 5× reduction.</li>
+                    <li><strong>Non-uniform data:</strong> Binary search is always O(log n) regardless of distribution. Interpolation search has no such guarantee. In practice, a hybrid approach works best: use interpolation for the first few probes, then fall back to binary search.</li>
+                    <li><strong>Cache and branch prediction:</strong> Binary search's predictable access pattern is friendlier to modern CPUs. Interpolation search's arithmetic (division, multiplication) and less predictable access can offset its theoretical advantage for smaller n.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Large sorted databases with uniform keys:</strong> Auto-incrementing primary keys (user IDs, order IDs) are naturally uniform. Interpolation search on a sorted array of 100 million IDs finds the target in ~5 probes instead of ~27. Used in high-performance in-memory databases.</li>
+                    <li><strong>Learned indexes (ML for systems):</strong> Google's "Learned Index" paper (Kraska et al., 2018) generalises interpolation search: train a model to predict the position of a key in a sorted array. A simple linear model is exactly interpolation search; neural models can handle non-uniform distributions. Achieves 1.5–3× speedup over B-trees.</li>
+                    <li><strong>Searching time-series data:</strong> Timestamps are roughly uniformly spaced. Searching a sorted log file by timestamp (e.g. finding the log entry nearest to 14:30:00) benefits from interpolation: the estimated position is usually very close.</li>
+                    <li><strong>Telephone directory analogy:</strong> When looking up "Smith" in a phone book, you don't open to the middle — you open near 80% of the way through, because "S" is late in the alphabet. This is interpolation search. Binary search would always open to the middle.</li>
+                    <li><strong>Numerical root-finding (regula falsi):</strong> The false position method for finding roots of continuous functions uses linear interpolation between two bracketing points — the same principle as interpolation search applied to continuous functions instead of discrete arrays.</li>
+                </ul>
+            `
+        },
+
+        'exponential-search': {
+            title: 'Exponential Search',
+            content: `
+                <p><strong>What it is:</strong> Exponential search (also called galloping search or doubling search) finds the range containing the target by repeatedly doubling an index — 1, 2, 4, 8, 16, … — until the element at that index exceeds the target. Then it performs binary search within the identified range. It is optimal when the target is near the beginning of a sorted collection or when the collection's size is unknown.</p>
+
+                <h3>The Algorithm</h3>
+                <ul>
+                    <li>If <code>a[0] == target</code>, return 0.</li>
+                    <li>Set <code>bound = 1</code>. While <code>bound &lt; n</code> and <code>a[bound] &lt; target</code>: double <code>bound</code>.</li>
+                    <li>Now the target lies in <code>[bound/2, min(bound, n-1)]</code>.</li>
+                    <li>Binary search within this range.</li>
+                </ul>
+
+                <h3>Complexity</h3>
+                <ul>
+                    <li><strong>Time:</strong> O(log i) where i is the index of the target element. The doubling phase takes O(log i) steps to bracket the target, and the binary search within the range of size i also takes O(log i). If the target is at position 8, only ~6 comparisons are needed, regardless of whether the array has 100 or 100 million elements.</li>
+                    <li><strong>Worst case:</strong> O(log n) when the target is near the end — same as binary search.</li>
+                    <li><strong>Space:</strong> O(1).</li>
+                    <li><strong>Precondition:</strong> Sorted data. The collection can be unbounded (infinite stream or unknown size).</li>
+                </ul>
+
+                <h3>Why O(log i) Matters</h3>
+                <p>Binary search always takes O(log n) regardless of where the target is. Exponential search is <em>output-sensitive</em>: its cost depends on the target's position, not the collection's size. This is an important distinction for:</p>
+                <ul>
+                    <li><strong>Unbounded search:</strong> You have a sorted stream or function and don't know n. Binary search requires knowing both endpoints; exponential search does not.</li>
+                    <li><strong>Skewed access patterns:</strong> If most queries target elements near the start, exponential search outperforms binary search on average.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Timsort's galloping mode:</strong> Python's Timsort (and Java's) uses exponential search ("galloping") during the merge phase. When one run is consistently winning (i.e. its elements are smaller), Timsort gallops through it with doubling steps to find the break point, reducing comparisons from O(n) to O(log n) for merging skewed runs.</li>
+                    <li><strong>Search engine posting list intersection:</strong> When intersecting two sorted posting lists of vastly different lengths (e.g. "the" with 10M entries vs. "quasar" with 100), gallop through the longer list using exponential search for each element of the shorter list. O(m log(n/m)) total, much better than linear merge for skewed sizes.</li>
+                    <li><strong>Unbounded binary search in algorithms:</strong> Finding the first index where a monotone predicate becomes true on an unbounded domain (e.g. "the smallest k such that f(k) > threshold") requires exponential search to first find a bound, then binary search. Used in competitive programming and theoretical CS.</li>
+                    <li><strong>Auto-tuning loop unrolling:</strong> Compilers and runtime systems that need to find the optimal iteration count for a loop (where performance is monotonically increasing then decreasing) use exponential search to bracket the peak before refining.</li>
+                    <li><strong>Finger search on sorted arrays:</strong> When you know the approximate position of the target from a previous query (a "finger"), exponential search from that position finds the new target in O(log d) where d is the distance from the finger. Skip lists and splay trees offer similar finger search guarantees.</li>
+                </ul>
+            `
+        }
+    };
+
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeBtn = document.querySelector('.close');
+
+    document.querySelectorAll('.ds-card').forEach(card => {
+        card.addEventListener('click', function () {
+            const key = this.getAttribute('data-info');
+            const info = explanations[key];
+            if (info) {
+                modalTitle.textContent = info.title;
+                modalBody.innerHTML = info.content;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    });
+    window.addEventListener('click', e => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    </script>
+</body>
+</html>
