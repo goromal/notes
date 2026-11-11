@@ -2,7 +2,9 @@
 
 The other day, riding down a long airport escalator, I let my finger drag (probably unwisely) along the smooth tiled wall, lifting it over the grout cracks as they approached. The tiles repeated, but the jump sequence didn’t necessarily repeat with any discernible repeating pattern. So naturally, a math problem popped into my head that I spent my entire gate-waiting period thinking about.
 
-Imagine an infinite rectangular grid and a straight path through it. As it turns out, **the crossing pattern repeats exactly when the path's slope, measured in tile units, is rational.** Two individually periodic sequences can combine into a pattern that never repeats.
+> If there is an infinite rectangular grid and a line that crosses through the grid at an angle, are you guaranteed periodicity in the grid-line intersection points (from the line’s 1D perspective) no matter the line angle and grid aspect ratio?
+
+As it turns out, **the crossing pattern repeats (achieving periodicity) exactly when the path's slope, measured in tile units, is a rational number.** So periodicity is not guaranteed; individually periodic sequences can combine into a pattern that never repeats, and that’s how you should think about this problems (and its unexpected applications).
 
 ## Two sets of periodic "ticks"
 
