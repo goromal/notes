@@ -16,6 +16,7 @@ I'm a bit of a meticulous note taker--in part because it helps me retain informa
       - [The Kinematic Filters](./Autonomy/Estimation/Filter-Based_Estimation_Algorithms/The_Kinematic_Filters.md)
       - [The Luenberger Observer (LQE)](./Autonomy/Estimation/Filter-Based_Estimation_Algorithms/The_Luenberger_Observer_(LQE).md)
   - [Math Fundamentals](./Autonomy/Math_Fundamentals/Math_Fundamentals.md)
+    - [Grid Intersections](./Autonomy/Math_Fundamentals/Grid_Intersections.md)
     - [3D Geometry](./Autonomy/Math_Fundamentals/3D_Geometry/3D_Geometry.md)
       - [Rotations Robotics Field Guide](./Autonomy/Math_Fundamentals/3D_Geometry/Rotations_Robotics_Field_Guide.md)
     - [Linear Algebra](./Autonomy/Math_Fundamentals/Linear_Algebra/Linear_Algebra.md)

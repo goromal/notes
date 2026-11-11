@@ -11,6 +11,7 @@
     - [The Kinematic Filters](./Estimation/Filter-Based_Estimation_Algorithms/The_Kinematic_Filters.md)
     - [The Luenberger Observer (LQE)](./Estimation/Filter-Based_Estimation_Algorithms/The_Luenberger_Observer_(LQE).md)
 - [Math Fundamentals](./Math_Fundamentals/Math_Fundamentals.md)
+  - [Grid Intersections](./Math_Fundamentals/Grid_Intersections.md)
   - [3D Geometry](./Math_Fundamentals/3D_Geometry/3D_Geometry.md)
     - [Rotations Robotics Field Guide](./Math_Fundamentals/3D_Geometry/Rotations_Robotics_Field_Guide.md)
   - [Linear Algebra](./Math_Fundamentals/Linear_Algebra/Linear_Algebra.md)
