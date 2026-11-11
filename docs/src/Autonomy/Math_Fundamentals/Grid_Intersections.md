@@ -4,7 +4,7 @@ One time, riding down a long airport escalator, I let my finger drag (probably u
 
 > If there is an infinite rectangular grid and a line that crosses through the grid at an angle, are you guaranteed periodicity in the grid-line intersection points (from the line’s 1D perspective) no matter the line angle and grid aspect ratio?
 
-As it turns out, **the crossing pattern repeats (achieving periodicity) exactly when the path's slope, measured in tile units, is a rational number.** So periodicity is not guaranteed *despite the inherent periodicity in the geometry of the problem*; individually periodic sequences can combine into a pattern that never repeats, and that’s how you should frame this problem (and its unexpected applications).
+As it turns out, **the crossing pattern repeats (achieving periodicity) exactly when the path's slope, measured in tile units, is a rational number.** So periodicity is not guaranteed *despite the inherent periodicity in the geometry of the problem*; stated differently, individually periodic sequences can combine into a pattern that never repeats, and that 1D stipulation is how you should frame this 2D problem (and its unexpected applications).
 
 ## Two sets of periodic "ticks"
 
