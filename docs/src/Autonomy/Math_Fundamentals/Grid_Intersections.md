@@ -70,7 +70,7 @@ For unit squares and slope \\(1/\sqrt2\\), instead \\(b/a=\sqrt2\\): no exact pe
 
 Aspect ratio matters: on tiles twice as wide as they are tall, slope \\(1/2\\) gives \\(a=b\\), so the pattern repeats. Conversely, slope 1 on tiles with \\(w/h=\sqrt2\\) is aperiodic.
 
-## More rhythms, and useful algorithms
+## Applications
 
 For a finite collection of positive spacings \\(T_1,\ldots,T_N\\), a common cycle exists exactly when every ratio \\(T_i/T_1\\) is rational. Checking adjacent ratios also suffices: multiplying them gives every ratio to the first. If \\(T_i/T_1=p_i/q_i\\) in lowest terms, a common cycle is
 
@@ -80,9 +80,9 @@ L=T_1\,\operatorname{lcm}(p_1,\ldots,p_N).
 
 Each \\(L/T_i\\) is then an integer. Conversely, any common cycle gives \\(T_i/T_j=(L/T_j)/(L/T_i)\\), a ratio of integers. Individual spacings may themselves be irrational; what matters is their ratios.
 
-Two practical uses:
+Two practical applications (found with the help of AI):
 
-* **Grid traversal.** Keep the next vertical and horizontal crossing distances. Take the smaller and advance that sequence by \\(a\\) or \\(b\\); at a corner, advance both for a single crossing event. This is the core idea behind [Amanatides and Woo's voxel traversal algorithm](https://flipcode.com/archives/A%20faster%20voxel%20traversal%20algorithm%20for%20ray%20tracing.pdf), extended to three axes. It generates crossings efficiently even without a repeating cycle. Which cells to include when a ray only touches their corner requires an explicit boundary convention.
-* **Periodic task releases.** Timers firing every 2, 3, and 5 milliseconds have a joint release pattern that repeats every 30 milliseconds: their [hyperperiod](https://prosa.mpi-sws.org/branches/master/without-proofs/prosa.analysis.definitions.hyperperiod.html). One cycle can represent the release pattern, though meeting execution deadlines is a separate scheduling problem. Integer clock ticks guarantee rational ratios, but a large least common multiple can make precomputing a cycle impractical.
+* **Grid traversal for ray tracing in computer graphics.** Keep the next vertical and horizontal crossing distances. Take the smaller and advance that sequence by \\(a\\) or \\(b\\); at a corner, advance both for a single crossing event. This is the core idea behind [Amanatides and Woo's voxel traversal algorithm](https://flipcode.com/archives/A%20faster%20voxel%20traversal%20algorithm%20for%20ray%20tracing.pdf), extended to three axes. It generates crossings efficiently even without a repeating cycle. Which cells to include when a ray only touches their corner requires an explicit boundary convention.
+* **Periodic task releases and hyperperiod calculation.** Timers firing every 2, 3, and 5 milliseconds have a joint release pattern that repeats every 30 milliseconds: their [hyperperiod](https://prosa.mpi-sws.org/branches/master/without-proofs/prosa.analysis.definitions.hyperperiod.html). One cycle can represent the release pattern, though meeting execution deadlines is a separate scheduling problem. Integer clock ticks guarantee rational ratios, but a large least common multiple can make precomputing a cycle impractical.
 
-The model treats grout as lines of zero width. A path parallel to one family crosses only the other and is periodic; a path lying directly on a grid line has continuous contact, outside this discrete model. Real tiles, motion, and measurements have tolerances, so a short observed rhythm cannot establish exact mathematical periodicity.
+Of course, whether or not I used my airport time wisely is a separate consideration altogether.
