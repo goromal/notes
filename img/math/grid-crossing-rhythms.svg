@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 425" role="img" aria-labelledby="title desc">
+<title id="title">Repeating and nonrepeating crossing rhythms</title><desc id="desc">Distances are divided by a. The upper panel combines periods 1 and 1.5, repeating every 3 units. The lower panel combines periods 1 and square root of 2, with no exact repeat. The combined rows retain both shapes at simultaneous crossings.</desc>
+<rect width="680" height="425" rx="12" fill="#ffffff"/>
+<g font-family="system-ui, sans-serif" font-size="16" fill="#182b3a">
+<text x="24" y="28" font-size="19" text-anchor="start" fill="#182b3a">Rational: b/a = 3/2</text>
+<rect x="138" y="47" width="234" height="118" rx="5" fill="#edf4fa"/>
+<rect x="372" y="47" width="234" height="118" rx="5" fill="#f6f8fa"/>
+<text x="118" y="77" font-size="14" text-anchor="end" fill="#182b3a">Vertical</text>
+<line x1="138" y1="72" x2="606" y2="72" stroke="#ced7de" stroke-width="1" />
+<text x="118" y="113" font-size="14" text-anchor="end" fill="#182b3a">Horizontal</text>
+<line x1="138" y1="108" x2="606" y2="108" stroke="#ced7de" stroke-width="1" />
+<text x="118" y="154" font-size="14" text-anchor="end" fill="#182b3a">Combined</text>
+<line x1="138" y1="149" x2="606" y2="149" stroke="#ced7de" stroke-width="1" />
+<circle cx="138" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="138" y1="149" x2="138" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="138" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="216" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="216" y1="149" x2="216" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="216" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="294" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="294" y1="149" x2="294" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="294" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="372" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="372" y1="149" x2="372" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="372" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="450" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="450" y1="149" x2="450" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="450" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="528" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="528" y1="149" x2="528" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="528" cy="142" r="4.5" fill="#1769aa"/>
+<circle cx="606" cy="72" r="4.5" fill="#1769aa"/>
+<line x1="606" y1="149" x2="606" y2="142" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="606" cy="142" r="4.5" fill="#1769aa"/>
+<rect x="134" y="104" width="8" height="8" fill="#c45b14"/>
+<line x1="138" y1="149" x2="138" y2="156" stroke="#c45b14" stroke-width="1.5" />
+<rect x="134" y="152" width="8" height="8" fill="#c45b14"/>
+<rect x="251" y="104" width="8" height="8" fill="#c45b14"/>
+<line x1="255" y1="149" x2="255" y2="156" stroke="#c45b14" stroke-width="1.5" />
+<rect x="251" y="152" width="8" height="8" fill="#c45b14"/>
+<rect x="368" y="104" width="8" height="8" fill="#c45b14"/>
+<line x1="372" y1="149" x2="372" y2="156" stroke="#c45b14" stroke-width="1.5" />
+<rect x="368" y="152" width="8" height="8" fill="#c45b14"/>
+<rect x="485" y="104" width="8" height="8" fill="#c45b14"/>
+<line x1="489" y1="149" x2="489" y2="156" stroke="#c45b14" stroke-width="1.5" />
+<rect x="485" y="152" width="8" height="8" fill="#c45b14"/>
+<rect x="602" y="104" width="8" height="8" fill="#c45b14"/>
+<line x1="606" y1="149" x2="606" y2="156" stroke="#c45b14" stroke-width="1.5" />
+<rect x="602" y="152" width="8" height="8" fill="#c45b14"/>
+<text x="138" y="183" font-size="13" text-anchor="middle" fill="#182b3a">0</text>
+<text x="216" y="183" font-size="13" text-anchor="middle" fill="#182b3a">1</text>
+<text x="294" y="183" font-size="13" text-anchor="middle" fill="#182b3a">2</text>
+<text x="372" y="183" font-size="13" text-anchor="middle" fill="#182b3a">3</text>
+<text x="450" y="183" font-size="13" text-anchor="middle" fill="#182b3a">4</text>
+<text x="528" y="183" font-size="13" text-anchor="middle" fill="#182b3a">5</text>
+<text x="606" y="183" font-size="13" text-anchor="middle" fill="#182b3a">6</text>
+<text x="637" y="183" font-size="14" text-anchor="middle" fill="#182b3a">s/a</text>
+<text x="255" y="202" font-size="13" text-anchor="middle" fill="#182b3a">One cycle = 3a</text>
+<text x="489" y="202" font-size="13" text-anchor="middle" fill="#182b3a">Same pattern again</text>
+<text x="24" y="243" font-size="19" text-anchor="start" fill="#182b3a">Irrational: b/a = √2</text>
+<text x="118" y="292" font-size="14" text-anchor="end" fill="#182b3a">Vertical</text>
+<line x1="138" y1="287" x2="606" y2="287" stroke="#ced7de" stroke-width="1" />
+<text x="118" y="328" font-size="14" text-anchor="end" fill="#182b3a">Horizontal</text>
+<line x1="138" y1="323" x2="606" y2="323" stroke="#ced7de" stroke-width="1" />
+<text x="118" y="369" font-size="14" text-anchor="end" fill="#182b3a">Combined</text>
+<line x1="138" y1="364" x2="606" y2="364" stroke="#ced7de" stroke-width="1" />
+<circle cx="138" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="138" y1="364" x2="138" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="138" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="216" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="216" y1="364" x2="216" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="216" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="294" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="294" y1="364" x2="294" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="294" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="372" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="372" y1="364" x2="372" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="372" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="450" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="450" y1="364" x2="450" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="450" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="528" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="528" y1="364" x2="528" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="528" cy="357" r="4.5" fill="#1769aa"/>
+<circle cx="606" cy="287" r="4.5" fill="#1769aa"/>
+<line x1="606" y1="364" x2="606" y2="357" stroke="#1769aa" stroke-width="1.5" />
+<circle cx="606" cy="357" r="4.5" fill="#1769aa"/>
+<rect x="134" y="319" width="8" height="8" fill="#c45b14"/>
+<line x1="138" y1="364" x2="138" y2="371" stroke="#c45b14" stroke-width="1.5" />
+<rect x="134" y="367" width="8" height="8" fill="#c45b14"/>
+<rect x="244.309" y="319" width="8" height="8" fill="#c45b14"/>
+<line x1="248.309" y1="364" x2="248.309" y2="371" stroke="#c45b14" stroke-width="1.5" />
+<rect x="244.309" y="367" width="8" height="8" fill="#c45b14"/>
+<rect x="354.617" y="319" width="8" height="8" fill="#c45b14"/>
+<line x1="358.617" y1="364" x2="358.617" y2="371" stroke="#c45b14" stroke-width="1.5" />
+<rect x="354.617" y="367" width="8" height="8" fill="#c45b14"/>
+<rect x="464.926" y="319" width="8" height="8" fill="#c45b14"/>
+<line x1="468.926" y1="364" x2="468.926" y2="371" stroke="#c45b14" stroke-width="1.5" />
+<rect x="464.926" y="367" width="8" height="8" fill="#c45b14"/>
+<rect x="575.235" y="319" width="8" height="8" fill="#c45b14"/>
+<line x1="579.235" y1="364" x2="579.235" y2="371" stroke="#c45b14" stroke-width="1.5" />
+<rect x="575.235" y="367" width="8" height="8" fill="#c45b14"/>
+<text x="138" y="398" font-size="13" text-anchor="middle" fill="#182b3a">0</text>
+<text x="216" y="398" font-size="13" text-anchor="middle" fill="#182b3a">1</text>
+<text x="294" y="398" font-size="13" text-anchor="middle" fill="#182b3a">2</text>
+<text x="372" y="398" font-size="13" text-anchor="middle" fill="#182b3a">3</text>
+<text x="450" y="398" font-size="13" text-anchor="middle" fill="#182b3a">4</text>
+<text x="528" y="398" font-size="13" text-anchor="middle" fill="#182b3a">5</text>
+<text x="606" y="398" font-size="13" text-anchor="middle" fill="#182b3a">6</text>
+<text x="637" y="398" font-size="14" text-anchor="middle" fill="#182b3a">s/a</text>
+<text x="138" y="417" font-size="13" text-anchor="start" fill="#182b3a">No exact cycle; near alignments still occur.</text>
+</g></svg>

@@ -1,0 +1,2677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Running a Multithreaded Executable on Linux</title>
+  <style>
+    /* ── Reset & base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0d1b2a 0%, #1a2f4e 50%, #0d1b2a 100%);
+      min-height: 100vh;
+      padding: 30px 20px 60px;
+      color: #2d3748;
+    }
+
+    /* ── Outer container ───────────────────────────────────────────── */
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 44px 48px 60px;
+      box-shadow: 0 24px 72px rgba(0,0,0,0.45);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2em;
+      font-weight: 700;
+      color: #1a2f4e;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #718096;
+      font-size: 1em;
+      margin-bottom: 36px;
+    }
+
+    /* ── Legend ────────────────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 38px;
+      padding: 16px 24px;
+      background: #edf2f7;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #4a5568;
+    }
+
+    .legend-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ── Section rows ──────────────────────────────────────────────── */
+    /*
+     * Each .section is a horizontal band with:
+     *   col 1: band label (180px)
+     *   col 2: clickable components (fills remaining space)
+     *   col 3: right-side annotation (300px)
+     */
+    .section {
+      display: grid;
+      grid-template-columns: 180px 1fr 300px;
+      gap: 20px;
+      margin-bottom: 6px;
+      align-items: start;
+    }
+
+    .section-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 12px;
+      padding: 14px 10px;
+      color: #fff;
+      font-size: 0.78em;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      min-height: 60px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .section-components {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-start;
+      align-content: flex-start;
+      padding: 10px 0;
+    }
+
+    .section-note {
+      font-size: 0.78em;
+      color: #718096;
+      line-height: 1.55;
+      padding: 10px 0;
+      border-left: 3px solid #e2e8f0;
+      padding-left: 14px;
+    }
+
+    /* ── Clickable component boxes ─────────────────────────────────── */
+    .comp {
+      background: #fff;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 11px 16px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-size: 0.82em;
+      font-weight: 600;
+      color: #2d3748;
+      line-height: 1.3;
+      position: relative;
+      min-width: 120px;
+    }
+
+    .comp:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .comp .comp-sub {
+      font-size: 0.78em;
+      font-weight: 400;
+      color: #a0aec0;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Click hint badge */
+    .comp::after {
+      content: 'click';
+      position: absolute;
+      top: 5px;
+      right: 7px;
+      font-size: 0.6em;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #a0aec0;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .comp:hover::after { opacity: 1; }
+
+    /* ── Color variants for comp borders & hover ───────────────────── */
+    /* user-space  → teal */
+    .comp.user    { border-color: #b2f5ea; }
+    .comp.user:hover  { border-color: #38b2ac; box-shadow: 0 8px 20px rgba(56,178,172,0.18); }
+
+    /* kernel-space → indigo */
+    .comp.kernel  { border-color: #c3dafe; }
+    .comp.kernel:hover { border-color: #667eea; box-shadow: 0 8px 20px rgba(102,126,234,0.18); }
+
+    /* memory → amber */
+    .comp.mem     { border-color: #feebc8; }
+    .comp.mem:hover   { border-color: #ed8936; box-shadow: 0 8px 20px rgba(237,137,54,0.18); }
+
+    /* hardware → rose */
+    .comp.hw      { border-color: #fed7d7; }
+    .comp.hw:hover    { border-color: #e53e3e; box-shadow: 0 8px 20px rgba(229,62,62,0.18); }
+
+    /* scheduler → purple */
+    .comp.sched   { border-color: #e9d8fd; }
+    .comp.sched:hover { border-color: #805ad5; box-shadow: 0 8px 20px rgba(128,90,213,0.18); }
+
+    /* elf / loader → green */
+    .comp.elf     { border-color: #c6f6d5; }
+    .comp.elf:hover   { border-color: #38a169; box-shadow: 0 8px 20px rgba(56,161,105,0.18); }
+
+    /* ── Section label color themes ────────────────────────────────── */
+    .label-user    { background: linear-gradient(135deg, #2c7a7b, #38b2ac); }
+    .label-loader  { background: linear-gradient(135deg, #276749, #38a169); }
+    .label-vmem    { background: linear-gradient(135deg, #975a16, #ed8936); }
+    .label-kernel  { background: linear-gradient(135deg, #434190, #667eea); }
+    .label-sched   { background: linear-gradient(135deg, #553c9a, #805ad5); }
+    .label-sync    { background: linear-gradient(135deg, #285e61, #319795); }
+    .label-syscall { background: linear-gradient(135deg, #2b6cb0, #4299e1); }
+    .label-hw      { background: linear-gradient(135deg, #9b2c2c, #e53e3e); }
+
+    /* ── Inter-section arrows ──────────────────────────────────────── */
+    .arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 2px 0;
+      /* aligns with the components column */
+      padding-left: 200px;
+    }
+
+    /* ── Special: thread swimlanes ─────────────────────────────────── */
+    .swimlanes {
+      display: flex;
+      gap: 10px;
+      flex: 1;
+      padding: 10px 0;
+    }
+
+    .thread-lane {
+      flex: 1;
+      border: 2px solid #e9d8fd;
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #faf5ff;
+      min-width: 130px;
+    }
+
+    .thread-lane:hover {
+      border-color: #805ad5;
+      box-shadow: 0 8px 20px rgba(128,90,213,0.15);
+      cursor: pointer;
+    }
+
+    .thread-lane-title {
+      font-size: 0.75em;
+      font-weight: 700;
+      color: #805ad5;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .thread-lane-item {
+      font-size: 0.75em;
+      color: #4a5568;
+      padding: 3px 0;
+      border-bottom: 1px solid #e9d8fd;
+    }
+
+    .thread-lane-item:last-child { border-bottom: none; }
+
+    /* ── Memory map strip ──────────────────────────────────────────── */
+    .memmap {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 100%;
+    }
+
+    .memmap-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      transition: all 0.22s ease;
+      background: #fff;
+    }
+
+    .memmap-row:hover {
+      border-color: #ed8936;
+      box-shadow: 0 4px 12px rgba(237,137,54,0.15);
+      transform: translateX(4px);
+    }
+
+    .memmap-addr {
+      font-family: 'Courier New', monospace;
+      font-size: 0.7em;
+      color: #a0aec0;
+      width: 110px;
+      flex-shrink: 0;
+    }
+
+    .memmap-bar {
+      height: 22px;
+      border-radius: 5px;
+      flex-shrink: 0;
+    }
+
+    .memmap-name {
+      font-size: 0.78em;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    /* ── ELF section strip ─────────────────────────────────────────── */
+    .elf-strip {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      padding: 10px 0;
+    }
+
+    .elf-section {
+      border-radius: 8px;
+      padding: 9px 14px;
+      font-size: 0.78em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      color: #fff;
+    }
+
+    .elf-section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+
+    /* ── Modal ─────────────────────────────────────────────────────── */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .modal-content {
+      background: #fff;
+      margin: 7% auto;
+      padding: 40px 44px;
+      border-radius: 16px;
+      width: 82%;
+      max-width: 740px;
+      max-height: 82vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 72px rgba(0,0,0,0.35);
+      animation: slideIn 0.25s ease;
+      position: relative;
+    }
+
+    .modal-title {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #1a2f4e;
+      margin-bottom: 18px;
+      padding-right: 36px;
+    }
+
+    .modal-body {
+      font-size: 0.9em;
+      line-height: 1.7;
+      color: #4a5568;
+    }
+
+    .modal-body p { margin-bottom: 12px; }
+    .modal-body ul { padding-left: 20px; margin-bottom: 12px; }
+    .modal-body li { margin-bottom: 6px; }
+    .modal-body strong { color: #2d3748; }
+
+    .modal-body .tools {
+      margin-top: 18px;
+      background: #f0fff4;
+      border: 1px solid #c6f6d5;
+      border-radius: 10px;
+      padding: 14px 18px;
+    }
+
+    .modal-body .tools-title {
+      font-size: 0.8em;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #276749;
+      margin-bottom: 8px;
+    }
+
+    .modal-body code {
+      font-family: 'Courier New', monospace;
+      font-size: 0.88em;
+      background: #edf2f7;
+      border-radius: 4px;
+      padding: 1px 6px;
+      color: #2b6cb0;
+    }
+
+    .modal-body pre {
+      font-family: 'Courier New', monospace;
+      font-size: 0.82em;
+      background: #1a202c;
+      color: #e2e8f0;
+      border-radius: 8px;
+      padding: 14px 18px;
+      overflow-x: auto;
+      margin: 10px 0;
+      line-height: 1.5;
+    }
+
+    .close {
+      position: absolute;
+      right: 18px;
+      top: 16px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #a0aec0;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .close:hover { color: #2d3748; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideIn {
+      from { transform: translateY(-40px); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+
+    /* ── Divider ───────────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 2px dashed #e2e8f0;
+      margin: 22px 0;
+    }
+
+    /* ── Responsive ────────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .section { grid-template-columns: 150px 1fr 220px; gap: 14px; }
+      .container { padding: 28px 24px 40px; }
+      h1 { font-size: 1.7em; }
+    }
+
+    @media (max-width: 768px) {
+      .section { grid-template-columns: 1fr; }
+      .section-label { min-height: unset; }
+      .section-note { border-left: none; border-top: 3px solid #e2e8f0; padding-left: 0; padding-top: 10px; }
+      .arrow { padding-left: 0; }
+      .modal-content { width: 95%; margin: 5% auto; padding: 24px 20px; }
+      .swimlanes { flex-wrap: wrap; }
+      h1 { font-size: 1.4em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Modal overlay ──────────────────────────────────────────────── -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="modal-close">&times;</span>
+    <h2 class="modal-title" id="modal-title"></h2>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ── Main container ─────────────────────────────────────────────── -->
+<div class="container">
+
+  <h1>Running a Multithreaded Executable on Linux</h1>
+  <p class="subtitle">From ELF on disk to threads on CPU &mdash; click any component to explore</p>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#38b2ac"></div>User Space</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#38a169"></div>ELF / Loader</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ed8936"></div>Virtual Memory</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#667eea"></div>Kernel Space</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#805ad5"></div>Scheduler</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#319795"></div>Sync / IPC</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#4299e1"></div>System Calls</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#e53e3e"></div>Hardware</div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 1 — ELF File on Disk
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-loader">ELF File<br>on Disk</div>
+
+    <div class="section-components">
+      <div class="elf-strip">
+        <div class="elf-section" style="background:#2b6cb0"     data-info="elf-header">ELF Header</div>
+        <div class="elf-section" style="background:#2c7a7b"     data-info="elf-phdrs">Program Headers</div>
+        <div class="elf-section" style="background:#276749"     data-info="elf-text">.text</div>
+        <div class="elf-section" style="background:#285e61"     data-info="elf-rodata">.rodata</div>
+        <div class="elf-section" style="background:#975a16"     data-info="elf-data">.data</div>
+        <div class="elf-section" style="background:#744210"     data-info="elf-bss">.bss</div>
+        <div class="elf-section" style="background:#553c9a"     data-info="elf-dynamic">.dynamic / .plt / .got</div>
+        <div class="elf-section" style="background:#702459"     data-info="elf-debug">.debug_*</div>
+        <div class="elf-section" style="background:#4a5568"     data-info="elf-shdrs">Section Headers</div>
+      </div>
+    </div>
+
+    <div class="section-note">
+      An ELF binary is divided into <strong>segments</strong> (runtime view via program headers)
+      and <strong>sections</strong> (link-time view via section headers).
+      The kernel only cares about segments when loading.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 2 — execve + Dynamic Linker
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-loader">execve &amp;<br>Dynamic Linker</div>
+
+    <div class="section-components">
+      <div class="comp elf" data-info="execve"><code style="font-family:monospace;font-size:0.9em">execve(2)</code><span class="comp-sub">kernel entry point</span></div>
+      <div class="comp elf" data-info="binfmt">binfmt_elf handler<span class="comp-sub">kernel parses ELF headers</span></div>
+      <div class="comp elf" data-info="ldso">ld-linux.so<span class="comp-sub">dynamic linker/loader</span></div>
+      <div class="comp elf" data-info="relocation">Relocation<span class="comp-sub">PLT / GOT patching</span></div>
+      <div class="comp elf" data-info="ldpreload">LD_PRELOAD / LD_AUDIT<span class="comp-sub">interposition hooks</span></div>
+      <div class="comp elf" data-info="init-fini">.init_array / .fini_array<span class="comp-sub">ctors &amp; dtors</span></div>
+      <div class="comp elf" data-info="vdso">vDSO mapping<span class="comp-sub">fast syscall page</span></div>
+    </div>
+
+    <div class="section-note">
+      <code>execve</code> replaces the process image. The kernel maps ELF segments, sets up the initial stack with <code>argc/argv/envp/auxv</code>, then jumps to the dynamic linker's entry point.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 3 — Virtual Address Space
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-vmem">Virtual<br>Address Space</div>
+
+    <div class="section-components" style="flex-direction:column; width:100%">
+      <div class="memmap">
+        <div class="memmap-row" data-info="vma-stack">
+          <span class="memmap-addr">0x7fff…</span>
+          <div class="memmap-bar" style="width:140px; background:#e53e3e"></div>
+          <span class="memmap-name">Stack (per-thread) &darr; grows down</span>
+        </div>
+        <div class="memmap-row" data-info="vma-mmap">
+          <span class="memmap-addr">0x7f00…</span>
+          <div class="memmap-bar" style="width:190px; background:#805ad5"></div>
+          <span class="memmap-name">mmap region — shared libs, anonymous, files</span>
+        </div>
+        <div class="memmap-row" data-info="vma-heap">
+          <span class="memmap-addr">0x0055…+</span>
+          <div class="memmap-bar" style="width:100px; background:#ed8936"></div>
+          <span class="memmap-name">Heap &uarr; grows up (brk / mmap)</span>
+        </div>
+        <div class="memmap-row" data-info="vma-bss">
+          <span class="memmap-addr">0x0055…</span>
+          <div class="memmap-bar" style="width:60px; background:#744210"></div>
+          <span class="memmap-name">.bss — zero-init data (CoW zero page)</span>
+        </div>
+        <div class="memmap-row" data-info="vma-data">
+          <span class="memmap-addr">0x0055…</span>
+          <div class="memmap-bar" style="width:70px; background:#975a16"></div>
+          <span class="memmap-name">.data — initialised globals (RW)</span>
+        </div>
+        <div class="memmap-row" data-info="vma-rodata">
+          <span class="memmap-addr">0x0055…</span>
+          <div class="memmap-bar" style="width:80px; background:#285e61"></div>
+          <span class="memmap-name">.rodata — read-only constants (R)</span>
+        </div>
+        <div class="memmap-row" data-info="vma-text">
+          <span class="memmap-addr">0x0040…</span>
+          <div class="memmap-bar" style="width:110px; background:#276749"></div>
+          <span class="memmap-name">.text — executable code (RX)</span>
+        </div>
+        <div class="memmap-row" data-info="vma-vdso">
+          <span class="memmap-addr">[vdso]</span>
+          <div class="memmap-bar" style="width:50px; background:#4299e1"></div>
+          <span class="memmap-name">vDSO — kernel-mapped fast-path page</span>
+        </div>
+        <div class="memmap-row" data-info="vma-vsyscall">
+          <span class="memmap-addr">0xffff…</span>
+          <div class="memmap-bar" style="width:40px; background:#434190"></div>
+          <span class="memmap-name">[vsyscall] — legacy compat page</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-note">
+      Each VMA (<code>vm_area_struct</code>) tracks permissions, file backing, and CoW state.
+      ASLR randomises base addresses. <code>/proc/&lt;pid&gt;/maps</code> lists all VMAs live.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 4 — Threads (user-space view)
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-sched">Threads<br>(user view)</div>
+
+    <div class="section-components" style="flex-direction:column; width:100%">
+      <div style="display:flex; gap:10px; flex-wrap:wrap; padding:10px 0">
+        <!-- Main thread -->
+        <div class="thread-lane" data-info="thread-main" style="flex:1.2">
+          <div class="thread-lane-title">Main Thread (TID=PID)</div>
+          <div class="thread-lane-item">pthread_create() origin</div>
+          <div class="thread-lane-item">Stack: argv, env, auxv</div>
+          <div class="thread-lane-item">Signal handler default</div>
+          <div class="thread-lane-item">TLS block 0</div>
+        </div>
+        <!-- Worker threads -->
+        <div class="thread-lane" data-info="thread-worker" style="flex:1">
+          <div class="thread-lane-title">Worker Thread N</div>
+          <div class="thread-lane-item">clone(CLONE_VM|…)</div>
+          <div class="thread-lane-item">Private stack (mmap)</div>
+          <div class="thread-lane-item">Shared heap/globals</div>
+          <div class="thread-lane-item">Own TLS block</div>
+        </div>
+        <div class="thread-lane" data-info="thread-worker" style="flex:1">
+          <div class="thread-lane-title">Worker Thread N+1</div>
+          <div class="thread-lane-item">clone(CLONE_VM|…)</div>
+          <div class="thread-lane-item">Private stack (mmap)</div>
+          <div class="thread-lane-item">Shared heap/globals</div>
+          <div class="thread-lane-item">Own TLS block</div>
+        </div>
+        <div class="thread-lane" data-info="thread-tls" style="flex:1">
+          <div class="thread-lane-title">TLS (Thread-Local Storage)</div>
+          <div class="thread-lane-item">__thread / _Thread_local</div>
+          <div class="thread-lane-item">FS register base</div>
+          <div class="thread-lane-item">pthread_self() ptr</div>
+          <div class="thread-lane-item">errno lives here</div>
+        </div>
+      </div>
+      <!-- pthread constructs -->
+      <div style="display:flex; gap:10px; flex-wrap:wrap; padding:4px 0 10px">
+        <div class="comp user" data-info="pthread-mutex">pthread_mutex<span class="comp-sub">futex-backed lock</span></div>
+        <div class="comp user" data-info="pthread-condvar">pthread_cond<span class="comp-sub">condition variable</span></div>
+        <div class="comp user" data-info="pthread-rwlock">pthread_rwlock<span class="comp-sub">readers-writer lock</span></div>
+        <div class="comp user" data-info="pthread-barrier">pthread_barrier<span class="comp-sub">rendezvous point</span></div>
+        <div class="comp user" data-info="pthread-sem">sem_t<span class="comp-sub">POSIX semaphore</span></div>
+        <div class="comp user" data-info="thread-cancel">Thread cancellation<span class="comp-sub">deferred / async</span></div>
+      </div>
+    </div>
+
+    <div class="section-note">
+      POSIX threads share address space, file descriptors, and signal disposition but have
+      <strong>private</strong> stacks, TLS, and scheduling attributes. All are Linux <em>tasks</em> under the hood.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 5 — System Call Interface
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-syscall">System Call<br>Interface</div>
+
+    <div class="section-components">
+      <div class="comp kernel" data-info="syscall-entry">syscall / sysenter<span class="comp-sub">ring-3 → ring-0 transition</span></div>
+      <div class="comp kernel" data-info="syscall-table">sys_call_table<span class="comp-sub">dispatch table in kernel</span></div>
+      <div class="comp kernel" data-info="vdso-syscall">vDSO fast-path<span class="comp-sub">clock_gettime etc.</span></div>
+      <div class="comp kernel" data-info="seccomp">seccomp BPF filter<span class="comp-sub">syscall allowlisting</span></div>
+      <div class="comp kernel" data-info="ptrace">ptrace / strace hook<span class="comp-sub">tracee stops</span></div>
+    </div>
+
+    <div class="section-note">
+      On x86-64 the <code>syscall</code> instruction saves registers, switches stacks to the per-CPU kernel stack, and jumps to <code>entry_SYSCALL_64</code>.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 6 — Kernel: Task / Process Management
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-kernel">Kernel:<br>Task Mgmt</div>
+
+    <div class="section-components">
+      <div class="comp kernel" data-info="task-struct">task_struct<span class="comp-sub">per-thread kernel object</span></div>
+      <div class="comp kernel" data-info="mm-struct">mm_struct<span class="comp-sub">shared address space desc.</span></div>
+      <div class="comp kernel" data-info="files-struct">files_struct<span class="comp-sub">open file descriptor table</span></div>
+      <div class="comp kernel" data-info="signal-struct">signal_struct<span class="comp-sub">signal handlers &amp; pending</span></div>
+      <div class="comp kernel" data-info="cred-struct">cred (uid/gid/caps)<span class="comp-sub">credentials &amp; namespaces</span></div>
+      <div class="comp kernel" data-info="pid-ns">PID / namespaces<span class="comp-sub">pid_ns, mnt_ns, net_ns…</span></div>
+      <div class="comp kernel" data-info="wait-queue">wait_queue<span class="comp-sub">blocking &amp; wakeup infra</span></div>
+    </div>
+
+    <div class="section-note">
+      Linux uses a single <code>task_struct</code> for both processes and threads.
+      Threads in a process share one <code>mm_struct</code> but each has its own kernel stack.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 7 — Scheduler (CFS + RT)
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-sched">Scheduler<br>(CFS / RT)</div>
+
+    <div class="section-components">
+      <div class="comp sched" data-info="cfs">CFS — Completely Fair Scheduler<span class="comp-sub">vruntime red-black tree</span></div>
+      <div class="comp sched" data-info="rt-sched">RT scheduler<span class="comp-sub">SCHED_FIFO / SCHED_RR</span></div>
+      <div class="comp sched" data-info="sched-domain">Scheduling domains<span class="comp-sub">NUMA / CPU topology</span></div>
+      <div class="comp sched" data-info="runqueue">Per-CPU runqueue<span class="comp-sub">rq, cfs_rq, rt_rq</span></div>
+      <div class="comp sched" data-info="load-balance">Load balancer<span class="comp-sub">work-stealing across CPUs</span></div>
+      <div class="comp sched" data-info="context-switch">Context switch<span class="comp-sub">switch_to() — save/restore regs</span></div>
+      <div class="comp sched" data-info="affinity">CPU affinity<span class="comp-sub">sched_setaffinity()</span></div>
+      <div class="comp sched" data-info="preemption">Kernel preemption<span class="comp-sub">CONFIG_PREEMPT</span></div>
+    </div>
+
+    <div class="section-note">
+      CFS tracks <code>vruntime</code> per-task and always picks the leftmost node of the red-black tree. Threads compete for slices within a <strong>cgroup</strong> hierarchy.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 8 — Memory Management (kernel side)
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-vmem">Kernel:<br>Memory Mgmt</div>
+
+    <div class="section-components">
+      <div class="comp mem" data-info="page-table">Page tables<span class="comp-sub">PGD→PUD→PMD→PTE</span></div>
+      <div class="comp mem" data-info="tlb">TLB / CR3<span class="comp-sub">address-translation cache</span></div>
+      <div class="comp mem" data-info="page-fault">Page fault handler<span class="comp-sub">demand paging, CoW</span></div>
+      <div class="comp mem" data-info="cow">Copy-on-Write (CoW)<span class="comp-sub">fork / mmap shared pages</span></div>
+      <div class="comp mem" data-info="slab">SLAB/SLUB allocator<span class="comp-sub">kernel object caches</span></div>
+      <div class="comp mem" data-info="buddy">Buddy allocator<span class="comp-sub">page-granularity free lists</span></div>
+      <div class="comp mem" data-info="mmap-anon">Anonymous mmap<span class="comp-sub">brk, thread stacks, malloc</span></div>
+      <div class="comp mem" data-info="oom">OOM killer<span class="comp-sub">oom_badness scoring</span></div>
+      <div class="comp mem" data-info="huge-pages">THP / HugeTLB<span class="comp-sub">2 MB / 1 GB pages</span></div>
+      <div class="comp mem" data-info="swap">Swap / zswap<span class="comp-sub">paging to disk</span></div>
+    </div>
+
+    <div class="section-note">
+      The kernel maintains a 4- (or 5-) level page table per <code>mm_struct</code>.
+      A page fault is the kernel's opportunity to demand-page, CoW-break, or extend the stack.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 9 — Synchronisation & IPC
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-sync">Sync &amp; IPC</div>
+
+    <div class="section-components">
+      <div class="comp kernel" data-info="futex">futex(2)<span class="comp-sub">fast userspace mutex</span></div>
+      <div class="comp kernel" data-info="pipe">pipe / pipe2<span class="comp-sub">anonymous byte stream</span></div>
+      <div class="comp kernel" data-info="eventfd">eventfd / timerfd<span class="comp-sub">edge-triggered counters</span></div>
+      <div class="comp kernel" data-info="mq">mq_open (POSIX MQ)<span class="comp-sub">message queues</span></div>
+      <div class="comp kernel" data-info="shm">shmget / shm_open<span class="comp-sub">shared memory</span></div>
+      <div class="comp kernel" data-info="signal-ipc">kill / sigqueue<span class="comp-sub">async notification</span></div>
+      <div class="comp kernel" data-info="membarrier">membarrier(2)<span class="comp-sub">cross-thread memory order</span></div>
+    </div>
+
+    <div class="section-note">
+      <code>pthread_mutex_lock</code> calls <code>futex(FUTEX_WAIT)</code> only when contended — uncontended lock/unlock stays entirely in user space.
+    </div>
+  </div>
+
+  <div class="arrow">
+    <svg width="36" height="40"><line x1="18" y1="0" x2="18" y2="28" stroke="#a0aec0" stroke-width="2.5" stroke-dasharray="5,3"/><polyline points="8,20 18,34 28,20" fill="none" stroke="#a0aec0" stroke-width="2.5"/></svg>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       SECTION 10 — Hardware
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-label label-hw">Hardware</div>
+
+    <div class="section-components">
+      <div class="comp hw" data-info="cpu-core">CPU Core(s)<span class="comp-sub">instruction fetch / decode / execute</span></div>
+      <div class="comp hw" data-info="registers">Registers + RIP<span class="comp-sub">GPRs, SIMD, segment regs</span></div>
+      <div class="comp hw" data-info="cache">L1/L2/L3 Cache<span class="comp-sub">coherence via MESI</span></div>
+      <div class="comp hw" data-info="mmu">MMU + CR3<span class="comp-sub">HW page-table walker</span></div>
+      <div class="comp hw" data-info="apic">Local APIC<span class="comp-sub">timer interrupt, IPI</span></div>
+      <div class="comp hw" data-info="iommu">IOMMU (VT-d)<span class="comp-sub">DMA address translation</span></div>
+      <div class="comp hw" data-info="spectre">Spectre / Meltdown mitigations<span class="comp-sub">IBRS, KPTI, STIBP</span></div>
+    </div>
+
+    <div class="section-note">
+      The scheduler timer interrupt fires via the Local APIC (~250 Hz default).
+      The MMU's CR3 register holds the physical address of the top-level page table — reloaded on every context switch.
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ════════════════════════════════════════════════════════════════
+       FLOW SUMMARY (bottom callout row)
+       ════════════════════════════════════════════════════════════════ -->
+  <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:14px; margin-top:10px">
+    <div class="comp elf" data-info="flow-exec" style="min-width:unset; text-align:center">
+      <span style="font-size:1.4em">&#9654;</span><br>
+      <strong>1. execve</strong><br>
+      <span class="comp-sub">ELF loaded, linker runs</span>
+    </div>
+    <div class="comp mem" data-info="flow-vm" style="min-width:unset; text-align:center">
+      <span style="font-size:1.4em">&#11053;</span><br>
+      <strong>2. Virtual Memory</strong><br>
+      <span class="comp-sub">VMAs mapped, ASLR applied</span>
+    </div>
+    <div class="comp sched" data-info="flow-sched" style="min-width:unset; text-align:center">
+      <span style="font-size:1.4em">&#9654;</span><br>
+      <strong>3. Threads Scheduled</strong><br>
+      <span class="comp-sub">CFS vruntime &rarr; CPU</span>
+    </div>
+    <div class="comp hw" data-info="flow-hw" style="min-width:unset; text-align:center">
+      <span style="font-size:1.4em">&#9881;</span><br>
+      <strong>4. Hardware Executes</strong><br>
+      <span class="comp-sub">Fetch–decode–execute</span>
+    </div>
+  </div>
+
+</div><!-- .container -->
+
+<script>
+// ── Explanations data ─────────────────────────────────────────────
+const explanations = {
+
+  /* ── ELF File on Disk ────────────────────────────────────────── */
+  'elf-header': {
+    title: 'ELF Header',
+    content: `
+      <p>The ELF header occupies the first 64 bytes of every ELF binary and acts as the file's
+      identity card. It contains the magic bytes <code>\\x7fELF</code>, the target architecture
+      (e.g. <code>EM_X86_64 = 0x3e</code>), the entry-point virtual address, and offsets to the
+      program-header and section-header tables.</p>
+      <p>Key fields:</p>
+      <ul>
+        <li><strong>e_type</strong> — <code>ET_EXEC</code> (static), <code>ET_DYN</code> (PIE/shared lib), <code>ET_CORE</code></li>
+        <li><strong>e_entry</strong> — VA of <code>_start</code> (or the interpreter's entry if dynamic)</li>
+        <li><strong>e_phoff / e_shoff</strong> — byte offsets to program/section header tables</li>
+        <li><strong>e_flags</strong> — architecture-specific flags (e.g. ARM ABI version)</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -h &lt;binary&gt;</code> — dump all ELF header fields</li>
+          <li><code>file &lt;binary&gt;</code> — quick type/arch summary from magic bytes</li>
+          <li><code>xxd &lt;binary&gt; | head -4</code> — raw hex view of the first 64 bytes</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-phdrs': {
+    title: 'Program Headers (Segments)',
+    content: `
+      <p>Program headers describe <em>segments</em> — the runtime view of the binary.
+      The kernel's ELF loader iterates only these headers; section headers are irrelevant at
+      load time (they are stripped in production binaries).</p>
+      <p>Critical segment types:</p>
+      <ul>
+        <li><strong>PT_LOAD</strong> — mapped directly into the process VAS with specified permissions (R, RW, RX)</li>
+        <li><strong>PT_INTERP</strong> — path to the dynamic linker (e.g. <code>/lib64/ld-linux-x86-64.so.2</code>)</li>
+        <li><strong>PT_DYNAMIC</strong> — points to the <code>.dynamic</code> section used by <code>ld.so</code></li>
+        <li><strong>PT_GNU_STACK</strong> — controls executable-stack policy (<code>NX</code> bit)</li>
+        <li><strong>PT_GNU_RELRO</strong> — pages to be made read-only after relocation (GOT hardening)</li>
+        <li><strong>PT_TLS</strong> — thread-local storage template</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -l &lt;binary&gt;</code> — list all program headers and segment-to-section mapping</li>
+          <li><code>objdump -p &lt;binary&gt;</code> — similar view plus dynamic section</li>
+          <li><code>eu-readelf -l &lt;binary&gt;</code> — elfutils alternative</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-text': {
+    title: '.text — Executable Code Section',
+    content: `
+      <p>The <code>.text</code> section holds compiled machine instructions. It is part of a
+      <code>PT_LOAD</code> segment with <strong>R+X</strong> (read + execute) permissions and is
+      mapped as a private, file-backed VMA. Because it is read-only, multiple processes loading
+      the same shared library share the same physical pages.</p>
+      <p>Important sub-regions:</p>
+      <ul>
+        <li><strong>_start</strong> — CRT entry stub; sets up argc/argv, calls <code>__libc_start_main</code></li>
+        <li><strong>main()</strong> and all user functions</li>
+        <li><strong>PLT stubs</strong> — tiny trampolines for lazy-bound shared-library calls</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>objdump -d &lt;binary&gt;</code> — disassemble .text</li>
+          <li><code>objdump -M intel -d &lt;binary&gt;</code> — Intel syntax</li>
+          <li><code>perf annotate</code> — annotate hot functions with CPU cycle counts</li>
+          <li><code>addr2line -e &lt;binary&gt; &lt;addr&gt;</code> — map address → source line</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-rodata': {
+    title: '.rodata — Read-Only Data',
+    content: `
+      <p><code>.rodata</code> holds constants that must not be modified at runtime: string literals,
+      jump tables, <code>const</code> global arrays, and switch-statement dispatch tables.
+      It is mapped <strong>R</strong> (read-only, non-executable) in its own <code>PT_LOAD</code>
+      segment, providing an extra layer of exploit mitigation.</p>
+      <p>Attempting to write to a <code>.rodata</code> address generates a <code>SIGSEGV</code>
+      (page-fault on a read-only PTE).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>objdump -s -j .rodata &lt;binary&gt;</code> — hex dump of .rodata</li>
+          <li><code>strings &lt;binary&gt;</code> — extract printable strings (mostly from .rodata)</li>
+          <li><code>readelf -S &lt;binary&gt;</code> — section headers showing addresses &amp; sizes</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-data': {
+    title: '.data — Initialised Read-Write Data',
+    content: `
+      <p><code>.data</code> contains global and static variables that have non-zero initial values
+      (e.g. <code>int x = 42;</code>). These values are stored verbatim in the ELF file and
+      copied into a private, writable VMA at load time. Each process gets its own copy.</p>
+      <p>Because this segment is <strong>private file-backed</strong>, the initial values come
+      from the file but writes are CoW-isolated per process.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -S &lt;binary&gt;</code> — shows .data offset, size, and alignment</li>
+          <li><code>nm &lt;binary&gt; | grep ' D '</code> — list initialized global symbols</li>
+          <li><code>gdb: info variables</code> — inspect globals at runtime</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-bss': {
+    title: '.bss — Zero-Initialised Data',
+    content: `
+      <p><code>.bss</code> holds global and static variables initialised to zero (or left
+      uninitialised, which C guarantees is zero). Crucially, <code>.bss</code> takes up
+      <strong>no space in the ELF file</strong> — only its size is recorded. The kernel maps
+      it as an anonymous VMA backed by the shared <em>zero page</em> using Copy-on-Write.</p>
+      <p>On first write to a .bss page, a page fault fires, the kernel allocates a fresh physical
+      page of zeros, and updates the PTE — demand zeroing at minimal cost.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>size &lt;binary&gt;</code> — quick breakdown of text/data/bss sizes</li>
+          <li><code>nm &lt;binary&gt; | grep ' B '</code> — list BSS symbols</li>
+          <li><code>/proc/&lt;pid&gt;/smaps</code> — shows anonymous pages actually faulted in</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-dynamic': {
+    title: '.dynamic / .plt / .got — Dynamic Linking Tables',
+    content: `
+      <p>These three sections form the machinery of runtime dynamic linking:</p>
+      <ul>
+        <li><strong>.dynamic</strong> — a table of <code>DT_*</code> tags consumed by <code>ld.so</code>:
+          <code>DT_NEEDED</code> (shared lib dependencies), <code>DT_RELA</code> (relocation table offset),
+          <code>DT_SYMTAB</code>, <code>DT_STRTAB</code>, etc.</li>
+        <li><strong>.plt</strong> (Procedure Linkage Table) — one stub per imported function.
+          On first call the stub jumps to the resolver; thereafter the GOT entry is patched with the
+          real address (lazy binding). With <code>BIND_NOW</code>/<code>-z now</code> all symbols are
+          resolved at startup.</li>
+        <li><strong>.got / .got.plt</strong> (Global Offset Table) — writable table of final symbol
+          addresses. RELRO (<code>PT_GNU_RELRO</code>) marks the GOT read-only after relocation to
+          prevent GOT overwrite exploits.</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -d &lt;binary&gt;</code> — dump .dynamic entries</li>
+          <li><code>objdump -d -j .plt &lt;binary&gt;</code> — disassemble PLT stubs</li>
+          <li><code>ldd &lt;binary&gt;</code> — list resolved shared-library dependencies</li>
+          <li><code>LD_DEBUG=bindings ./binary</code> — trace every GOT resolution live</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-debug': {
+    title: '.debug_* — DWARF Debug Information',
+    content: `
+      <p>DWARF sections (<code>.debug_info</code>, <code>.debug_line</code>, <code>.debug_abbrev</code>,
+      <code>.debug_frame</code>, etc.) store the mapping between machine code and source-level
+      constructs: variable names and types, inlined functions, source line numbers, and call-frame
+      unwinding rules.</p>
+      <p>These sections are <strong>not loaded into the process VAS</strong> at runtime — they are
+      read directly from the file by debuggers and profilers. Stripped binaries have these sections
+      removed; separate <code>.debug</code> packages or <code>debuginfod</code> supply them on demand.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf --debug-dump=info &lt;binary&gt;</code> — raw DWARF info</li>
+          <li><code>dwarfdump &lt;binary&gt;</code> — human-readable DWARF</li>
+          <li><code>gdb &lt;binary&gt;</code> — consumes DWARF for source-level debugging</li>
+          <li><code>eu-stack -p &lt;pid&gt;</code> — DWARF-based stack unwind of live process</li>
+          <li><code>perf report --sort=srcline</code> — source-annotated profiling via DWARF</li>
+        </ul>
+      </div>`
+  },
+
+  'elf-shdrs': {
+    title: 'Section Headers',
+    content: `
+      <p>The section-header table provides a fine-grained, link-time view of the binary's
+      contents — one entry per named section. Each entry records the section name (as an offset
+      into <code>.shstrtab</code>), its type (<code>SHT_PROGBITS</code>, <code>SHT_SYMTAB</code>,
+      <code>SHT_RELA</code>, etc.), file offset, virtual address, size, and alignment.</p>
+      <p>The kernel <em>ignores</em> section headers when loading an ELF; they exist for the
+      linker, debugger, and binary-analysis tools. A binary with the section-header table
+      stripped runs identically.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -S &lt;binary&gt;</code> — list all sections with addresses and sizes</li>
+          <li><code>objdump -h &lt;binary&gt;</code> — section headers in objdump format</li>
+          <li><code>strip --strip-all &lt;binary&gt;</code> — remove section headers and symbols</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── execve + Dynamic Linker ──────────────────────────────────── */
+  'execve': {
+    title: 'execve(2) — Replace Process Image',
+    content: `
+      <p><code>execve(path, argv, envp)</code> is the syscall that replaces the calling process's
+      address space with a new program. It does <em>not</em> create a new process — PID is
+      preserved; open file descriptors marked <code>FD_CLOEXEC</code> are closed.</p>
+      <p>Kernel steps inside <code>do_execveat_common()</code>:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>Open and <code>mmap</code> the file; read first 256 bytes to detect format</li>
+        <li>Match a <strong>binfmt handler</strong> (ELF, script shebang, etc.)</li>
+        <li>Flush the old VAS (<code>exec_mmap()</code>)</li>
+        <li>Map ELF <code>PT_LOAD</code> segments and set up the stack</li>
+        <li>Write <code>argc/argv/envp/auxv</code> onto the new stack</li>
+        <li>Jump to the dynamic linker entry point (or <code>e_entry</code> for static)</li>
+      </ol>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e execve ./binary</code> — trace the execve call and args</li>
+          <li><code>strace -f ./binary</code> — follow forks/execs across child processes</li>
+          <li><code>/proc/&lt;pid&gt;/cmdline</code> — null-delimited argv of running process</li>
+          <li><code>/proc/&lt;pid&gt;/exe</code> — symlink to the executable on disk</li>
+        </ul>
+      </div>`
+  },
+
+  'binfmt': {
+    title: 'binfmt_elf — Kernel ELF Handler',
+    content: `
+      <p>Linux's binary format subsystem (<code>fs/binfmt_elf.c</code>) is the kernel-side ELF
+      interpreter. When <code>execve</code> opens a file and reads the magic bytes
+      <code>\\x7fELF</code>, this handler is invoked.</p>
+      <p>Key actions:</p>
+      <ul>
+        <li>Validates ELF header (architecture, ABI, entry point sanity)</li>
+        <li>Iterates <code>PT_LOAD</code> segments, calling <code>elf_map()</code> for each</li>
+        <li>Reads <code>PT_INTERP</code> to find the dynamic linker and maps it too</li>
+        <li>Builds the <strong>auxiliary vector</strong> (<code>AT_PHDR</code>, <code>AT_ENTRY</code>,
+          <code>AT_RANDOM</code>, <code>AT_HWCAP</code>, …) on the initial stack</li>
+        <li>Applies <strong>ASLR</strong> (<code>mmap_base</code> randomisation)</li>
+      </ul>
+      <p><strong>binfmt_misc</strong> is the userspace-extensible cousin — it lets you register
+      arbitrary magic bytes or file extensions to run with a specified interpreter
+      (e.g. <code>.jar</code> → <code>java -jar</code>).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/sys/fs/binfmt_misc/status</code> — list registered binfmt_misc entries</li>
+          <li><code>dmesg | grep binfmt</code> — kernel messages about format detection failures</li>
+          <li><code>/proc/&lt;pid&gt;/auxv</code> — binary dump of the aux vector for a live process</li>
+          <li><code>LD_SHOW_AUXV=1 ./binary</code> — print auxv before main runs</li>
+        </ul>
+      </div>`
+  },
+
+  'ldso': {
+    title: 'ld-linux.so — The Dynamic Linker',
+    content: `
+      <p><code>ld-linux-x86-64.so.2</code> (glibc) or <code>ld-musl-x86_64.so.1</code> (musl) is
+      itself an ELF shared object that is mapped into the process VAS by the kernel and receives
+      control before <code>main()</code>. It is self-contained and position-independent.</p>
+      <p>Startup sequence:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>Parse the executable's <code>PT_DYNAMIC</code> segment</li>
+        <li>Walk <code>DT_NEEDED</code> entries recursively, opening each <code>.so</code></li>
+        <li>Map each shared library into the VAS (with ASLR offsets)</li>
+        <li>Process relocations: <code>R_X86_64_GLOB_DAT</code>, <code>R_X86_64_JUMP_SLOT</code>, etc.</li>
+        <li>Run each library's <code>.init_array</code> in dependency order</li>
+        <li>Transfer control to the executable's <code>_start</code></li>
+      </ol>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ldd &lt;binary&gt;</code> — list shared library dependencies and load addresses</li>
+          <li><code>LD_DEBUG=all ./binary 2&gt;&amp;1 | less</code> — verbose linker trace</li>
+          <li><code>LD_DEBUG=libs,binding ./binary</code> — library search and symbol binding only</li>
+          <li><code>pmap &lt;pid&gt;</code> — show all mapped regions including .so files</li>
+          <li><code>pldd &lt;pid&gt;</code> — list shared libraries of a running process</li>
+        </ul>
+      </div>`
+  },
+
+  'relocation': {
+    title: 'Relocations — PLT / GOT Patching',
+    content: `
+      <p>A <strong>relocation</strong> is a directive that says "patch this address in memory with
+      the resolved virtual address of symbol X". Relocations are applied by <code>ld.so</code> at
+      load time (or lazily through the PLT at first call).</p>
+      <p>Key relocation types on x86-64:</p>
+      <ul>
+        <li><code>R_X86_64_GLOB_DAT</code> — write symbol address into the GOT slot (data symbols)</li>
+        <li><code>R_X86_64_JUMP_SLOT</code> — GOT entry for a PLT-bound function (lazy or eager)</li>
+        <li><code>R_X86_64_RELATIVE</code> — base-address-relative fixup for PIE binaries</li>
+        <li><code>R_X86_64_TPOFF64</code> — thread-pointer-relative TLS offset</li>
+      </ul>
+      <p>With <strong>full RELRO</strong> (<code>-Wl,-z,relro,-z,now</code>), all GOT entries are
+      resolved eagerly at startup and the GOT is remapped read-only before <code>main()</code>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -r &lt;binary&gt;</code> — dump all relocation entries</li>
+          <li><code>objdump -R &lt;binary&gt;</code> — dynamic relocations</li>
+          <li><code>LD_DEBUG=reloc ./binary</code> — trace every relocation applied at runtime</li>
+        </ul>
+      </div>`
+  },
+
+  'ldpreload': {
+    title: 'LD_PRELOAD / LD_AUDIT — Library Interposition',
+    content: `
+      <p><code>LD_PRELOAD</code> instructs the dynamic linker to load a specified shared library
+      <em>before</em> all others, allowing its symbols to shadow those in system libraries.
+      Classic uses: <code>malloc</code> debugging, function hooking, and sandboxing.</p>
+      <p><code>LD_AUDIT</code> loads an audit library that receives callbacks at each PLT
+      resolution — useful for syscall tracing without ptrace.</p>
+      <p>Security note: both are silently ignored for <strong>setuid/setgid</strong> binaries
+      and those with <code>AT_SECURE</code> set in the auxv.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>LD_PRELOAD=/usr/lib/libefence.so ./binary</code> — Electric Fence malloc debugger</li>
+          <li><code>LD_PRELOAD=libtsan.so.0 ./binary</code> — ThreadSanitizer via preload</li>
+          <li><code>ltrace ./binary</code> — intercepts all library calls (similar mechanism)</li>
+        </ul>
+      </div>`
+  },
+
+  'init-fini': {
+    title: '.init_array / .fini_array — Constructors & Destructors',
+    content: `
+      <p><code>.init_array</code> is an array of function pointers that the dynamic linker calls
+      in order, for each shared library and then the executable, before transferring control to
+      <code>main()</code>. <code>.fini_array</code> is called in reverse order at process exit.</p>
+      <p>These are the modern replacement for the legacy <code>_init()</code> / <code>_fini()</code>
+      functions. GCC's <code>__attribute__((constructor))</code> / <code>__attribute__((destructor))</code>
+      populates these arrays.</p>
+      <p>Common uses: C++ static object constructors, OpenSSL entropy seeding, glibc TLS setup.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>objdump -s -j .init_array &lt;binary&gt;</code> — list constructor pointers</li>
+          <li><code>readelf -S &lt;binary&gt; | grep init</code> — locate init/fini sections</li>
+          <li><code>gdb: break __libc_csu_init</code> — stop just before constructors run</li>
+        </ul>
+      </div>`
+  },
+
+  'vdso': {
+    title: 'vDSO — Virtual Dynamic Shared Object',
+    content: `
+      <p>The <strong>vDSO</strong> is a small shared library (typically 4–8 KB) that the kernel
+      maps into every process's address space. It provides a handful of high-frequency syscalls
+      that can be serviced entirely in user space by reading kernel-maintained data in a shared
+      memory page — <em>without</em> the cost of a ring-3→ring-0 transition.</p>
+      <p>Functions in the vDSO (x86-64):</p>
+      <ul>
+        <li><code>clock_gettime()</code> — reads <code>vvar</code> page containing kernel time</li>
+        <li><code>gettimeofday()</code></li>
+        <li><code>time()</code></li>
+        <li><code>getcpu()</code> — current CPU and NUMA node</li>
+      </ul>
+      <p>The <code>vvar</code> page is a companion read-only mapping that the kernel updates atomically using a seqlock.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep vdso</code> — find vDSO mapping address</li>
+          <li><code>LD_SHOW_AUXV=1 ./binary | grep AT_SYSINFO</code> — vDSO entry from auxv</li>
+          <li><code>perf stat -e syscalls:sys_enter_clock_gettime ./binary</code> — count how often it falls back to real syscall</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Virtual Address Space ───────────────────────────────────── */
+  'vma-stack': {
+    title: 'Stack — Per-Thread Private Region',
+    content: `
+      <p>Each thread has its own stack VMA, typically 8 MB by default
+      (<code>ulimit -s</code>). The main thread's stack is placed near the top of the user
+      address space and grows <strong>downward</strong>. Additional thread stacks are allocated
+      via <code>mmap(MAP_ANONYMOUS|MAP_STACK)</code> in a lower region.</p>
+      <p>The kernel extends the main thread's stack automatically on page fault if the faulting
+      address is within the <em>stack guard gap</em> (<code>vm.stack_guard_gap</code> sysctl,
+      default 256 pages). Beyond that, the fault is fatal (<code>SIGSEGV</code>).</p>
+      <p>Stack contents (top to bottom on entry to <code>main</code>): envp strings, argv strings,
+      null-term envp[], null-term argv[], argc, auxv.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep stack</code> — find stack VMA</li>
+          <li><code>ulimit -s unlimited</code> — remove stack size cap</li>
+          <li><code>prlimit --stack=&lt;bytes&gt; ./binary</code> — set per-process stack limit</li>
+          <li><code>gdb: info frame</code> — show current stack frame</li>
+          <li><code>valgrind --tool=massif ./binary</code> — heap &amp; stack profiling</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-mmap': {
+    title: 'mmap Region — Shared Libs, Files, Anonymous',
+    content: `
+      <p>The <code>mmap</code> region (between the heap and the stack) is where the kernel
+      satisfies all <code>mmap()</code> requests that don't specify a fixed address. It holds:</p>
+      <ul>
+        <li><strong>Shared libraries</strong> — text (shared, read-only), data (private CoW)</li>
+        <li><strong>Thread stacks</strong> — per-thread anonymous private mappings</li>
+        <li><strong>Large malloc allocations</strong> — glibc uses <code>mmap</code> for allocations &gt;128 KB by default (MMAP_THRESHOLD)</li>
+        <li><strong>File mappings</strong> — <code>mmap(fd)</code> for zero-copy file I/O</li>
+        <li><strong>Anonymous shared memory</strong> — <code>memfd_create</code>, <code>shm_open</code></li>
+      </ul>
+      <p>ASLR randomises the base of this region at every <code>execve</code>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps</code> — all VMAs with permissions and file backing</li>
+          <li><code>cat /proc/&lt;pid&gt;/smaps</code> — per-VMA memory usage stats (RSS, PSS, swap)</li>
+          <li><code>pmap -x &lt;pid&gt;</code> — formatted VMA summary</li>
+          <li><code>vmstat -s</code> — system-wide virtual memory stats</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-heap': {
+    title: 'Heap — Dynamic Allocation (brk / mmap)',
+    content: `
+      <p>The heap is the region for dynamic memory allocation (<code>malloc</code>/<code>free</code>).
+      glibc's <strong>ptmalloc2</strong> manages it using two mechanisms:</p>
+      <ul>
+        <li><strong>brk()</strong> — moves the program-break pointer to extend the initial heap arena.
+          Fast but single-threaded; protected by a global lock in older glibc.</li>
+        <li><strong>mmap(MAP_ANONYMOUS)</strong> — used for large allocations (&gt;MMAP_THRESHOLD, default 128 KB)
+          and for creating additional per-thread arenas to reduce contention.</li>
+      </ul>
+      <p>Alternative allocators: <strong>jemalloc</strong> (Firefox, FreeBSD), <strong>tcmalloc</strong>
+      (Google), <strong>mimalloc</strong> (Microsoft) — all use per-thread caches to minimise locking.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>valgrind --tool=massif ./binary</code> — heap profiling over time</li>
+          <li><code>heaptrack ./binary</code> — fast heap profiler with flamegraph output</li>
+          <li><code>MALLOC_TRACE=trace.txt ./binary; mtrace</code> — glibc malloc trace</li>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep VmRSS</code> — resident set size</li>
+          <li><code>address sanitizer: -fsanitize=address</code> — detect heap bugs at compile time</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-bss': {
+    title: '.bss VMA — Demand-Zeroed Anonymous Pages',
+    content: `
+      <p>The <code>.bss</code> segment is mapped as an <strong>anonymous private</strong> VMA
+      (not file-backed). All pages initially point to the kernel's shared <em>zero page</em>
+      with read-only PTEs — no physical RAM is consumed until the first write.</p>
+      <p>On first write, the MMU raises a protection fault; the page-fault handler allocates a
+      fresh zeroed physical page, updates the PTE, and resumes execution — this is
+      <strong>demand zeroing</strong>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>/proc/&lt;pid&gt;/smaps</code> — <code>Private_Clean</code> vs <code>Private_Dirty</code> counts</li>
+          <li><code>size &lt;binary&gt;</code> — .bss size (reported but not stored in file)</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-data': {
+    title: '.data VMA — Private File-Backed Writable',
+    content: `
+      <p>The <code>.data</code> segment is mapped as a <strong>private file-backed</strong> VMA
+      (MAP_PRIVATE). Pages are initially shared with the on-disk file contents, but on the
+      first write a Copy-on-Write fault triggers: the kernel allocates a new physical page,
+      copies the original content, and maps it privately to the process.</p>
+      <p>This means two instances of the same program initially share .data pages in RAM until
+      one of them actually writes to a variable.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>/proc/&lt;pid&gt;/smaps | grep -A15 ' rw'</code> — find writable file-backed VMAs</li>
+          <li><code>nm &lt;binary&gt; | grep ' D '</code> — list initialized data symbols</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-rodata': {
+    title: '.rodata VMA — Shared Read-Only Pages',
+    content: `
+      <p>The <code>.rodata</code> segment is mapped as a <strong>shared file-backed read-only</strong>
+      VMA. Multiple instances of the same program (or any process loading the same shared library)
+      share the exact same physical pages in RAM. The MMU enforces read-only access; any write
+      attempt generates <code>SIGSEGV</code>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>/proc/&lt;pid&gt;/smaps</code> — <code>Shared_Clean</code> for .rodata pages</li>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep ' r--'</code> — read-only non-exec VMAs</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-text': {
+    title: '.text VMA — Shared Executable Pages',
+    content: `
+      <p>The executable code segment is mapped <strong>shared, read-only, executable</strong>
+      (r-xp). Because it is read-only and file-backed, all processes executing the same binary
+      or shared library share these physical pages — a 10 MB library loaded by 100 processes
+      still occupies only one copy in RAM.</p>
+      <p>The <strong>NX (no-execute)</strong> bit prevents non-.text pages from being executed,
+      a core exploit mitigation. On x86-64 this is the XD bit in the PTE.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep ' r-x'</code> — find executable VMAs</li>
+          <li><code>perf record -g ./binary &amp;&amp; perf report</code> — CPU time per function in .text</li>
+          <li><code>checkec --file &lt;binary&gt;</code> — check NX, ASLR, stack-canary, RELRO status</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-vdso': {
+    title: 'vDSO VMA — Kernel-Managed Fast Syscall Page',
+    content: `
+      <p>The vDSO appears as a special anonymous executable mapping in every process's VAS.
+      Its physical pages are managed entirely by the kernel and are shared read-only across all
+      processes. A companion <code>vvar</code> mapping (read-only data) holds kernel time values
+      that the vDSO code reads directly.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep vdso</code></li>
+          <li><code>vdso_test</code> from kernel selftests</li>
+        </ul>
+      </div>`
+  },
+
+  'vma-vsyscall': {
+    title: '[vsyscall] — Legacy Compatibility Page',
+    content: `
+      <p>The <code>vsyscall</code> page is a fixed-address (<code>0xffffffffff600000</code>) legacy
+      mechanism from Linux 2.6 for fast <code>gettimeofday</code> and <code>time</code> syscalls.
+      It predates the vDSO and is now a security liability — its fixed address makes it useful
+      for return-oriented programming (ROP) gadgets.</p>
+      <p>Modern kernels map it in <strong>emulation mode</strong>: the page is readable but not
+      executable; a fault is caught and emulated safely, eliminating the ROP gadget surface.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep vsyscall</code></li>
+          <li><code>sysctl kernel.vsyscall64</code> — 0=disabled, 1=emulate, 2=native (legacy)</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Threads ─────────────────────────────────────────────────── */
+  'thread-main': {
+    title: 'Main Thread (TID = PID)',
+    content: `
+      <p>The main thread is created implicitly by <code>execve</code>. Its TID equals the PID
+      of the process group leader. It is the only thread that receives signals sent to the PID
+      by default, and it owns the initial stack laid out by the kernel.</p>
+      <p>When the main thread calls <code>exit()</code> (or returns from <code>main()</code>),
+      glibc calls <code>pthread_exit()</code> which keeps the process alive until all other
+      threads finish, then calls <code>exit_group()</code> to terminate all threads.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ps -eLf | grep &lt;pid&gt;</code> — list all threads (LWPs) of a process</li>
+          <li><code>ls /proc/&lt;pid&gt;/task/</code> — one directory per thread</li>
+          <li><code>htop</code> (press H) — show individual threads in tree view</li>
+        </ul>
+      </div>`
+  },
+
+  'thread-worker': {
+    title: 'Worker Thread — clone(CLONE_VM|…)',
+    content: `
+      <p>POSIX threads are created by <code>pthread_create()</code>, which calls
+      <code>clone(2)</code> with flags that control what is shared:</p>
+      <pre>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
+      CLONE_THREAD | CLONE_SETTLS | CLONE_PARENT_SETTID |
+      CLONE_CHILD_CLEARTID, stack_top, ...)</pre>
+      <ul>
+        <li><strong>CLONE_VM</strong> — share the same <code>mm_struct</code> (address space)</li>
+        <li><strong>CLONE_FILES</strong> — share file descriptor table</li>
+        <li><strong>CLONE_SIGHAND</strong> — share signal handlers</li>
+        <li><strong>CLONE_THREAD</strong> — place new task in the same thread group (same PID)</li>
+        <li><strong>CLONE_SETTLS</strong> — set the FS register base for TLS</li>
+      </ul>
+      <p>Each thread gets its own kernel stack (typically 16 KB) and its own
+      <code>task_struct</code> in the kernel.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep Threads</code> — thread count</li>
+          <li><code>gdb: info threads</code> — list and switch between threads</li>
+          <li><code>strace -f -e clone ./binary</code> — trace clone() calls</li>
+          <li><code>perf sched record/report</code> — thread scheduling timeline</li>
+        </ul>
+      </div>`
+  },
+
+  'thread-tls': {
+    title: 'TLS — Thread-Local Storage',
+    content: `
+      <p>TLS gives each thread its own private copy of variables declared with
+      <code>__thread</code> or <code>_Thread_local</code>. At load time, the linker allocates
+      a TLS template in the ELF <code>PT_TLS</code> segment; <code>ld.so</code> creates a copy
+      for each thread.</p>
+      <p>On x86-64, the <strong>FS segment register</strong> base is set to the thread's
+      <code>pthread</code> descriptor (the TCB — Thread Control Block). All TLS accesses
+      compile to <code>fs:offset</code> memory references. This is set via
+      <code>arch_prctl(ARCH_SET_FS)</code> or the <code>CLONE_SETTLS</code> clone flag.</p>
+      <p>Key per-thread globals stored in TLS:</p>
+      <ul>
+        <li><code>errno</code> — each thread has its own errno so concurrent syscalls don't clobber it</li>
+        <li><code>pthread_self()</code> — returns the pthread descriptor pointer (at fs:0)</li>
+        <li>Stack canary, locale state, random seed</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>readelf -S &lt;binary&gt; | grep -i tls</code> — show PT_TLS / .tdata / .tbss</li>
+          <li><code>gdb: p $fs_base</code> — print current thread's TLS base address</li>
+          <li><code>arch_prctl(ARCH_GET_FS, &amp;addr)</code> — programmatically read FS base</li>
+        </ul>
+      </div>`
+  },
+
+  'pthread-mutex': {
+    title: 'pthread_mutex — Futex-Backed Mutex',
+    content: `
+      <p>A <code>pthread_mutex_t</code> is a 40-byte structure in user space. The lock word
+      (the first 4 bytes) is manipulated with atomic compare-and-swap instructions.
+      The kernel is only involved on contention:</p>
+      <ul>
+        <li><strong>Uncontended lock</strong>: a single <code>LOCK CMPXCHG</code> in user space; zero syscalls</li>
+        <li><strong>Contended lock</strong>: losing thread calls <code>futex(FUTEX_WAIT)</code> to sleep</li>
+        <li><strong>Unlock with waiters</strong>: <code>futex(FUTEX_WAKE)</code> wakes one waiter</li>
+      </ul>
+      <p>Mutex types: <code>PTHREAD_MUTEX_NORMAL</code>, <code>PTHREAD_MUTEX_RECURSIVE</code>,
+      <code>PTHREAD_MUTEX_ERRORCHECK</code>, <code>PTHREAD_MUTEX_ADAPTIVE_NP</code> (spin then sleep).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e futex ./binary</code> — watch futex calls (each is a contention event)</li>
+          <li><code>perf lock record ./binary &amp;&amp; perf lock report</code> — lock contention analysis</li>
+          <li><code>helgrind ./binary</code> (Valgrind) — data race &amp; lock-order violation detector</li>
+          <li><code>-fsanitize=thread</code> (TSan) — compile-time thread sanitizer</li>
+        </ul>
+      </div>`
+  },
+
+  'pthread-condvar': {
+    title: 'pthread_cond — Condition Variable',
+    content: `
+      <p>A condition variable allows threads to atomically release a mutex and sleep until a
+      condition is signalled. The canonical pattern:</p>
+      <pre>pthread_mutex_lock(&amp;m);
+while (!condition)
+    pthread_cond_wait(&amp;cv, &amp;m);  // atomically unlock &amp; sleep
+// condition is now true
+pthread_mutex_unlock(&amp;m);</pre>
+      <p><code>pthread_cond_wait</code> calls <code>futex(FUTEX_WAIT)</code> internally.
+      <code>pthread_cond_signal</code> wakes one waiter; <code>pthread_cond_broadcast</code>
+      wakes all. Spurious wakeups are possible — always re-check the condition in a loop.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e futex ./binary</code> — condition waits appear as FUTEX_WAIT_BITSET</li>
+          <li><code>gdb: info threads</code> — see which threads are blocked in pthread_cond_wait</li>
+        </ul>
+      </div>`
+  },
+
+  'pthread-rwlock': {
+    title: 'pthread_rwlock — Readers-Writer Lock',
+    content: `
+      <p>A readers-writer lock allows multiple concurrent readers but exclusive writer access.
+      Implemented in glibc using futexes. The lock state encodes reader count and writer-pending
+      bit in a single atomic word.</p>
+      <p>Prefer when reads heavily outnumber writes. Be cautious of <strong>writer starvation</strong>
+      in heavily read-biased workloads — glibc's default implementation prefers readers.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf lock report</code> — shows rwlock contention alongside mutex stats</li>
+          <li><code>-fsanitize=thread</code> — TSan understands rwlocks for race detection</li>
+        </ul>
+      </div>`
+  },
+
+  'pthread-barrier': {
+    title: 'pthread_barrier — Rendezvous Point',
+    content: `
+      <p>A barrier blocks all participating threads until the last one arrives, then releases
+      them all simultaneously. Useful for synchronising parallel computation phases.</p>
+      <p>Internally implemented using a futex-based counter: each thread atomically decrements
+      the count; the last thread to arrive broadcasts a wakeup.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e futex ./binary</code> — barrier waits show as FUTEX_WAIT</li>
+        </ul>
+      </div>`
+  },
+
+  'pthread-sem': {
+    title: 'sem_t — POSIX Semaphore',
+    content: `
+      <p>A POSIX semaphore is a non-negative integer counter with atomic increment/decrement.
+      <code>sem_wait()</code> blocks if the count is zero; <code>sem_post()</code> increments
+      and wakes a waiter. Unnamed semaphores live in shared memory; named semaphores
+      (<code>sem_open</code>) are accessible across processes via <code>/dev/shm</code>.</p>
+      <p>Unlike mutexes, semaphores have no concept of ownership — any thread can post.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ls /dev/shm/</code> — list named semaphores and shared memory objects</li>
+          <li><code>strace -e semop,futex ./binary</code> — trace semaphore operations</li>
+        </ul>
+      </div>`
+  },
+
+  'thread-cancel': {
+    title: 'Thread Cancellation',
+    content: `
+      <p><code>pthread_cancel(tid)</code> requests cancellation of a target thread. The default
+      mode is <strong>deferred</strong>: cancellation is delivered only at designated
+      <em>cancellation points</em> (most blocking syscalls like <code>read</code>, <code>sleep</code>,
+      <code>pthread_cond_wait</code>). <strong>Asynchronous</strong> cancellation delivers
+      immediately — generally unsafe due to risk of inconsistent state.</p>
+      <p>Cleanup handlers registered with <code>pthread_cleanup_push()</code> run when a thread
+      is cancelled, ensuring mutex unlocks and resource frees.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>gdb: thread apply all bt</code> — full backtrace of all threads at cancellation</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── System Call Interface ───────────────────────────────────── */
+  'syscall-entry': {
+    title: 'syscall Instruction — Ring-3 to Ring-0 Transition',
+    content: `
+      <p>On x86-64, the <code>syscall</code> instruction (replacing legacy <code>int 0x80</code>
+      and <code>sysenter</code>) performs a fast privilege-level transition:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>Saves RIP into RCX, RFLAGS into R11</li>
+        <li>Loads the kernel CS and SS from the <code>STAR</code> MSR</li>
+        <li>Jumps to the kernel entry point in the <code>LSTAR</code> MSR (<code>entry_SYSCALL_64</code>)</li>
+        <li>Kernel switches to the <strong>per-CPU kernel stack</strong> (saved in the TSS)</li>
+        <li>KPTI flushes non-global TLB entries (Meltdown mitigation)</li>
+        <li>Syscall number (in RAX) is used to index <code>sys_call_table</code></li>
+      </ol>
+      <p>Arguments are passed in: RDI, RSI, RDX, R10, R8, R9 (up to 6).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace ./binary</code> — trace all syscalls with args and return values</li>
+          <li><code>strace -c ./binary</code> — count and time syscalls (summary table)</li>
+          <li><code>perf stat -e syscalls:sys_enter_* ./binary</code> — hardware-level syscall counting</li>
+          <li><code>ausyscall --dump</code> — list all syscall numbers for current arch</li>
+        </ul>
+      </div>`
+  },
+
+  'syscall-table': {
+    title: 'sys_call_table — Kernel Dispatch Table',
+    content: `
+      <p><code>sys_call_table</code> is a static array of function pointers in the kernel, indexed
+      by syscall number. On x86-64 there are ~350 entries. The kernel invokes
+      <code>sys_call_table[rax](rdi, rsi, rdx, r10, r8, r9)</code>.</p>
+      <p>The table lives in read-only memory (<code>__ro_after_init</code>) to prevent rootkit
+      modification. Each entry points to a <code>SYSCALL_DEFINE</code>-generated stub that
+      handles argument copying from user space and audit logging.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>sudo cat /proc/kallsyms | grep sys_call_table</code> — address of the table</li>
+          <li><code>sudo bpftrace -e 'tracepoint:raw_syscalls:sys_enter { @[args-&gt;id] = count(); }'</code> — live syscall frequency histogram</li>
+        </ul>
+      </div>`
+  },
+
+  'vdso-syscall': {
+    title: 'vDSO Fast-Path Syscalls',
+    content: `
+      <p>Certain high-frequency syscalls are accelerated by the vDSO — they execute entirely in
+      user space by reading a kernel-maintained shared data page (<code>vvar</code>). This
+      eliminates the expensive ring transition, TLB flush (KPTI), and kernel stack switch.</p>
+      <p>The kernel updates the <code>vvar</code> page atomically using a <strong>seqlock</strong>:
+      the reader spins if the sequence counter is odd (write in progress) and re-reads until it
+      sees a stable even value.</p>
+      <p>Speedup: ~25 ns for a vDSO <code>clock_gettime</code> vs ~100–300 ns for a real syscall.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e cs ./binary</code> — context-switch count; vDSO calls avoid these</li>
+          <li><code>strace</code> will <em>not</em> see vDSO calls (they never enter the kernel)</li>
+        </ul>
+      </div>`
+  },
+
+  'seccomp': {
+    title: 'seccomp BPF — Syscall Filtering',
+    content: `
+      <p><code>seccomp</code> (secure computing) attaches a BPF program to a thread that is
+      evaluated on every syscall entry. The filter can return:</p>
+      <ul>
+        <li><code>SECCOMP_RET_ALLOW</code> — continue normally</li>
+        <li><code>SECCOMP_RET_KILL_PROCESS</code> — immediately terminate with SIGSYS</li>
+        <li><code>SECCOMP_RET_TRAP</code> — deliver SIGSYS to the thread</li>
+        <li><code>SECCOMP_RET_ERRNO</code> — return a fake error code</li>
+        <li><code>SECCOMP_RET_TRACE</code> — notify a ptrace tracer (for sandboxing)</li>
+      </ul>
+      <p>Used by Chrome, Firefox, Docker, systemd, and OpenSSH for privilege reduction.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep Seccomp</code> — 0=off, 1=strict, 2=filter</li>
+          <li><code>seccomp-tools dump ./binary</code> — extract and disassemble BPF filter</li>
+          <li><code>strace -e seccomp ./binary</code> — trace seccomp installation</li>
+        </ul>
+      </div>`
+  },
+
+  'ptrace': {
+    title: 'ptrace — Process Tracing / Debugger Interface',
+    content: `
+      <p><code>ptrace(2)</code> is the kernel mechanism underlying debuggers (<code>gdb</code>,
+      <code>lldb</code>) and system call tracers (<code>strace</code>). The tracer process
+      attaches to a tracee; the tracee is stopped on each syscall entry/exit, signal delivery,
+      or single-step instruction.</p>
+      <p>At each stop, the tracer can inspect/modify registers (<code>PTRACE_GETREGS</code>),
+      read/write memory (<code>PTRACE_PEEKDATA</code>), inject signals, or change the syscall
+      number — forming the basis of syscall sandboxing in tools like <code>gvisor</code>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -p &lt;pid&gt;</code> — attach to a running process</li>
+          <li><code>gdb -p &lt;pid&gt;</code> — live debugging via ptrace</li>
+          <li><code>sysctl kernel.yama.ptrace_scope</code> — 0=permissive, 1=restricted, 2=admin-only</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Kernel Task Management ──────────────────────────────────── */
+  'task-struct': {
+    title: 'task_struct — The Kernel Thread Descriptor',
+    content: `
+      <p><code>task_struct</code> (defined in <code>include/linux/sched.h</code>) is the central
+      kernel data structure for every thread. It is approximately 10 KB in size and contains
+      hundreds of fields:</p>
+      <ul>
+        <li><strong>Scheduling</strong>: <code>state</code>, <code>prio</code>, <code>sched_entity</code>, <code>policy</code></li>
+        <li><strong>Identity</strong>: <code>pid</code>, <code>tgid</code>, <code>comm[16]</code> (name)</li>
+        <li><strong>Memory</strong>: <code>mm</code> (pointer to <code>mm_struct</code>)</li>
+        <li><strong>Files</strong>: <code>files</code> (pointer to <code>files_struct</code>)</li>
+        <li><strong>Signals</strong>: <code>sighand</code>, <code>pending</code></li>
+        <li><strong>Timing</strong>: <code>utime</code>, <code>stime</code>, <code>start_time</code></li>
+        <li><strong>CPU state</strong>: <code>thread</code> (arch-specific registers on context switch)</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>sudo bpftrace -e 'kprobe:schedule { printf("%s\\n", comm); }'</code> — print task name on each schedule</li>
+          <li><code>sudo crash /boot/vmlinux /proc/kcore</code> — inspect live kernel structures</li>
+          <li><code>cat /proc/&lt;pid&gt;/status</code> — many task_struct fields exported here</li>
+        </ul>
+      </div>`
+  },
+
+  'mm-struct': {
+    title: 'mm_struct — Process Address Space Descriptor',
+    content: `
+      <p><code>mm_struct</code> describes the complete virtual address space of a process.
+      All threads in a process share a single <code>mm_struct</code> (pointed to by
+      <code>task_struct.mm</code>). It contains:</p>
+      <ul>
+        <li><strong>pgd</strong> — physical address of the top-level page directory (loaded into CR3)</li>
+        <li><strong>mmap</strong> — linked list / rbtree of all <code>vm_area_struct</code> (VMAs)</li>
+        <li><strong>start_code/end_code</strong>, <strong>start_data</strong>, <strong>brk</strong>, <strong>start_stack</strong> — region boundaries</li>
+        <li><strong>mm_count / mm_users</strong> — reference counts for thread sharing and <code>execve</code></li>
+        <li><strong>mmap_lock</strong> (rwsem) — protects the VMA tree during modifications</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>/proc/&lt;pid&gt;/maps</code> — VMA list from mm_struct</li>
+          <li><code>/proc/&lt;pid&gt;/statm</code> — total/resident/shared page counts</li>
+          <li><code>sudo bpftrace -e 'kprobe:do_mmap { printf("mmap called\\n"); }'</code></li>
+        </ul>
+      </div>`
+  },
+
+  'files-struct': {
+    title: 'files_struct — File Descriptor Table',
+    content: `
+      <p><code>files_struct</code> holds the per-process (shared among threads) open file
+      descriptor table. Each entry in the table is a pointer to a <code>file</code> struct,
+      which in turn points to the underlying <code>inode</code>.</p>
+      <p>FD flags (<code>FD_CLOEXEC</code>) are stored separately from the <code>file</code>
+      struct so they can differ between processes that share the same open file description
+      (after <code>fork</code> or <code>dup</code>).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ls -la /proc/&lt;pid&gt;/fd/</code> — all open file descriptors as symlinks</li>
+          <li><code>lsof -p &lt;pid&gt;</code> — detailed open file listing</li>
+          <li><code>cat /proc/sys/fs/file-max</code> — system-wide open file limit</li>
+          <li><code>ulimit -n</code> — per-process FD limit</li>
+        </ul>
+      </div>`
+  },
+
+  'signal-struct': {
+    title: 'signal_struct — Signal Handling State',
+    content: `
+      <p>Each process has one <code>signal_struct</code> (shared by all threads), which holds
+      the array of <code>sigaction</code> structures defining how each of the 64 signals is
+      handled (SIG_DFL, SIG_IGN, or a handler function). Per-thread pending signal sets
+      live in <code>task_struct.pending</code>; process-wide pending signals live in
+      <code>signal_struct.shared_pending</code>.</p>
+      <p>The kernel delivers signals at syscall return or on preemption by checking
+      <code>TIF_SIGPENDING</code> in the thread info flags.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep Sig</code> — SigPnd, SigBlk, SigIgn, SigCgt bitmasks</li>
+          <li><code>kill -l</code> — list all signal names and numbers</li>
+          <li><code>strace -e signal ./binary</code> — trace signal-related syscalls</li>
+        </ul>
+      </div>`
+  },
+
+  'cred-struct': {
+    title: 'cred — Credentials & Capabilities',
+    content: `
+      <p>The <code>cred</code> struct stores the security identity of a task:
+      real/effective/saved UID and GID, supplementary groups, Linux capabilities
+      (64-bit bitmask split into permitted, effective, and inheritable sets), and
+      security module labels (SELinux, AppArmor).</p>
+      <p>Linux capabilities divide root privilege into discrete units
+      (<code>CAP_NET_ADMIN</code>, <code>CAP_SYS_PTRACE</code>, etc.), enabling
+      privilege separation without full-root suid binaries.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep Cap</code> — raw capability hex bitmasks</li>
+          <li><code>capsh --decode=&lt;hex&gt;</code> — decode capability bitmask to names</li>
+          <li><code>getpcaps &lt;pid&gt;</code> — human-readable capabilities of a process</li>
+          <li><code>id</code> — current process UID/GID/groups</li>
+        </ul>
+      </div>`
+  },
+
+  'pid-ns': {
+    title: 'PID Namespaces & Linux Namespaces',
+    content: `
+      <p>Linux namespaces partition global system resources so processes inside a namespace
+      have an isolated view. Key namespace types:</p>
+      <ul>
+        <li><strong>pid</strong> — isolated PID number space (container PID 1)</li>
+        <li><strong>mnt</strong> — independent filesystem mount tree</li>
+        <li><strong>net</strong> — private network interfaces, routing tables</li>
+        <li><strong>uts</strong> — independent hostname and domain name</li>
+        <li><strong>ipc</strong> — isolated SysV IPC and POSIX message queues</li>
+        <li><strong>user</strong> — UID/GID remapping (user containers)</li>
+        <li><strong>cgroup</strong> — isolated cgroup root</li>
+      </ul>
+      <p>Together with cgroups, namespaces form the foundation of <strong>containers</strong>
+      (Docker, podman, systemd-nspawn).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ls -la /proc/&lt;pid&gt;/ns/</code> — symlinks to each namespace inode</li>
+          <li><code>lsns</code> — list all namespaces on the system</li>
+          <li><code>nsenter -t &lt;pid&gt; --all bash</code> — enter a process's namespaces</li>
+          <li><code>unshare --pid --fork bash</code> — create a new PID namespace</li>
+        </ul>
+      </div>`
+  },
+
+  'wait-queue': {
+    title: 'wait_queue — Blocking & Wakeup Infrastructure',
+    content: `
+      <p>The kernel's <code>wait_queue_head_t</code> is a linked list of sleeping tasks waiting
+      on a condition. When a task calls <code>wait_event(wq, condition)</code>, it adds itself
+      to the list and calls <code>schedule()</code>. When the condition changes,
+      <code>wake_up(wq)</code> iterates the list and marks waiters as runnable.</p>
+      <p>Used pervasively throughout the kernel: I/O completion, socket receive buffers,
+      pipe writes, futex wake, epoll, and inotify all use wait queues.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/wchan</code> — kernel function where thread is sleeping</li>
+          <li><code>ps -o pid,wchan ./binary</code> — wait channel in ps output</li>
+          <li><code>sudo bpftrace -e 'kprobe:wake_up_process { @[probe] = count(); }'</code></li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Scheduler ───────────────────────────────────────────────── */
+  'cfs': {
+    title: 'CFS — Completely Fair Scheduler',
+    content: `
+      <p>CFS (introduced in Linux 2.6.23) aims to give each runnable task a proportionally equal
+      share of CPU time. It tracks a per-task <strong>virtual runtime</strong>
+      (<code>vruntime</code>, in nanoseconds) that advances proportionally to the task's
+      scheduling weight (derived from <code>nice</code> value).</p>
+      <p>All runnable tasks are stored in a <strong>red-black tree</strong> keyed by
+      <code>vruntime</code>. The scheduler always picks the <em>leftmost</em> node — the task
+      with the smallest vruntime (i.e., the one that has received the least CPU time). This gives
+      O(log n) pick-next and O(log n) enqueue/dequeue.</p>
+      <p><strong>Target latency</strong> (default 6–24 ms) is the period within which every
+      runnable task should get at least one timeslice.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/sched</code> — per-task CFS statistics (vruntime, switches)</li>
+          <li><code>schedtool -r -p 99 -e ./binary</code> — set real-time priority</li>
+          <li><code>chrt -f 50 ./binary</code> — run with SCHED_FIFO priority 50</li>
+          <li><code>nice -n -10 ./binary</code> — increase priority (lower nice = higher weight)</li>
+          <li><code>perf sched latency</code> — scheduling latency analysis</li>
+        </ul>
+      </div>`
+  },
+
+  'rt-sched': {
+    title: 'RT Scheduler — SCHED_FIFO / SCHED_RR',
+    content: `
+      <p>Real-time scheduling policies preempt CFS tasks unconditionally.
+      RT tasks have priorities 1–99 (higher = more urgent) and always run before any CFS task.</p>
+      <ul>
+        <li><strong>SCHED_FIFO</strong> — runs until it blocks or yields; no timeslice</li>
+        <li><strong>SCHED_RR</strong> — like FIFO but with a round-robin timeslice among equal priorities</li>
+        <li><strong>SCHED_DEADLINE</strong> — sporadic tasks with explicit runtime/deadline/period (EDF algorithm)</li>
+      </ul>
+      <p>To prevent RT tasks from starving the system: <code>kernel.sched_rt_runtime_us</code>
+      (default 950 ms per 1000 ms) reserves 5% of CPU for non-RT tasks.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>chrt -p &lt;pid&gt;</code> — show scheduling policy and priority</li>
+          <li><code>chrt -f -p 80 &lt;pid&gt;</code> — set SCHED_FIFO priority 80</li>
+          <li><code>cyclictest</code> — measure real-time scheduling latency</li>
+          <li><code>sysctl kernel.sched_rt_runtime_us</code></li>
+        </ul>
+      </div>`
+  },
+
+  'sched-domain': {
+    title: 'Scheduling Domains — NUMA & CPU Topology',
+    content: `
+      <p>Scheduling domains form a hierarchy that mirrors the CPU topology:
+      SMT siblings → cores → LLC-sharing socket → NUMA node. Load balancing respects this
+      hierarchy — it's cheaper to move a task between two SMT threads on the same core than
+      between NUMA nodes.</p>
+      <p>The kernel builds domain topology at boot from ACPI/SMBIOS data and exposes it via
+      <code>/sys/devices/system/cpu/cpu*/topology/</code>.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>lstopo</code> (hwloc) — visual CPU/NUMA topology diagram</li>
+          <li><code>numactl --hardware</code> — NUMA node layout and distances</li>
+          <li><code>cat /sys/devices/system/cpu/cpu0/topology/core_siblings</code></li>
+          <li><code>lscpu</code> — full CPU topology summary</li>
+        </ul>
+      </div>`
+  },
+
+  'runqueue': {
+    title: 'Per-CPU Runqueue (rq)',
+    content: `
+      <p>Each CPU has its own <code>struct rq</code> containing sub-queues for each scheduler
+      class: <code>cfs_rq</code> (the red-black vruntime tree), <code>rt_rq</code> (bitmap of
+      100 priority levels), and <code>dl_rq</code> (deadline tasks, an rbtree by deadline).</p>
+      <p>The scheduler always checks queues from highest to lowest class: DL → RT → CFS → idle.
+      Having per-CPU runqueues eliminates the global lock bottleneck of earlier kernels.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/schedstat</code> — per-CPU scheduler statistics</li>
+          <li><code>sudo bpftrace -e 'tracepoint:sched:sched_switch { @[cpu] = count(); }'</code> — context switches per CPU</li>
+          <li><code>mpstat -P ALL 1</code> — per-CPU utilisation</li>
+        </ul>
+      </div>`
+  },
+
+  'load-balance': {
+    title: 'Load Balancer — Work Stealing',
+    content: `
+      <p>Linux's load balancer runs periodically (via the scheduler tick) and on CPU idle.
+      It identifies imbalanced runqueues and <em>pulls</em> tasks from busy CPUs to idle ones.
+      This is work-stealing: the idle CPU reaches into a busier CPU's runqueue and migrates
+      the least-recently-run task.</p>
+      <p>Migration is constrained by scheduling domains — the balancer won't cross a NUMA
+      boundary unless the imbalance is significant, because remote NUMA memory access is slow.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/schedstat | grep 'lb'</code> — load-balance statistics</li>
+          <li><code>perf sched migrate</code> — trace task migrations between CPUs</li>
+          <li><code>taskset -c 0,1 ./binary</code> — pin to specific CPUs, disabling migration</li>
+        </ul>
+      </div>`
+  },
+
+  'context-switch': {
+    title: 'Context Switch — switch_to()',
+    content: `
+      <p>A context switch saves the outgoing thread's CPU state and restores the incoming
+      thread's state. On x86-64 this involves:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>Save/restore callee-saved registers (RSP, RBP, R12–R15) on the kernel stack</li>
+        <li>Load the incoming thread's <strong>CR3</strong> (top-level page table) if switching between processes — this flushes the TLB</li>
+        <li>Update the TSS (<code>tss.sp0</code>) with the new kernel stack pointer</li>
+        <li>Switch the FS base register (<code>arch_prctl(ARCH_SET_FS)</code>) for TLS</li>
+        <li>Flush FPU/SIMD state lazily (only on first FP instruction after switch)</li>
+      </ol>
+      <p>Switching between threads of the <em>same process</em> is cheaper because CR3 stays
+      the same — no TLB flush needed.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e cs ./binary</code> — total context switches</li>
+          <li><code>vmstat 1</code> — context switches per second (cs column)</li>
+          <li><code>pidstat -w -p &lt;pid&gt; 1</code> — voluntary vs involuntary context switches</li>
+        </ul>
+      </div>`
+  },
+
+  'affinity': {
+    title: 'CPU Affinity — sched_setaffinity()',
+    content: `
+      <p>CPU affinity restricts which CPUs a task may run on, expressed as a bitmask
+      (<code>cpu_set_t</code>). Pinning threads to specific CPUs can reduce cache thrashing,
+      improve NUMA locality, and provide more predictable latency.</p>
+      <p>The scheduler's load balancer respects affinity masks and will not migrate a task
+      outside its allowed set. A task with a single-CPU affinity mask effectively has a
+      dedicated core.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>taskset -c 0,2 ./binary</code> — run on CPUs 0 and 2</li>
+          <li><code>taskset -cp 0,2 &lt;pid&gt;</code> — change affinity of running process</li>
+          <li><code>numactl --cpunodebind=0 ./binary</code> — bind to NUMA node 0's CPUs</li>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep Cpus_allowed</code></li>
+        </ul>
+      </div>`
+  },
+
+  'preemption': {
+    title: 'Kernel Preemption — CONFIG_PREEMPT',
+    content: `
+      <p>Kernel preemption allows the scheduler to interrupt a thread running in kernel mode
+      (e.g., inside a syscall) and switch to a higher-priority task. Without preemption,
+      a thread cannot be descheduled until it voluntarily yields or returns to user space.</p>
+      <p>Linux offers three preemption models:</p>
+      <ul>
+        <li><strong>PREEMPT_NONE</strong> — no voluntary kernel preemption; lowest latency overhead</li>
+        <li><strong>PREEMPT_VOLUNTARY</strong> — explicit preemption points at selected kernel locations</li>
+        <li><strong>PREEMPT</strong> — full preemption except in spinlock-protected sections</li>
+        <li><strong>PREEMPT_RT</strong> (PREEMPT_REALTIME patch) — nearly all spinlocks become sleeping locks; suitable for hard real-time</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>zcat /proc/config.gz | grep PREEMPT</code> — check kernel preemption config</li>
+          <li><code>uname -v | grep PREEMPT</code> — visible in kernel version string for RT kernels</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Kernel Memory Management ────────────────────────────────── */
+  'page-table': {
+    title: 'Page Tables — 4-Level / 5-Level Walk',
+    content: `
+      <p>x86-64 Linux uses a 4-level (or 5-level with LA57) page table to translate 48-bit
+      (or 57-bit) virtual addresses to 52-bit physical addresses:</p>
+      <pre>VA bits [47:39] → PGD (Page Global Dir, 512 entries)
+VA bits [38:30] → PUD (Page Upper Dir)
+VA bits [29:21] → PMD (Page Middle Dir)
+VA bits [20:12] → PTE (Page Table Entry)
+VA bits [11:0]  → byte offset within 4 KB page</pre>
+      <p>Each table has 512 entries × 8 bytes = 4 KB (one page). The PTE contains the physical
+      page frame number, accessed/dirty bits, and protection flags (U/S, R/W, NX).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/pagemap</code> — virtual → physical page mapping (requires root)</li>
+          <li><code>page-types</code> tool from kernel tools — page frame flags</li>
+          <li><code>sudo cat /proc/kpageflags</code> — per-PFN flags for all physical memory</li>
+        </ul>
+      </div>`
+  },
+
+  'tlb': {
+    title: 'TLB — Translation Lookaside Buffer',
+    content: `
+      <p>The TLB is a hardware cache of recent virtual-to-physical address translations, holding
+      ~64–2048 entries per CPU. A TLB <em>hit</em> resolves a virtual address in 1–4 cycles;
+      a <em>miss</em> requires a hardware page-table walk costing ~100+ cycles.</p>
+      <p>TLB flushes (invalidations) are required when:</p>
+      <ul>
+        <li>A new process is scheduled (CR3 reload — flushes all non-global entries)</li>
+        <li>A VMA is unmapped or its permissions change</li>
+        <li>A page is CoW-broken</li>
+        <li>Meltdown mitigation: KPTI flushes on every kernel entry/exit (expensive)</li>
+      </ul>
+      <p>For multi-CPU flushes, the kernel sends <strong>TLB shootdown IPIs</strong> via the
+      Local APIC to synchronise all cores.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e dTLB-load-misses,iTLB-load-misses ./binary</code> — TLB miss counts</li>
+          <li><code>sudo perf stat -e tlb:tlb_flush ./binary</code> — kernel TLB flush events</li>
+        </ul>
+      </div>`
+  },
+
+  'page-fault': {
+    title: 'Page Fault Handler — Demand Paging & CoW',
+    content: `
+      <p>A page fault fires when the MMU cannot translate a virtual address — either because
+      the PTE is not-present or the access violates permissions. The kernel's
+      <code>do_page_fault()</code> (x86: <code>exc_page_fault()</code>) handles three cases:</p>
+      <ul>
+        <li><strong>Minor fault</strong> — PTE valid in <code>mm_struct</code> but page not yet loaded;
+          allocate a physical page and fill it (demand paging). No disk I/O. Cheap.</li>
+        <li><strong>Major fault</strong> — page was swapped out; must read from swap device.
+          Expensive I/O wait.</li>
+        <li><strong>CoW fault</strong> — write to a read-only shared page; allocate a new page,
+          copy content, update PTE.</li>
+        <li><strong>SIGSEGV</strong> — address outside any VMA or wrong permissions; fatal.</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e page-faults,major-faults ./binary</code> — fault counts</li>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep VmFlt</code> — major/minor fault totals</li>
+          <li><code>sudo bpftrace -e 'tracepoint:exceptions:page_fault_user { @[comm] = count(); }'</code></li>
+        </ul>
+      </div>`
+  },
+
+  'cow': {
+    title: 'Copy-on-Write (CoW)',
+    content: `
+      <p>CoW is a kernel optimization where two processes (or a parent and forked child) share
+      the same physical pages mapped as <em>read-only</em> in both address spaces. The data
+      is only physically duplicated when one process writes to it — triggering a protection
+      fault that the kernel handles by allocating a new page, copying the content, and updating
+      the faulting process's PTE to point to the new page.</p>
+      <p>CoW enables:</p>
+      <ul>
+        <li><strong>Fast fork()</strong> — duplicating mm_struct is cheap; no actual page copies until writes happen</li>
+        <li><strong>Shared library .data</strong> — initial values shared until a process modifies a global</li>
+        <li><strong>mmap(MAP_PRIVATE)</strong> — file-backed private mappings</li>
+        <li><strong>Zero page for .bss</strong> — all zero-init data pages share one zero page</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>/proc/&lt;pid&gt;/smaps — Private_Dirty</code> shows pages that have been CoW-broken</li>
+          <li><code>perf stat -e page-faults ./binary</code> — CoW breaks show as minor faults</li>
+        </ul>
+      </div>`
+  },
+
+  'slab': {
+    title: 'SLAB / SLUB Allocator — Kernel Object Caches',
+    content: `
+      <p>The SLUB allocator (default since 2.6.23) is the kernel's equivalent of userspace
+      <code>malloc</code>. It maintains per-CPU caches of frequently allocated objects
+      (<code>task_struct</code>, <code>inode</code>, <code>file</code>, <code>dentry</code>,
+      <code>socket</code>, etc.) to avoid expensive buddy-allocator calls for every object.</p>
+      <p>Each <em>slab cache</em> holds objects of a single size, minimising fragmentation.
+      Objects are allocated in bulk from buddy pages and recycled without zeroing (constructors
+      handle initialisation).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/slabinfo</code> — all slab caches with active/total counts</li>
+          <li><code>slabtop</code> — live slab usage sorted by size (like top for slabs)</li>
+          <li><code>sudo bpftrace -e 'kprobe:kmem_cache_alloc { @[comm] = count(); }'</code></li>
+        </ul>
+      </div>`
+  },
+
+  'buddy': {
+    title: 'Buddy Allocator — Page-Granularity Free Lists',
+    content: `
+      <p>The buddy system manages physical memory in power-of-2 page blocks (order 0 = 4 KB,
+      order 1 = 8 KB, …, order 10 = 4 MB). Allocation searches the smallest available order
+      ≥ requested size and splits if necessary. Freed blocks are merged with their
+      <em>buddy</em> (the adjacent same-size block) back up to order 10.</p>
+      <p>Memory is divided into zones: <code>DMA</code> (&lt;16 MB), <code>DMA32</code>
+      (&lt;4 GB), <code>NORMAL</code>, and optionally <code>HIGHMEM</code> (32-bit only)
+      and <code>MOVABLE</code> (for page migration and huge-page promotion).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/buddyinfo</code> — free blocks per order per zone</li>
+          <li><code>cat /proc/zoneinfo</code> — detailed zone statistics</li>
+          <li><code>cat /proc/meminfo</code> — system-wide memory summary</li>
+        </ul>
+      </div>`
+  },
+
+  'mmap-anon': {
+    title: 'Anonymous mmap — Heap, Stacks, and Malloc',
+    content: `
+      <p><code>mmap(NULL, size, PROT_READ|PROT_WRITE, MAP_ANONYMOUS|MAP_PRIVATE, -1, 0)</code>
+      allocates a region of private anonymous memory backed by physical pages on demand.
+      The kernel creates a new VMA; pages are only faulted in as the program writes to them.</p>
+      <p>Uses:</p>
+      <ul>
+        <li><strong>glibc malloc</strong> — large allocations (&gt;MMAP_THRESHOLD ~128 KB)</li>
+        <li><strong>Thread stacks</strong> — each <code>pthread_create</code> calls <code>mmap</code> for the stack</li>
+        <li><strong>brk() extension</strong> — small heap growth below MMAP_THRESHOLD</li>
+        <li><strong>Stack overflow guard page</strong> — <code>mmap(PROT_NONE)</code> below each thread stack</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e mmap,mprotect ./binary</code> — trace all memory mapping calls</li>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep 'anon'</code> — anonymous VMAs</li>
+        </ul>
+      </div>`
+  },
+
+  'oom': {
+    title: 'OOM Killer — Out-of-Memory Process Selection',
+    content: `
+      <p>When the system runs out of memory and cannot reclaim any, the kernel's OOM killer
+      selects a process to terminate. It computes an <strong>oom_score</strong> for each process
+      based on its memory consumption (RSS + swap), runtime, and a user-configurable
+      <code>oom_score_adj</code> (-1000 to +1000). The process with the highest score is killed.</p>
+      <p>Setting <code>oom_score_adj = -1000</code> makes a process immune to OOM killing
+      (used by system daemons). Setting it to <code>+1000</code> makes it the first victim.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/&lt;pid&gt;/oom_score</code> — current OOM score</li>
+          <li><code>echo -500 > /proc/&lt;pid&gt;/oom_score_adj</code> — reduce OOM priority</li>
+          <li><code>dmesg | grep -i 'oom'</code> — OOM kill events in kernel log</li>
+        </ul>
+      </div>`
+  },
+
+  'huge-pages': {
+    title: 'Transparent Huge Pages (THP) / HugeTLB',
+    content: `
+      <p>Huge pages (2 MB on x86-64, 1 GB with 1G pages) reduce TLB pressure by covering
+      512× more virtual address space per TLB entry. Linux supports two mechanisms:</p>
+      <ul>
+        <li><strong>THP (Transparent Huge Pages)</strong> — the kernel automatically promotes
+          4 KB PTEs to 2 MB PMD entries when a 2 MB-aligned anonymous region is fully faulted in.
+          Transparent to applications. Can cause latency spikes during promotion/demotion.</li>
+        <li><strong>HugeTLB</strong> — pre-allocated huge-page pools via <code>hugetlbfs</code>;
+          applications must use <code>mmap(MAP_HUGETLB)</code> or libhugetlbfs explicitly.
+          Predictable but inflexible.</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /sys/kernel/mm/transparent_hugepage/enabled</code> — THP policy (always/madvise/never)</li>
+          <li><code>cat /proc/meminfo | grep Huge</code> — huge page allocation stats</li>
+          <li><code>perf stat -e dTLB-load-misses ./binary</code> — TLB miss reduction from huge pages</li>
+        </ul>
+      </div>`
+  },
+
+  'swap': {
+    title: 'Swap / zswap — Paging to Disk',
+    content: `
+      <p>When the kernel needs physical pages and cannot reclaim clean file-backed pages,
+      it <em>swaps out</em> dirty anonymous pages to a swap partition or swap file. The PTE
+      is marked not-present with a swap entry encoding the location on disk; the physical page
+      is freed. On access, a <strong>major page fault</strong> occurs and the page is read back.</p>
+      <p><strong>zswap</strong> is a compressed in-memory swap cache: pages are compressed
+      (LZO, LZ4, zstd) and stored in a pool before being evicted to disk, reducing swap I/O.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>swapon --show</code> — list swap devices and usage</li>
+          <li><code>vmstat 1 | awk '{print $7,$8}'</code> — swap-in/out per second</li>
+          <li><code>cat /proc/meminfo | grep Swap</code> — total/used/free swap</li>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep VmSwap</code> — per-process swap usage</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Sync & IPC ──────────────────────────────────────────────── */
+  'futex': {
+    title: 'futex(2) — Fast Userspace Mutex',
+    content: `
+      <p>A futex (fast userspace mutex) is a 32-bit integer in shared memory that threads
+      manipulate with atomic CPU instructions (CAS). The kernel is only invoked in the
+      contended case:</p>
+      <ul>
+        <li><code>FUTEX_WAIT</code> — atomically check the value and sleep if it matches; the
+          thread is added to the kernel's futex hash table</li>
+        <li><code>FUTEX_WAKE</code> — wake N threads sleeping on the futex address</li>
+        <li><code>FUTEX_REQUEUE</code> — move waiters to a different futex (used in
+          <code>pthread_cond_broadcast</code>)</li>
+      </ul>
+      <p>The futex key is the physical address of the 32-bit word, enabling futexes to work
+      across processes sharing the same memory-mapped region.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e futex ./binary</code> — every futex syscall with arguments</li>
+          <li><code>perf lock record ./binary &amp;&amp; perf lock report</code></li>
+          <li><code>sudo bpftrace -e 'tracepoint:syscalls:sys_enter_futex { @[comm] = count(); }'</code></li>
+        </ul>
+      </div>`
+  },
+
+  'pipe': {
+    title: 'pipe / pipe2 — Anonymous Byte-Stream IPC',
+    content: `
+      <p>A pipe is a unidirectional byte stream with a kernel-managed ring buffer (default 64 KB,
+      configurable via <code>F_SETPIPE_SZ</code>). Writes block when the buffer is full; reads
+      block when empty. The kernel implements pipes as a pair of file descriptors sharing a
+      <code>pipe_inode_info</code> struct.</p>
+      <p>Linux supports <strong>splice()</strong> and <strong>vmsplice()</strong> to move data
+      between pipes and file descriptors without copying through user space (zero-copy).</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ls -la /proc/&lt;pid&gt;/fd | grep pipe</code> — find pipe FDs</li>
+          <li><code>cat /proc/&lt;pid&gt;/fdinfo/&lt;n&gt;</code> — pipe buffer position and flags</li>
+          <li><code>strace -e pipe,read,write ./binary</code></li>
+        </ul>
+      </div>`
+  },
+
+  'eventfd': {
+    title: 'eventfd / timerfd — Edge-Triggered Counters',
+    content: `
+      <p><code>eventfd(2)</code> creates a file descriptor wrapping a 64-bit counter. Writes
+      add to the counter; reads return and reset it. It integrates with <code>epoll</code>
+      and <code>select</code>, making it ideal for waking an I/O event loop from another thread
+      or from a signal handler.</p>
+      <p><code>timerfd_create(2)</code> creates an FD that becomes readable when a timer expires,
+      again compatible with <code>epoll</code> — enabling timer events in the same event loop
+      as network I/O without signals.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e eventfd,timerfd_create ./binary</code></li>
+          <li><code>ls /proc/&lt;pid&gt;/fd</code> — eventfd shows as <code>anon_inode:[eventfd]</code></li>
+        </ul>
+      </div>`
+  },
+
+  'mq': {
+    title: 'POSIX Message Queues — mq_open',
+    content: `
+      <p>POSIX message queues (<code>mq_open</code>, <code>mq_send</code>, <code>mq_receive</code>)
+      provide typed, prioritised, kernel-buffered message passing between processes or threads.
+      Messages are delivered in priority order. Queues persist as named entries in the
+      <code>mqueue</code> pseudo-filesystem (<code>/dev/mqueue/</code>).</p>
+      <p>Unlike pipes, message boundaries are preserved and each message has an associated
+      priority. Blocking and non-blocking modes are supported, and queues can be
+      <code>select()</code>/<code>poll()</code>-able.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ls /dev/mqueue/</code> — list open named queues</li>
+          <li><code>cat /proc/sys/fs/mqueue/msg_max</code> — max messages per queue</li>
+        </ul>
+      </div>`
+  },
+
+  'shm': {
+    title: 'Shared Memory — shmget / shm_open',
+    content: `
+      <p>Shared memory is the fastest IPC mechanism — two or more processes map the same
+      physical pages into their respective virtual address spaces. No data copying occurs;
+      communication is as fast as a memory write.</p>
+      <p>Two APIs:</p>
+      <ul>
+        <li><strong>SysV</strong> — <code>shmget</code> / <code>shmat</code> / <code>shmdt</code>;
+          kernel-managed with IPC keys. Legacy.</li>
+        <li><strong>POSIX</strong> — <code>shm_open</code> / <code>mmap</code>; backed by
+          <code>tmpfs</code> objects in <code>/dev/shm/</code>. Preferred.</li>
+      </ul>
+      <p>Synchronisation must be provided separately (futex-based mutex, semaphore, etc.)
+      since shared memory has no inherent ordering guarantees.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>ipcs -m</code> — list SysV shared memory segments</li>
+          <li><code>ls /dev/shm/</code> — POSIX shared memory objects</li>
+          <li><code>cat /proc/&lt;pid&gt;/maps | grep '/dev/shm'</code></li>
+        </ul>
+      </div>`
+  },
+
+  'signal-ipc': {
+    title: 'kill / sigqueue — Async Signal Notification',
+    content: `
+      <p>Signals are the kernel's mechanism for asynchronous notification of events.
+      <code>kill(pid, sig)</code> delivers a signal to a process; the kernel sets a bit in
+      <code>task_struct.pending.signal</code> and sets <code>TIF_SIGPENDING</code>.
+      The signal is delivered at the next opportunity (syscall return, preemption point).</p>
+      <p><code>sigqueue()</code> delivers a real-time signal with a <code>sigval</code> payload
+      (integer or pointer), and real-time signals (34–64) are queued rather than collapsed.</p>
+      <p>Self-pipe trick / <code>signalfd(2)</code> allows signals to be consumed via
+      <code>read()</code> in an event loop.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>kill -l</code> — list all signals</li>
+          <li><code>kill -SIGSTOP &lt;pid&gt;</code> — pause a process</li>
+          <li><code>strace -e signal ./binary</code></li>
+          <li><code>cat /proc/&lt;pid&gt;/status | grep SigPnd</code></li>
+        </ul>
+      </div>`
+  },
+
+  'membarrier': {
+    title: 'membarrier(2) — Cross-Thread Memory Ordering',
+    content: `
+      <p><code>membarrier(2)</code> issues a memory barrier across all threads of the calling
+      process (or system-wide). This is used by lock-free data structures that need to ensure
+      that all CPUs observe stores in the correct order, without the overhead of full memory
+      fences on every operation.</p>
+      <p>The caller issues an expensive full barrier once; all other threads implicitly execute
+      a fence at their next scheduling point, allowing the fast path (reader side) to use
+      relaxed loads.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>strace -e membarrier ./binary</code></li>
+          <li>Used internally by glibc's POSIX <code>pthread_atfork()</code> and RCU implementations</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Hardware ────────────────────────────────────────────────── */
+  'cpu-core': {
+    title: 'CPU Core — Instruction Fetch / Decode / Execute',
+    content: `
+      <p>A modern x86-64 core is a deeply pipelined, out-of-order superscalar machine.
+      Key stages:</p>
+      <ul>
+        <li><strong>Fetch</strong> — fetch up to 16–32 bytes of instructions from L1-I cache;
+          branch predictor speculatively selects next PC</li>
+        <li><strong>Decode</strong> — x86 macro-ops split into 1–4 micro-ops (μops)</li>
+        <li><strong>Rename / Dispatch</strong> — register renaming eliminates false dependencies;
+          μops issued to reservation stations</li>
+        <li><strong>Execute (OOO)</strong> — up to 4–6 μops per cycle, out of program order</li>
+        <li><strong>Retire</strong> — μops committed in program order to architectural state</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat ./binary</code> — IPC, cache-miss, branch-miss summary</li>
+          <li><code>perf record -g ./binary &amp;&amp; perf report</code> — CPU flamegraph</li>
+          <li><code>toplev.py</code> (pmu-tools) — top-down microarchitecture analysis</li>
+          <li><code>likwid-perfctr</code> — hardware counter profiling</li>
+        </ul>
+      </div>`
+  },
+
+  'registers': {
+    title: 'Registers — GPRs, SIMD, Segment Registers',
+    content: `
+      <p>x86-64 exposes 16 general-purpose 64-bit registers (RAX–R15), 16 SSE/AVX
+      128/256/512-bit SIMD registers (XMM0–XMM15 / YMM / ZMM), and several control registers.</p>
+      <p>Key roles in thread execution:</p>
+      <ul>
+        <li><strong>RIP</strong> — instruction pointer; the heart of a thread's execution state</li>
+        <li><strong>RSP</strong> — stack pointer; points to current top of the thread stack</li>
+        <li><strong>RBP</strong> — frame pointer (optional; omitted with <code>-fomit-frame-pointer</code>)</li>
+        <li><strong>FS</strong> — base of TLS segment; <code>fs:0</code> = <code>pthread_self()</code></li>
+        <li><strong>CR3</strong> — physical address of page table root (per-process, reloaded on context switch)</li>
+        <li><strong>RFLAGS</strong> — condition codes (ZF, CF, SF, OF) + interrupt enable flag</li>
+      </ul>
+      <p>On context switch, callee-saved registers (RBX, RBP, R12–R15) are saved on the kernel
+      stack; caller-saved registers are the thread's own responsibility.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>gdb: info registers</code> — dump all GPRs for current thread</li>
+          <li><code>gdb: info all-registers</code> — include FP/SSE/AVX state</li>
+          <li><code>strace</code> — displays syscall args which are register values</li>
+        </ul>
+      </div>`
+  },
+
+  'cache': {
+    title: 'L1/L2/L3 Cache — MESI Coherence Protocol',
+    content: `
+      <p>Modern CPUs have a hierarchy of SRAM caches:</p>
+      <ul>
+        <li><strong>L1-D / L1-I</strong> — 32–64 KB, private per core, ~4 cycles</li>
+        <li><strong>L2</strong> — 256 KB–2 MB, private per core (or shared between SMT threads), ~12 cycles</li>
+        <li><strong>L3 (LLC)</strong> — 8–64 MB, shared across all cores on a socket, ~40 cycles</li>
+        <li><strong>DRAM</strong> — GBs, ~100–300 cycles on local NUMA node; 2–4× slower on remote node</li>
+      </ul>
+      <p>The <strong>MESI protocol</strong> (Modified, Exclusive, Shared, Invalid) keeps cache
+      lines coherent across cores. A write to a line in Shared state invalidates all other
+      copies — <em>cache line bouncing</em> between threads is a major source of contention.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e cache-misses,cache-references ./binary</code></li>
+          <li><code>perf c2c record ./binary &amp;&amp; perf c2c report</code> — cache-to-cache false sharing</li>
+          <li><code>valgrind --tool=cachegrind ./binary</code> — cache simulation</li>
+          <li><code>lscpu | grep cache</code> — cache sizes</li>
+        </ul>
+      </div>`
+  },
+
+  'mmu': {
+    title: 'MMU + CR3 — Hardware Page-Table Walker',
+    content: `
+      <p>The Memory Management Unit is the hardware that translates virtual addresses to physical
+      ones. When the TLB misses, the MMU's <strong>page-table walker</strong> performs the
+      multi-level walk autonomously (without OS involvement), reading PGD/PUD/PMD/PTE entries
+      from RAM.</p>
+      <p><strong>CR3</strong> holds the physical base address of the PGD; it is loaded by the
+      kernel on every process context switch. With PCID (Process Context ID, CR4.PCIDE),
+      tagged TLB entries allow CR3 reloads without flushing all TLB entries.</p>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>perf stat -e dTLB-load-misses ./binary</code> — MMU walker invocations</li>
+          <li><code>cat /proc/cpuinfo | grep pcid</code> — check for PCID support</li>
+          <li><code>cat /sys/kernel/debug/x86/pti_enabled</code> — KPTI (Meltdown mitigation) status</li>
+        </ul>
+      </div>`
+  },
+
+  'apic': {
+    title: 'Local APIC — Timer Interrupt & IPI',
+    content: `
+      <p>Each CPU core has a Local APIC (Advanced Programmable Interrupt Controller). It is the
+      source of two critical interrupt types for the kernel:</p>
+      <ul>
+        <li><strong>Periodic timer interrupt</strong> — fires at <code>CONFIG_HZ</code> (100–1000 Hz,
+          default 250 Hz). Each tick calls <code>update_process_times()</code> and potentially
+          <code>schedule()</code>, driving the CFS timeslice mechanism.</li>
+        <li><strong>IPI (Inter-Processor Interrupt)</strong> — one CPU sends a vector to another
+          via the LAPIC. Used for TLB shootdowns, scheduler reschedule requests
+          (<code>RESCHEDULE_VECTOR</code>), and function calls (<code>call_function_vector</code>).</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /proc/interrupts | grep LOC</code> — local timer interrupt counts per CPU</li>
+          <li><code>cat /proc/interrupts | grep RES</code> — reschedule IPI counts</li>
+          <li><code>cat /proc/interrupts | grep TLB</code> — TLB shootdown IPIs</li>
+          <li><code>perf stat -e irq:irq_handler_entry ./binary</code></li>
+        </ul>
+      </div>`
+  },
+
+  'iommu': {
+    title: 'IOMMU (VT-d / AMD-Vi) — DMA Address Translation',
+    content: `
+      <p>The IOMMU sits between PCIe devices and physical RAM. Just as the CPU's MMU translates
+      process virtual addresses to physical addresses, the IOMMU translates <em>device virtual
+      addresses</em> (DVAs / IOVAs) to physical addresses, restricting which memory ranges
+      a device can DMA into.</p>
+      <p>Benefits:</p>
+      <ul>
+        <li><strong>Security</strong> — a compromised NIC cannot DMA into kernel memory</li>
+        <li><strong>Virtualization</strong> — enables safe device passthrough to VMs (VFIO)</li>
+        <li><strong>Error isolation</strong> — DMA faults are caught and reported rather than silently corrupting memory</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>dmesg | grep -i iommu</code> — IOMMU detection and domain setup</li>
+          <li><code>cat /sys/kernel/iommu_groups/*/devices/*</code> — IOMMU groupings</li>
+          <li><code>intel_iommu=on</code> kernel parameter to enable</li>
+        </ul>
+      </div>`
+  },
+
+  'spectre': {
+    title: 'Spectre / Meltdown Mitigations',
+    content: `
+      <p>Modern CPUs speculatively execute instructions across privilege boundaries, potentially
+      leaking data via CPU side channels (cache timing). Linux applies several mitigations:</p>
+      <ul>
+        <li><strong>KPTI</strong> (Kernel Page-Table Isolation) — Meltdown: kernel mappings are
+          removed from user-space page tables; CR3 is reloaded on every syscall/interrupt entry/exit.
+          Cost: ~5–30% overhead on syscall-heavy workloads.</li>
+        <li><strong>IBRS/IBPB</strong> (Indirect Branch Restricted Speculation) — Spectre v2:
+          prevents cross-privilege branch-target injection. Retpoline is a software alternative.</li>
+        <li><strong>STIBP</strong> (Single Thread Indirect Branch Predictors) — prevents
+          cross-hyperthread Spectre v2 attacks.</li>
+        <li><strong>SSB / SSBD</strong> (Speculative Store Bypass Disable) — Spectre v4.</li>
+      </ul>
+      <div class="tools">
+        <div class="tools-title">Linux introspection tools</div>
+        <ul>
+          <li><code>cat /sys/devices/system/cpu/vulnerabilities/*</code> — mitigation status per vulnerability</li>
+          <li><code>grep . /sys/devices/system/cpu/vulnerabilities/*</code> — one-liner summary</li>
+          <li><code>spectre-meltdown-checker.sh</code> — comprehensive third-party audit script</li>
+        </ul>
+      </div>`
+  },
+
+  /* ── Flow Summary ────────────────────────────────────────────── */
+  'flow-exec': {
+    title: 'Step 1 — execve: ELF Loaded, Linker Runs',
+    content: `
+      <p>The lifecycle begins with a call to <code>execve(path, argv, envp)</code>.
+      The kernel replaces the calling process image:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>Open the ELF file; verify magic bytes and architecture</li>
+        <li>Read and validate the ELF header and program headers</li>
+        <li>Map all <code>PT_LOAD</code> segments into the new VAS</li>
+        <li>If <code>PT_INTERP</code> is present, map <code>ld.so</code> too</li>
+        <li>Build <code>argc</code>, <code>argv</code>, <code>envp</code>, auxv on the stack</li>
+        <li>Jump to <code>ld.so</code> entry point; it resolves all shared library symbols</li>
+        <li>Run <code>.init_array</code> constructors; call <code>main()</code></li>
+      </ol>
+      <p>At this point the program is ready to spawn threads and begin work.</p>`
+  },
+
+  'flow-vm': {
+    title: 'Step 2 — Virtual Memory: VMAs Mapped, ASLR Applied',
+    content: `
+      <p>After <code>execve</code>, the process VAS contains a set of VMAs:</p>
+      <ul>
+        <li>File-backed read-only VMAs for <code>.text</code> and <code>.rodata</code></li>
+        <li>File-backed private VMAs for <code>.data</code> (CoW on write)</li>
+        <li>Anonymous private VMAs for <code>.bss</code> (demand-zeroed) and heap</li>
+        <li>Thread stacks (anonymous, via <code>mmap(MAP_STACK)</code>)</li>
+        <li>vDSO and vvar pages (kernel-managed)</li>
+        <li>Shared library VMAs for each <code>.so</code> loaded by <code>ld.so</code></li>
+      </ul>
+      <p>ASLR randomises the base of the stack, mmap region, and (for PIE binaries) the
+      executable itself, at a different offset on every <code>execve</code>.</p>`
+  },
+
+  'flow-sched': {
+    title: 'Step 3 — Threads Scheduled: CFS vruntime → CPU',
+    content: `
+      <p>Each call to <code>pthread_create()</code> issues a <code>clone(CLONE_VM|…)</code>
+      syscall, creating a new <code>task_struct</code> with the same <code>mm_struct</code>.
+      The new task is placed on the CFS runqueue of a chosen CPU (by the load balancer)
+      with an initial <code>vruntime</code> set to the minimum in the runqueue.</p>
+      <p>From this point, the scheduler timer interrupt (Local APIC, ~250 Hz) periodically
+      increments the running thread's <code>vruntime</code>. When another task has a smaller
+      <code>vruntime</code>, the kernel preempts the current thread, saves its registers,
+      and restores the new thread's context — a context switch.</p>
+      <p>On a multi-core system, threads run truly in parallel, one per core, synchronised
+      only when they contend on shared data structures (protected by mutexes, atomics, etc.).</p>`
+  },
+
+  'flow-hw': {
+    title: 'Step 4 — Hardware Executes: Fetch–Decode–Execute',
+    content: `
+      <p>With a thread scheduled and its context restored, the CPU core executes instructions
+      from the thread's <code>RIP</code>:</p>
+      <ol style="padding-left:20px; margin-bottom:12px">
+        <li>The <strong>branch predictor</strong> speculatively fetches the next cache line from L1-I</li>
+        <li>The <strong>instruction decoder</strong> converts x86 macro-ops into μops</li>
+        <li>The <strong>out-of-order engine</strong> dispatches μops to execution units as their operands become ready</li>
+        <li>Load/store μops query the <strong>TLB</strong>; on a hit, the MMU provides the physical address and the L1-D cache is accessed</li>
+        <li>On a cache miss, the request propagates to L2 → L3 → DRAM</li>
+        <li>Completed μops are <strong>retired</strong> in program order</li>
+      </ol>
+      <p>When the thread calls a syscall, issues an I/O request, or exhausts its timeslice
+      (Local APIC interrupt), the CPU transitions back to the kernel to schedule the next thread.</p>`
+  }
+
+};
+
+// ── Modal elements ────────────────────────────────────────────────
+const modal      = document.getElementById('modal');
+const modalTitle = document.getElementById('modal-title');
+const modalBody  = document.getElementById('modal-body');
+const closeBtn   = document.getElementById('modal-close');
+
+// ── Open modal helper ─────────────────────────────────────────────
+function openModal(key) {
+  const info = explanations[key];
+  if (!info) return;
+  modalTitle.textContent = info.title;
+  modalBody.innerHTML    = info.content;
+  modal.style.display    = 'block';
+  modal.querySelector('.modal-content').scrollTop = 0;
+  closeBtn.focus();
+}
+
+// ── Close modal helper ────────────────────────────────────────────
+function closeModal() {
+  modal.style.display = 'none';
+}
+
+// ── Generic wiring helper ─────────────────────────────────────────
+function wireClickable(selector) {
+  document.querySelectorAll(selector + '[data-info]').forEach(el => {
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    el.addEventListener('click', () => openModal(el.dataset.info));
+    el.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(el.dataset.info);
+      }
+    });
+  });
+}
+
+// ── Wire all interactive element types ───────────────────────────
+wireClickable('.comp');
+wireClickable('.elf-section');
+wireClickable('.memmap-row');
+wireClickable('.thread-lane');
+
+// ── Close: button, backdrop click, Escape key ────────────────────
+closeBtn.addEventListener('click', closeModal);
+
+modal.addEventListener('click', e => {
+  if (e.target === modal) closeModal();
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && modal.style.display === 'block') closeModal();
+});
+</script>
+</body>
+</html>
