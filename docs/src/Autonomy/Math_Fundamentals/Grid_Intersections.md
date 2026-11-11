@@ -1,10 +1,10 @@
 # Do Grid Crossings Always Repeat?
 
-Riding down a long airport escalator, I let my finger drag (probably unwisely) along the smooth tiled wall, lifting it over the grout cracks as they approached. The tiles repeated. Would the rhythm of those little jumps necessarily repeat too?
+The other day, riding down a long airport escalator, I let my finger drag (probably unwisely) along the smooth tiled wall, lifting it over the grout cracks as they approached. The tiles repeated, but the jump sequence didn’t necessarily repeat with any discernible repeating pattern. So naturally, a math problem popped into my head that I spent my entire gate-waiting period thinking about.
 
-Imagine an infinite rectangular grid and a straight path through it. **The crossing pattern repeats exactly when the path's slope, measured in tile units, is rational.** Two individually periodic sequences can combine into a pattern that never repeats.
+Imagine an infinite rectangular grid and a straight path through it. As it turns out, **the crossing pattern repeats exactly when the path's slope, measured in tile units, is rational.** Two individually periodic sequences can combine into a pattern that never repeats.
 
-## Two sets of ticks
+## Two sets of periodic "ticks"
 
 Let the tiles have width \\(w\\) and height \\(h\\), and let the path make angle \\(\theta\\) with the horizontal. Measure distance \\(s\\) along the path. Initially assume it crosses both families of grid lines.
 
