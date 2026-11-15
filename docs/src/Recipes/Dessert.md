@@ -233,3 +233,32 @@
   - Drop by spoonfuls on a greased cookie sheet
   - Bake for 10 minutes
 
+### Ginger Cookies
+
+*Yield: about 10 large cookies.*
+
+----
+
+  * \\(1~\frac{1}{2}\\) sticks of room-temperature butter (salted works)
+  * 1 cup of packed brown sugar
+  * 1 egg
+  * \\(\frac{1}{4}\\) cup of molasses
+  * 1 teaspoon of baking soda
+  * 1 teaspoon of ground ginger
+  * \\(\frac{1}{2}\\) teaspoon of ground cloves
+  * 1 teaspoon of cinnamon
+  * \\(2~\frac{1}{4}\\) cups of flour
+  * \\(\frac{1}{4}\\) cup of sugar, for rolling the dough balls
+
+----
+
+  - Preheat oven to 350\\(^\circ\\) and line a baking sheet with parchment paper
+  - Cream together the butter and brown sugar
+  - Mix in the egg and molasses
+  - In a separate bowl, whisk together the flour, cinnamon, ginger, cloves, and baking soda
+  - Add half of the dry mixture to the wet and mix lightly until worked in, then add the other half (don't overmix the dough)
+  - Use a \\(\frac{1}{4}\\) cup measuring cup to portion out the dough balls
+  - Roll each dough ball in the sugar, then shape it into a top-heavy, almost triangular ball
+  - Place 4-6 dough balls on each cookie sheet and bake for 12 minutes
+  - Let cool completely
+
