@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamental Data Structures</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3a6b 0%, #2563a8 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 50px;
+            font-size: 1.1em;
+        }
+
+        /* Section heading */
+        .section-heading {
+            font-size: 0.75em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #a0aec0;
+            margin: 40px 0 16px 0;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .section-heading:first-of-type {
+            margin-top: 0;
+        }
+
+        /* DS card grid */
+        .ds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 18px;
+            margin-bottom: 8px;
+        }
+
+        .ds-card {
+            border-radius: 14px;
+            padding: 22px 20px 18px;
+            cursor: pointer;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ds-card:hover {
+            transform: translateY(-4px);
+        }
+
+        /* Complexity badge in top-right */
+        .complexity-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 20px;
+            letter-spacing: 0.03em;
+            background: rgba(255,255,255,0.25);
+            color: rgba(255,255,255,0.95);
+        }
+
+        .ds-card-icon {
+            font-size: 1.9em;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+
+        .ds-card-name {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .ds-card-tagline {
+            font-size: 0.82em;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.45;
+            margin-bottom: 12px;
+        }
+
+        .ds-card-ops {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .op-tag {
+            font-size: 0.68em;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.22);
+            color: rgba(255,255,255,0.95);
+            letter-spacing: 0.02em;
+        }
+
+        /* Card colour themes */
+        .card-array    { background: linear-gradient(135deg, #2b6cb0, #3182ce); box-shadow: 0 4px 18px rgba(49,130,206,0.35); }
+        .card-array:hover { box-shadow: 0 8px 28px rgba(49,130,206,0.5); }
+
+        .card-linked   { background: linear-gradient(135deg, #276749, #38a169); box-shadow: 0 4px 18px rgba(56,161,105,0.35); }
+        .card-linked:hover { box-shadow: 0 8px 28px rgba(56,161,105,0.5); }
+
+        .card-stack    { background: linear-gradient(135deg, #6b21a8, #9333ea); box-shadow: 0 4px 18px rgba(147,51,234,0.35); }
+        .card-stack:hover { box-shadow: 0 8px 28px rgba(147,51,234,0.5); }
+
+        .card-queue    { background: linear-gradient(135deg, #9a3412, #ea580c); box-shadow: 0 4px 18px rgba(234,88,12,0.35); }
+        .card-queue:hover { box-shadow: 0 8px 28px rgba(234,88,12,0.5); }
+
+        .card-bst      { background: linear-gradient(135deg, #065f46, #059669); box-shadow: 0 4px 18px rgba(5,150,105,0.35); }
+        .card-bst:hover { box-shadow: 0 8px 28px rgba(5,150,105,0.5); }
+
+        .card-heap     { background: linear-gradient(135deg, #92400e, #d97706); box-shadow: 0 4px 18px rgba(217,119,6,0.35); }
+        .card-heap:hover { box-shadow: 0 8px 28px rgba(217,119,6,0.5); }
+
+        .card-trie     { background: linear-gradient(135deg, #0369a1, #0284c7); box-shadow: 0 4px 18px rgba(2,132,199,0.35); }
+        .card-trie:hover { box-shadow: 0 8px 28px rgba(2,132,199,0.5); }
+
+        .card-avl      { background: linear-gradient(135deg, #1d4ed8, #2563eb); box-shadow: 0 4px 18px rgba(37,99,235,0.35); }
+        .card-avl:hover { box-shadow: 0 8px 28px rgba(37,99,235,0.5); }
+
+        .card-hash     { background: linear-gradient(135deg, #881337, #e11d48); box-shadow: 0 4px 18px rgba(225,29,72,0.35); }
+        .card-hash:hover { box-shadow: 0 8px 28px rgba(225,29,72,0.5); }
+
+        .card-graph    { background: linear-gradient(135deg, #4a5568, #718096); box-shadow: 0 4px 18px rgba(113,128,150,0.35); }
+        .card-graph:hover { box-shadow: 0 8px 28px rgba(113,128,150,0.5); }
+
+        .card-disjoint { background: linear-gradient(135deg, #7e22ce, #a855f7); box-shadow: 0 4px 18px rgba(168,85,247,0.35); }
+        .card-disjoint:hover { box-shadow: 0 8px 28px rgba(168,85,247,0.5); }
+
+        .card-bloom    { background: linear-gradient(135deg, #0f766e, #14b8a6); box-shadow: 0 4px 18px rgba(20,184,166,0.35); }
+        .card-bloom:hover { box-shadow: 0 8px 28px rgba(20,184,166,0.5); }
+
+        .card-skiplist { background: linear-gradient(135deg, #c2410c, #f97316); box-shadow: 0 4px 18px rgba(249,115,22,0.35); }
+        .card-skiplist:hover { box-shadow: 0 8px 28px rgba(249,115,22,0.5); }
+
+        /* Summary bar */
+        .summary-bar {
+            background: #edf2f7;
+            padding: 16px 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 36px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.25s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 6% auto;
+            padding: 40px;
+            border-radius: 16px;
+            width: 84%;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.25s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-36px); opacity: 0; }
+            to   { transform: translateY(0);     opacity: 1; }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 18px;
+            font-size: 34px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        .close:hover { color: #2d3748; }
+
+        .modal-title {
+            color: #1e56b0;
+            font-size: 1.6em;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 3px solid #2563a8;
+            padding-right: 40px;
+            line-height: 1.3;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.82;
+            font-size: 1.01em;
+        }
+
+        .modal-body p   { margin-bottom: 14px; }
+        .modal-body strong { color: #1e56b0; }
+        .modal-body ul  { margin: 0 0 14px 22px; }
+        .modal-body li  { margin-bottom: 5px; }
+        .modal-body code {
+            background: #edf2f7;
+            border-radius: 4px;
+            padding: 1px 5px;
+            font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+            font-size: 0.91em;
+            color: #2d3748;
+        }
+        .modal-body h3 {
+            color: #2d3748;
+            font-size: 1.05em;
+            margin: 18px 0 6px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 700px) {
+            body { padding: 20px 10px; }
+            .container { padding: 22px 14px; border-radius: 12px; }
+            h1 { font-size: 1.6em; }
+            .ds-grid { grid-template-columns: 1fr; }
+            .modal-content { margin: 4% auto; padding: 24px 18px; width: 96%; max-width: 96%; max-height: 90vh; }
+            .modal-title { font-size: 1.25em; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .ds-card:active { transform: scale(0.97); }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Fundamental Data Structures</h1>
+        <p class="subtitle">Core abstractions of computer science — algorithms, motivations, and real-world applications, ordered by increasing complexity</p>
+
+        <!-- ── SECTION 1: LINEAR ── -->
+        <div class="section-heading">Linear Structures</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-array" data-info="array">
+                <div class="complexity-badge">O(1) access</div>
+                <div class="ds-card-icon">▦</div>
+                <div class="ds-card-name">Array</div>
+                <div class="ds-card-tagline">Contiguous block of elements addressable by index. The foundation of nearly all other structures.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Access O(1)</span>
+                    <span class="op-tag">Search O(n)</span>
+                    <span class="op-tag">Insert O(n)</span>
+                    <span class="op-tag">Delete O(n)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-linked" data-info="linked-list">
+                <div class="complexity-badge">O(1) insert</div>
+                <div class="ds-card-icon">⬡</div>
+                <div class="ds-card-name">Linked List</div>
+                <div class="ds-card-tagline">Nodes connected by pointers. Constant-time insertion/deletion at known positions without shifting.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Access O(n)</span>
+                    <span class="op-tag">Search O(n)</span>
+                    <span class="op-tag">Insert O(1)</span>
+                    <span class="op-tag">Delete O(1)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-stack" data-info="stack">
+                <div class="complexity-badge">LIFO</div>
+                <div class="ds-card-icon">⬆</div>
+                <div class="ds-card-name">Stack</div>
+                <div class="ds-card-tagline">Last-in, first-out discipline. Push and pop from one end only. Models function call frames and undo history.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Push O(1)</span>
+                    <span class="op-tag">Pop O(1)</span>
+                    <span class="op-tag">Peek O(1)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-queue" data-info="queue">
+                <div class="complexity-badge">FIFO</div>
+                <div class="ds-card-icon">⇒</div>
+                <div class="ds-card-name">Queue</div>
+                <div class="ds-card-tagline">First-in, first-out discipline. Enqueue at the back, dequeue from the front. Natural model for waiting lines and BFS.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Enqueue O(1)</span>
+                    <span class="op-tag">Dequeue O(1)</span>
+                    <span class="op-tag">Peek O(1)</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 2: TREES ── -->
+        <div class="section-heading">Tree Structures</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-bst" data-info="bst">
+                <div class="complexity-badge">O(log n) avg</div>
+                <div class="ds-card-icon">🌲</div>
+                <div class="ds-card-name">Binary Search Tree</div>
+                <div class="ds-card-tagline">Ordered binary tree where left &lt; parent &lt; right. Fast search, insert, and delete on average-case data.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Search O(log n)</span>
+                    <span class="op-tag">Insert O(log n)</span>
+                    <span class="op-tag">Delete O(log n)</span>
+                    <span class="op-tag">Worst O(n)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-avl" data-info="avl">
+                <div class="complexity-badge">O(log n) worst</div>
+                <div class="ds-card-icon">⚖</div>
+                <div class="ds-card-name">Balanced BST (AVL / Red-Black)</div>
+                <div class="ds-card-tagline">Self-balancing trees that guarantee O(log n) in the worst case by maintaining height invariants via rotations.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Search O(log n)</span>
+                    <span class="op-tag">Insert O(log n)</span>
+                    <span class="op-tag">Delete O(log n)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-heap" data-info="heap">
+                <div class="complexity-badge">O(log n) push/pop</div>
+                <div class="ds-card-icon">△</div>
+                <div class="ds-card-name">Heap (Priority Queue)</div>
+                <div class="ds-card-tagline">Complete binary tree satisfying the heap property. O(1) access to the min or max element; O(log n) insertion.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Peek O(1)</span>
+                    <span class="op-tag">Push O(log n)</span>
+                    <span class="op-tag">Pop O(log n)</span>
+                    <span class="op-tag">Build O(n)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-trie" data-info="trie">
+                <div class="complexity-badge">O(k) per op</div>
+                <div class="ds-card-icon">✦</div>
+                <div class="ds-card-name">Trie (Prefix Tree)</div>
+                <div class="ds-card-tagline">Tree where each edge is a character. Lookup time is proportional to key length, not corpus size. Ideal for autocomplete.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Insert O(k)</span>
+                    <span class="op-tag">Search O(k)</span>
+                    <span class="op-tag">Prefix O(k)</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 3: HASH & GRAPHS ── -->
+        <div class="section-heading">Hash Tables &amp; Graphs</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-hash" data-info="hash-table">
+                <div class="complexity-badge">O(1) avg</div>
+                <div class="ds-card-icon">#</div>
+                <div class="ds-card-name">Hash Table</div>
+                <div class="ds-card-tagline">Maps keys to array indices via a hash function. Expected O(1) insert, lookup, and delete — the workhorse of fast lookup.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Insert O(1) avg</span>
+                    <span class="op-tag">Lookup O(1) avg</span>
+                    <span class="op-tag">Delete O(1) avg</span>
+                    <span class="op-tag">Worst O(n)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-graph" data-info="graph">
+                <div class="complexity-badge">V + E</div>
+                <div class="ds-card-icon">◎</div>
+                <div class="ds-card-name">Graph</div>
+                <div class="ds-card-tagline">Vertices connected by edges. Directed or undirected, weighted or unweighted. Models relationships, networks, and dependencies.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">BFS O(V+E)</span>
+                    <span class="op-tag">DFS O(V+E)</span>
+                    <span class="op-tag">Dijkstra O((V+E)log V)</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ── SECTION 4: ADVANCED ── -->
+        <div class="section-heading">Advanced &amp; Probabilistic Structures</div>
+        <div class="ds-grid">
+
+            <div class="ds-card card-disjoint" data-info="disjoint-set">
+                <div class="complexity-badge">≈ O(α(n))</div>
+                <div class="ds-card-icon">∪</div>
+                <div class="ds-card-name">Disjoint Set (Union-Find)</div>
+                <div class="ds-card-tagline">Tracks a partition of elements into disjoint groups. Near-constant amortised time with union-by-rank and path compression.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Find O(α(n))</span>
+                    <span class="op-tag">Union O(α(n))</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-bloom" data-info="bloom-filter">
+                <div class="complexity-badge">O(k) · no FN</div>
+                <div class="ds-card-icon">~</div>
+                <div class="ds-card-name">Bloom Filter</div>
+                <div class="ds-card-tagline">Probabilistic set membership test. Space-efficient: no false negatives; small, tunable false-positive rate.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Insert O(k)</span>
+                    <span class="op-tag">Query O(k)</span>
+                    <span class="op-tag">Space O(m bits)</span>
+                </div>
+            </div>
+
+            <div class="ds-card card-skiplist" data-info="skip-list">
+                <div class="complexity-badge">O(log n) expected</div>
+                <div class="ds-card-icon">≡</div>
+                <div class="ds-card-name">Skip List</div>
+                <div class="ds-card-tagline">Randomised multi-level linked list. Provides sorted access with O(log n) expected operations — no rotations needed.</div>
+                <div class="ds-card-ops">
+                    <span class="op-tag">Search O(log n)</span>
+                    <span class="op-tag">Insert O(log n)</span>
+                    <span class="op-tag">Delete O(log n)</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="summary-bar">
+            Click any card to explore the full algorithm, motivation, and real-world application examples.
+        </div>
+    </div>
+
+    <script>
+    const explanations = {
+
+        /* ══════════════════════════════════════════
+           LINEAR STRUCTURES
+           ══════════════════════════════════════════ */
+
+        'array': {
+            title: 'Array',
+            content: `
+                <p><strong>What it is:</strong> An array is a contiguous block of memory that stores elements of the same type, each addressable by an integer index in O(1) time. It is the most primitive aggregate data structure and underpins virtually all others.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Random access</strong> — <code>a[i]</code> in O(1): the address of element <em>i</em> is simply <code>base + i × element_size</code>, a single multiply-and-add.</li>
+                    <li><strong>Search (unsorted)</strong> — O(n) linear scan; O(log n) with binary search on a sorted array.</li>
+                    <li><strong>Insert/Delete at arbitrary index</strong> — O(n) because all subsequent elements must be shifted.</li>
+                    <li><strong>Append to end (dynamic array)</strong> — O(1) amortised: a dynamic array (e.g. Python list, C++ vector) doubles capacity when full, so the average cost per push is constant despite occasional O(n) resizes.</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Binary Search:</strong> On a sorted array, repeatedly halve the search space. Compare the middle element; go left if target is smaller, right if larger. T = O(log n).</li>
+                    <li><strong>Prefix Sums:</strong> Precompute <code>P[i] = a[0] + … + a[i]</code> in O(n). Then any range sum <code>a[l..r] = P[r] − P[l−1]</code> is O(1) — used heavily in competitive programming and signal processing.</li>
+                    <li><strong>Two-Pointer / Sliding Window:</strong> Maintain two indices into the array to find subarrays satisfying a property in O(n) instead of O(n²).</li>
+                    <li><strong>Kadane's Algorithm:</strong> Maximum subarray sum in O(n): track the best sum ending at each position.</li>
+                </ul>
+
+                <h3>Motivation</h3>
+                <p>Arrays are optimal when you know the size up front, need fast indexed access, and want excellent cache locality — elements sit adjacent in memory, so sequential access benefits from hardware prefetching. No other structure matches O(1) random read.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Image buffers:</strong> A bitmap image is a 2D array of pixel values (RGB triplets). GPU memory, OpenCV <code>Mat</code>, and NumPy arrays all exploit contiguous layout for SIMD vectorisation.</li>
+                    <li><strong>Sensor time-series:</strong> An IMU at 1 kHz produces a flat array of float64 samples; FFT, convolution, and filters rely on random-access arithmetic.</li>
+                    <li><strong>Database column stores:</strong> Columnar databases (DuckDB, Apache Parquet) store each column as a contiguous array, enabling vectorised SIMD aggregations over millions of rows.</li>
+                    <li><strong>Ring/Circular buffers:</strong> Embedded systems use fixed-length arrays with head/tail indices modulo capacity to implement lock-free FIFO queues between ISR and main loop.</li>
+                    <li><strong>Hash table backing store:</strong> Every hash table implementation uses an underlying array of buckets.</li>
+                </ul>
+            `
+        },
+
+        'linked-list': {
+            title: 'Linked List',
+            content: `
+                <p><strong>What it is:</strong> A linked list is a sequence of nodes, each holding a value and a pointer (reference) to the next node. A doubly-linked list adds a pointer to the previous node. There is no contiguous memory requirement.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Access by index</strong> — O(n): must traverse from the head.</li>
+                    <li><strong>Insert/Delete at a known pointer</strong> — O(1): just rewire two or three pointers. No shifting.</li>
+                    <li><strong>Search</strong> — O(n) linear scan.</li>
+                    <li><strong>Prepend to head</strong> — O(1), the canonical fast operation.</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Floyd's Cycle Detection (Tortoise &amp; Hare):</strong> Two pointers advance at different speeds; if they meet, a cycle exists. Detects and locates cycles in O(n) time, O(1) space.</li>
+                    <li><strong>Reversal:</strong> Iterate once, pointing each node's <code>next</code> to its predecessor. O(n), O(1) space.</li>
+                    <li><strong>Merge Sort on a Linked List:</strong> Find the midpoint with slow/fast pointers, recursively sort each half, merge. O(n log n) with O(log n) stack depth — preferred over arrays here since there's no copying cost for splitting.</li>
+                    <li><strong>XOR Linked List:</strong> Store <code>prev XOR next</code> in each node to halve the pointer storage. A curiosity demonstrating the value of bit tricks.</li>
+                </ul>
+
+                <h3>Motivation</h3>
+                <p>Linked lists shine when the number of elements is unpredictable, frequent mid-sequence insertions/deletions are needed at already-known positions, and random access is rare. They avoid the O(n) shift cost of arrays and never need to over-allocate like dynamic arrays.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>OS kernel memory allocator (free lists):</strong> The Linux kernel's slab allocator links free memory blocks with embedded <code>list_head</code> structs — no extra allocation needed for the list node itself.</li>
+                    <li><strong>LRU Cache:</strong> A doubly-linked list + hash map implements O(1) eviction of the least-recently-used item. Used by CPU caches, database buffer pools, and web caches like Varnish.</li>
+                    <li><strong>Undo/Redo history:</strong> A doubly-linked list of state snapshots allows O(1) stepping forward and backward.</li>
+                    <li><strong>Adjacency lists for graphs:</strong> Each vertex stores a linked list of its neighbours — efficient for sparse graphs where adjacency matrices would waste O(V²) space.</li>
+                    <li><strong>Chained hash table buckets:</strong> Hash collisions are handled by prepending to a linked list at the collision bucket.</li>
+                </ul>
+            `
+        },
+
+        'stack': {
+            title: 'Stack',
+            content: `
+                <p><strong>What it is:</strong> A stack is an abstract data type that enforces a Last-In, First-Out (LIFO) access discipline. Only the top element is accessible. Implemented either over a dynamic array or a linked list.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Push</strong> — O(1): add element to the top.</li>
+                    <li><strong>Pop</strong> — O(1): remove and return the top element.</li>
+                    <li><strong>Peek/Top</strong> — O(1): read the top without removing.</li>
+                    <li><strong>isEmpty</strong> — O(1).</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Balanced Parentheses:</strong> Push each opening bracket; on a closing bracket, pop and check for a match. O(n). Used by every compiler and linter.</li>
+                    <li><strong>Infix → Postfix (Shunting-Yard):</strong> Dijkstra's algorithm converts <code>3 + 4 × 2</code> to <code>3 4 2 × +</code> using an operator stack, respecting precedence and associativity. Parsers use this to build ASTs.</li>
+                    <li><strong>Monotonic Stack:</strong> Maintain a stack where elements are monotonically increasing or decreasing. Solves "next greater element", stock span, and largest rectangle in histogram in O(n).</li>
+                    <li><strong>Iterative DFS:</strong> Replace recursion with an explicit stack to traverse trees/graphs without call-stack overflow on deep inputs.</li>
+                    <li><strong>Backtracking:</strong> Push choices onto the stack; pop to undo when a path fails (maze solving, Sudoku, N-Queens).</li>
+                </ul>
+
+                <h3>Motivation</h3>
+                <p>The LIFO invariant captures the fundamental structure of nested scopes and recursive subproblems. Whenever a problem requires "remember where I came from and undo in reverse order," a stack is the natural tool.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>CPU call stack:</strong> Every function call pushes a stack frame (return address, local variables, saved registers). Return pops it. Stack overflow = exhausting this memory region.</li>
+                    <li><strong>Expression evaluation:</strong> Spreadsheet formula engines, calculators, and shader compilers evaluate RPN expressions with an operand stack.</li>
+                    <li><strong>Browser history / forward-back navigation:</strong> Two stacks — one for back history, one for forward — implement O(1) navigation. (Though modern browsers optimise further.)</li>
+                    <li><strong>Undo in editors:</strong> VS Code, Vim, Photoshop push operations onto a stack; Ctrl+Z pops and inverts them.</li>
+                    <li><strong>Robotics path planning (backtracking search):</strong> A robot exploring an unknown maze pushes candidate moves and pops to backtrack when a dead end is reached.</li>
+                </ul>
+            `
+        },
+
+        'queue': {
+            title: 'Queue',
+            content: `
+                <p><strong>What it is:</strong> A queue is an abstract data type enforcing First-In, First-Out (FIFO) order. Elements enqueue at the rear and dequeue from the front. Implemented over a ring buffer (circular array) for O(1) amortised ops, or a doubly-linked list for strict O(1).</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Enqueue</strong> — O(1): append to the rear.</li>
+                    <li><strong>Dequeue</strong> — O(1): remove from the front.</li>
+                    <li><strong>Peek/Front</strong> — O(1): read the front element.</li>
+                    <li><strong>isEmpty</strong> — O(1).</li>
+                </ul>
+
+                <h3>Variants</h3>
+                <ul>
+                    <li><strong>Deque (double-ended queue):</strong> O(1) insert/remove at both ends. Python's <code>collections.deque</code>. Useful for sliding window problems.</li>
+                    <li><strong>Priority Queue:</strong> Dequeue returns the minimum (or maximum) element, not FIFO. Implemented with a heap (see Heap card). Used for Dijkstra's shortest path.</li>
+                    <li><strong>Circular Buffer:</strong> Fixed-size queue with head/tail indices mod capacity. Lock-free variants used in real-time systems.</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Breadth-First Search (BFS):</strong> Enqueue the root; while the queue is non-empty, dequeue a node, process it, enqueue its unvisited neighbours. Guarantees shortest path in unweighted graphs.</li>
+                    <li><strong>Level-order Tree Traversal:</strong> BFS on a tree visits nodes level by level — used to serialise/deserialise binary trees.</li>
+                    <li><strong>Sliding Window Maximum (Monotonic Deque):</strong> Maintain a deque of candidate maximum indices; pop from the back when a larger element arrives, pop from the front when out of the window. O(n) for all windows.</li>
+                    <li><strong>Topological Sort (Kahn's algorithm):</strong> Enqueue all nodes with in-degree zero; process and reduce in-degrees, enqueueing new zero-degree nodes. Detects cycles.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>OS task/process scheduler:</strong> The Linux Completely Fair Scheduler maintains run queues of ready tasks per CPU core. Round-robin time slices are managed with a queue.</li>
+                    <li><strong>Network packet buffers:</strong> A router's output queue holds packets waiting to be forwarded. Active Queue Management (AQM) algorithms (CoDel, FQ-CoDel) keep latency low by actively dropping from the queue tail.</li>
+                    <li><strong>Message brokers (Kafka, RabbitMQ):</strong> Producers enqueue messages; consumers dequeue in order. Kafka persists queues to disk for durability and replay.</li>
+                    <li><strong>Print spoolers &amp; job queues:</strong> Print jobs enqueue in FIFO order. GPU compute job queues (CUDA streams) work the same way.</li>
+                    <li><strong>BFS robot navigation:</strong> A robot computing shortest path on a grid with BFS expands wave-fronts using a queue, visiting cells in order of increasing distance from the start.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           TREE STRUCTURES
+           ══════════════════════════════════════════ */
+
+        'bst': {
+            title: 'Binary Search Tree (BST)',
+            content: `
+                <p><strong>What it is:</strong> A binary tree where every node satisfies: all values in its left subtree are strictly less than the node's value, and all values in its right subtree are strictly greater. This ordering invariant enables efficient search.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Search, Insert, Delete</strong> — O(h) where <em>h</em> is the tree height. Average case (random data): O(log n). Worst case (sorted insertions): O(n) — a degenerate chain.</li>
+                    <li><strong>In-order traversal</strong> — O(n): visits nodes in sorted ascending order. "Free" sorted output.</li>
+                    <li><strong>Min/Max</strong> — O(h): traverse leftmost/rightmost path.</li>
+                    <li><strong>Successor/Predecessor</strong> — O(h): used to implement range queries.</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Search:</strong> Compare target with current node; recurse left if smaller, right if larger; return when found or null.</li>
+                    <li><strong>Insert:</strong> Search for the position where the key would be; attach a new leaf node there.</li>
+                    <li><strong>Delete:</strong> Three cases — leaf (just remove), one child (splice out), two children (replace with in-order successor, then delete the successor).</li>
+                    <li><strong>Range Query:</strong> In-order traversal with early termination collects all keys in [lo, hi] in O(h + k) where k is the number of results.</li>
+                </ul>
+
+                <h3>Motivation</h3>
+                <p>BSTs combine the fast insertion of a linked structure with the ordered lookup of sorted arrays. The BST invariant gives a binary decision at every node, halving the search space (when balanced). They are the foundation for self-balancing trees and database index structures like B-trees.</p>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Sorted sets and maps in standard libraries:</strong> C++ <code>std::map</code> / <code>std::set</code> and Java's <code>TreeMap</code> / <code>TreeSet</code> use red-black trees (balanced BSTs) internally, providing O(log n) ordered operations.</li>
+                    <li><strong>Database indexes (B-trees):</strong> B-trees — a generalisation of BSTs where each node can have many children — are the universal index structure in relational databases (PostgreSQL, MySQL). They allow efficient range scans on disk.</li>
+                    <li><strong>Symbol tables in compilers:</strong> An ordered symbol table backed by a BST enables fast lookup of identifiers while preserving lexicographic order for efficient scoping.</li>
+                    <li><strong>Event-driven simulation (event queue):</strong> Events sorted by timestamp are stored in a BST (or heap) for O(log n) next-event extraction.</li>
+                    <li><strong>File system directory trees:</strong> Some file systems (ext4's HTree, NTFS) use B-tree variants for directory entries to support fast name lookup in large directories.</li>
+                </ul>
+            `
+        },
+
+        'avl': {
+            title: 'Balanced BST — AVL Tree & Red-Black Tree',
+            content: `
+                <p><strong>What it is:</strong> A self-balancing binary search tree that maintains a height invariant ensuring O(log n) worst-case operations by performing <em>rotations</em> after insertions and deletions.</p>
+
+                <h3>AVL Tree</h3>
+                <p>An <strong>AVL tree</strong> (Adelson-Velsky and Landis, 1962) stores a <em>balance factor</em> at each node: <code>height(left) − height(right) ∈ {−1, 0, +1}</code>. If an insertion violates this, one of four rotation cases restores balance:</p>
+                <ul>
+                    <li><strong>Right rotation</strong> (LL case)</li>
+                    <li><strong>Left rotation</strong> (RR case)</li>
+                    <li><strong>Left-Right rotation</strong> (LR case)</li>
+                    <li><strong>Right-Left rotation</strong> (RL case)</li>
+                </ul>
+                <p>AVL trees are height-optimal: height ≤ 1.44 log₂(n). They are slightly more rigidly balanced than red-black trees, making lookups marginally faster, but insertions slightly slower (more rotations).</p>
+
+                <h3>Red-Black Tree</h3>
+                <p>A <strong>red-black tree</strong> colours each node red or black and enforces five invariants (e.g. no two consecutive red nodes; all root-to-leaf paths have the same number of black nodes). This guarantees height ≤ 2 log₂(n+1). Fewer rotations than AVL on insert/delete, making it preferred in practice.</p>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Rotation:</strong> A local restructuring of three nodes that preserves the BST invariant but changes the height. O(1) pointer rewiring.</li>
+                    <li><strong>Rebalance after insert/delete:</strong> Walk back up the tree from the modified leaf, checking and fixing balance. At most O(log n) rotations (AVL insert: ≤ 2; AVL delete: O(log n); RB tree: ≤ 3 rotations ever).</li>
+                    <li><strong>Order statistics:</strong> Augment each node with subtree size → O(log n) rank(x) and select(k) queries. Linux's CFS scheduler uses this for fair scheduling.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>C++ STL <code>std::map</code> / <code>std::set</code>:</strong> Every conforming C++ standard library implementation (libstdc++, libc++) uses a red-black tree, giving O(log n) insertion and iteration in sorted order.</li>
+                    <li><strong>Java <code>TreeMap</code> / <code>TreeSet</code>:</strong> Same guarantee; Java's implementation is also a red-black tree.</li>
+                    <li><strong>Linux kernel CFS scheduler:</strong> The Completely Fair Scheduler organises runnable tasks in a red-black tree keyed by virtual runtime. The leftmost node (minimum vruntime) is always the next task to run — O(log n) insert/delete, O(1) find-min.</li>
+                    <li><strong>Interval trees &amp; segment trees (augmented RB):</strong> Computational geometry libraries augment red-black trees to answer "which intervals overlap point x?" in O(log n + k).</li>
+                    <li><strong>Database query optimiser:</strong> PostgreSQL uses red-black trees internally for in-memory work tables and plan-cache structures.</li>
+                </ul>
+            `
+        },
+
+        'heap': {
+            title: 'Heap (Binary Heap / Priority Queue)',
+            content: `
+                <p><strong>What it is:</strong> A <em>complete</em> binary tree stored as a flat array where the heap property holds: in a min-heap, every node's value is ≤ its children's values; in a max-heap, ≥. This guarantees O(1) access to the minimum (or maximum) element at the root.</p>
+
+                <h3>Array Representation</h3>
+                <p>For a node at index <code>i</code> (1-indexed): left child = <code>2i</code>, right child = <code>2i+1</code>, parent = <code>⌊i/2⌋</code>. No pointers needed — perfect cache locality.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Peek (min/max)</strong> — O(1): read index 1.</li>
+                    <li><strong>Push/Insert</strong> — O(log n): append to the end and <em>sift up</em> (swap with parent while heap property violated).</li>
+                    <li><strong>Pop (extract-min/max)</strong> — O(log n): swap root with the last element, remove last, <em>sift down</em> (swap with the smaller child while violated).</li>
+                    <li><strong>Build heap from array (heapify)</strong> — O(n): surprisingly, calling sift-down from n/2 down to 1 is O(n), not O(n log n).</li>
+                    <li><strong>Decrease-key</strong> — O(log n): used in Dijkstra's and Prim's. Requires a handle/index. Fibonacci heaps offer O(1) amortised decrease-key.</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Heap Sort:</strong> Build a max-heap (O(n)), then repeatedly extract-max and place at the end. O(n log n) in-place, O(1) extra space. Not stable, but optimal worst-case.</li>
+                    <li><strong>Dijkstra's Algorithm:</strong> Min-heap of (distance, vertex) pairs. Pop the closest unvisited vertex; relax edges; push updated neighbours. O((V + E) log V).</li>
+                    <li><strong>Prim's MST:</strong> Same structure as Dijkstra but using edge weight to the growing MST as the key. O((V + E) log V).</li>
+                    <li><strong>Merge k sorted lists:</strong> Push the head of each list into a min-heap; pop the smallest, push its successor. O(n log k).</li>
+                    <li><strong>k-th Largest Element:</strong> Maintain a min-heap of size k; replace the root whenever a larger element arrives. O(n log k).</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Operating system process scheduling:</strong> Priority queues determine which process or interrupt handler runs next. Linux's timer wheel uses heap-like structures for time-ordered event delivery.</li>
+                    <li><strong>Network routing (Dijkstra / A*):</strong> Every GPS navigation app and OSPF routing protocol computes shortest paths with a priority queue over the graph of road segments or network links.</li>
+                    <li><strong>Compression (Huffman coding):</strong> Build a Huffman tree by repeatedly merging the two lowest-frequency symbols from a min-heap. Produces optimal prefix-free codes for lossless compression (ZIP, PNG, gzip).</li>
+                    <li><strong>Real-time task schedulers:</strong> Embedded RTOS kernels (FreeRTOS, Zephyr) schedule tasks by priority using a priority queue; the highest-priority ready task always runs.</li>
+                    <li><strong>Stream median:</strong> Two heaps — a max-heap for the lower half and a min-heap for the upper half — give the running median in O(log n) per insertion. Used in statistics dashboards and signal processing.</li>
+                </ul>
+            `
+        },
+
+        'trie': {
+            title: 'Trie (Prefix Tree)',
+            content: `
+                <p><strong>What it is:</strong> A tree where each edge represents a character (or bit), and a path from the root to a marked node spells a complete key. Every node is implicitly labelled by the prefix of keys that pass through it. The lookup time is O(k) in the key length — independent of how many keys are stored.</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Insert</strong> — O(k): traverse or create one node per character.</li>
+                    <li><strong>Search (exact)</strong> — O(k): follow edges; return true if the terminal node is marked.</li>
+                    <li><strong>Prefix search</strong> — O(k): traverse to the node representing the prefix, then enumerate all descendants. Fundamental to autocomplete.</li>
+                    <li><strong>Delete</strong> — O(k): unmark the terminal and prune any now-childless nodes back toward the root.</li>
+                </ul>
+
+                <h3>Variants</h3>
+                <ul>
+                    <li><strong>Compressed Trie (Radix / Patricia Tree):</strong> Merge chains of single-child nodes into one edge labelled by the entire substring. Reduces memory from O(n·k) to O(n) nodes — used in IP routing tables.</li>
+                    <li><strong>Ternary Search Tree (TST):</strong> Each node has three children (less, equal, greater). More memory-efficient than a full alphabet-branching trie.</li>
+                    <li><strong>Binary Trie:</strong> One bit per level. Used in XOR-based problems and IP longest-prefix-match lookups (CIDR routing).</li>
+                    <li><strong>Suffix Trie / Suffix Array:</strong> Insert all suffixes of a string. Enables O(k) substring search in a text of length n. Suffix arrays are the compressed, practical alternative.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Autocomplete &amp; spell-check:</strong> Google Search, IDE code completion, and smartphone keyboards store the lexicon in a trie. Depth-first enumeration of all words under a prefix node yields candidates ranked by frequency.</li>
+                    <li><strong>IP routing (LPM):</strong> A binary trie (or compressed PATRICIA trie) stores CIDR prefixes. Routers perform Longest Prefix Match in O(32) or O(128) bit comparisons — constant time regardless of routing table size.</li>
+                    <li><strong>DNS resolver:</strong> Domain labels are traversed in reverse (root → TLD → domain) in a trie-like structure to find the authoritative nameserver.</li>
+                    <li><strong>Genome sequence search (suffix array/trie):</strong> Bioinformatics tools (BWA, Bowtie) align short reads to a reference genome using compressed suffix tries (FM-index), enabling O(k) pattern matching across 3-billion-base references.</li>
+                    <li><strong>XOR maximum pair:</strong> Insert integers into a binary trie; for each new integer, greedily pick the opposite bit at each level to maximise XOR. O(32n) — used in competitive programming and network bitmask optimisation.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           HASH TABLES & GRAPHS
+           ══════════════════════════════════════════ */
+
+        'hash-table': {
+            title: 'Hash Table',
+            content: `
+                <p><strong>What it is:</strong> A hash table stores key–value pairs in an array of <em>buckets</em>. A <em>hash function</em> maps each key to a bucket index. Collisions — when two keys map to the same index — are resolved either by chaining (linked list at each bucket) or open addressing (probe for the next empty slot).</p>
+
+                <h3>Core Operations &amp; Complexity</h3>
+                <ul>
+                    <li><strong>Insert, Lookup, Delete</strong> — O(1) average, O(n) worst (all keys collide). With a good hash function and load factor α &lt; 0.75, worst case is extremely rare.</li>
+                    <li><strong>Load factor α = n / m</strong> (n keys, m buckets): as α rises, collision probability rises. Dynamic resizing (doubling when α exceeds threshold) keeps α bounded, giving O(1) amortised.</li>
+                    <li><strong>Iteration</strong> — O(m + n): must scan all buckets. Hash tables do not support ordered iteration.</li>
+                </ul>
+
+                <h3>Hash Functions</h3>
+                <ul>
+                    <li><strong>Division method:</strong> <code>h(k) = k mod m</code>. Simple but sensitive to m choice.</li>
+                    <li><strong>Multiplication method:</strong> <code>h(k) = ⌊m · (kA mod 1)⌋</code>, A ≈ 0.618. Less sensitive to m.</li>
+                    <li><strong>Universal hashing:</strong> Pick a random hash function from a family; guarantees O(1) expected collisions for any input, including adversarial.</li>
+                    <li><strong>Cryptographic hashes (SHA-256, MurmurHash3):</strong> Used when the hash must be unpredictable to an attacker (hash flooding defence).</li>
+                </ul>
+
+                <h3>Collision Resolution</h3>
+                <ul>
+                    <li><strong>Separate chaining:</strong> Each bucket is a linked list (or small dynamic array). Simple; handles high load factors gracefully.</li>
+                    <li><strong>Open addressing (linear probing):</strong> On collision, probe bucket + 1, +2, … until empty. Better cache performance but sensitive to clustering.</li>
+                    <li><strong>Robin Hood hashing:</strong> Steal slots from "rich" entries (low probe distance) for "poor" ones (high probe distance). Equalises probe distances; used in Rust's <code>HashMap</code>.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Language built-in maps/dicts:</strong> Python's <code>dict</code>, JavaScript's <code>Map</code>, Java's <code>HashMap</code>, and Go's <code>map</code> are all hash tables. The single most-used data structure in most programs.</li>
+                    <li><strong>Database hash joins:</strong> Build a hash table on the smaller relation; probe with each row of the larger. O(n) vs. O(n log n) for sort-merge join when data fits in memory.</li>
+                    <li><strong>Caching (memcached, Redis):</strong> An in-memory hash table maps string keys to arbitrary byte values. Sub-millisecond lookup latency allows databases to serve millions of requests per second.</li>
+                    <li><strong>Compiler symbol tables:</strong> Identifier → (type, scope, offset) lookup in O(1) during parsing and code generation.</li>
+                    <li><strong>Counting and frequency analysis:</strong> Count word frequencies in a document, detect duplicate packets in a network stream, or track unique visitors — all done with <code>table[key]++</code> in O(n).</li>
+                    <li><strong>Blockchain / Merkle trees:</strong> SHA-256 hashes chain blocks, creating an append-only ledger where tampering with any block invalidates all subsequent hashes.</li>
+                </ul>
+            `
+        },
+
+        'graph': {
+            title: 'Graph',
+            content: `
+                <p><strong>What it is:</strong> A graph G = (V, E) consists of a set of <em>vertices</em> (nodes) and <em>edges</em> (connections). Edges may be directed (digraph) or undirected, weighted or unweighted. Graphs are the most general relational data structure — almost any system of relationships can be modelled as a graph.</p>
+
+                <h3>Representations</h3>
+                <ul>
+                    <li><strong>Adjacency list:</strong> Array of V lists; list[u] contains all neighbours of u. Space O(V + E). Preferred for sparse graphs (most real-world graphs).</li>
+                    <li><strong>Adjacency matrix:</strong> V×V boolean or weight matrix; M[u][v] = 1 iff edge (u,v) exists. Space O(V²). O(1) edge query; O(V) neighbour enumeration. Good for dense graphs or when O(1) edge lookup is critical.</li>
+                    <li><strong>Edge list:</strong> Simple list of (u, v) pairs. Used in Kruskal's MST and when iterating all edges.</li>
+                </ul>
+
+                <h3>Fundamental Algorithms</h3>
+                <ul>
+                    <li><strong>BFS (Breadth-First Search):</strong> O(V+E). Explores level by level using a queue. Finds shortest path in unweighted graphs. Used in web crawlers, social network distance, puzzle solvers (15-puzzle, Rubik's cube).</li>
+                    <li><strong>DFS (Depth-First Search):</strong> O(V+E). Explores as deep as possible using a stack (or recursion). Used for cycle detection, topological sort, strongly connected components, maze generation.</li>
+                    <li><strong>Dijkstra's Shortest Path:</strong> O((V+E) log V) with a binary heap. Finds shortest paths from a source to all vertices in non-negatively-weighted graphs.</li>
+                    <li><strong>Bellman-Ford:</strong> O(VE). Handles negative-weight edges; detects negative cycles. Used in BGP routing protocol's distance-vector computation.</li>
+                    <li><strong>A* Search:</strong> Dijkstra + heuristic; focuses search toward the goal. Used in GPS navigation, game AI pathfinding (NPC movement).</li>
+                    <li><strong>Kruskal's / Prim's MST:</strong> Find the minimum spanning tree — the subset of edges connecting all vertices with minimum total weight. Used in network design, cluster analysis.</li>
+                    <li><strong>Topological Sort (Kahn's / DFS-based):</strong> Linear ordering of a DAG's vertices such that every edge points forward. Used in build systems, dependency resolution, course scheduling.</li>
+                    <li><strong>Tarjan's SCC / Kosaraju's:</strong> Find strongly connected components of a digraph in O(V+E). Used in compiler dead-code elimination, feedback loop analysis.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Maps and navigation (A*, Dijkstra):</strong> Google Maps, Apple Maps, and OpenStreetMap model roads as weighted directed graphs. Dijkstra or bidirectional A* finds the shortest or fastest route.</li>
+                    <li><strong>Social networks:</strong> Facebook's friendship graph, Twitter's follower digraph. Algorithms compute friend-of-a-friend suggestions (BFS), influence spread (PageRank), and community detection.</li>
+                    <li><strong>Dependency resolution (build systems):</strong> Bazel, Make, and npm model target/package dependencies as a DAG. Topological sort gives the valid build order; cycles are build errors.</li>
+                    <li><strong>Network routing protocols:</strong> OSPF uses Dijkstra's algorithm on a graph of routers to compute shortest paths. BGP uses path-vector (Bellman-Ford variant) across autonomous systems.</li>
+                    <li><strong>Knowledge graphs (AI/ML):</strong> Google's Knowledge Graph, Wikidata, and embedding models like TransE represent entities and relations as directed graphs used for semantic search and recommendation.</li>
+                    <li><strong>Autonomy &amp; robotics:</strong> Occupancy grids become graphs for A* motion planning. Factor graphs model SLAM (Simultaneous Localisation and Mapping) as a sparse graph of pose and landmark nodes optimised by message passing.</li>
+                </ul>
+            `
+        },
+
+        /* ══════════════════════════════════════════
+           ADVANCED STRUCTURES
+           ══════════════════════════════════════════ */
+
+        'disjoint-set': {
+            title: 'Disjoint Set (Union-Find)',
+            content: `
+                <p><strong>What it is:</strong> A disjoint-set forest maintains a collection of non-overlapping (disjoint) sets and supports two operations: <strong>Find</strong> (which set does element x belong to?) and <strong>Union</strong> (merge two sets). With two optimisations — <em>union by rank</em> and <em>path compression</em> — both operations run in O(α(n)) amortised time, where α is the inverse Ackermann function, practically constant (≤ 4) for all realistic n.</p>
+
+                <h3>Structure</h3>
+                <p>Each element is a node in a forest of trees. Each tree represents one set; the root is the set's canonical representative. Initially, each element is its own tree (n singleton sets).</p>
+
+                <h3>Optimisations</h3>
+                <ul>
+                    <li><strong>Union by Rank (or Size):</strong> Always attach the smaller tree under the root of the larger. This keeps tree heights O(log n) in the worst case.</li>
+                    <li><strong>Path Compression:</strong> During Find, make every node on the path point directly to the root. Subsequent Finds on the same path are O(1). Together with union by rank, amortised cost is O(α(n)).</li>
+                </ul>
+
+                <h3>Key Algorithms</h3>
+                <ul>
+                    <li><strong>Kruskal's Minimum Spanning Tree:</strong> Sort all edges by weight. For each edge (u, v), if Find(u) ≠ Find(v), add it to the MST and Union(u, v). O(E log E). Union-Find decides cycle detection in near-constant time per edge.</li>
+                    <li><strong>Connected Components:</strong> Process edges one by one. After all edges, nodes in the same tree share a connected component.</li>
+                    <li><strong>Online connectivity queries:</strong> As edges arrive in a stream, maintain connectivity without recomputing from scratch.</li>
+                    <li><strong>Percolation (physics simulation):</strong> Model a grid where sites open randomly; union adjacent open sites. Ask whether the top and bottom are connected — the phase transition occurs near a critical threshold.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Network connectivity:</strong> Has a network partition occurred? Are nodes A and B in the same connected component? Union-Find answers in near-constant time as topology changes arrive.</li>
+                    <li><strong>Image segmentation:</strong> Computer vision algorithms union adjacent pixels of similar colour into regions (connected components labelling). Union-Find makes a single-pass O(n) algorithm possible.</li>
+                    <li><strong>Kruskal's MST in practice:</strong> Used in geographic cluster analysis, minimum-cost network design, and approximation algorithms for the Travelling Salesman Problem (Christofides).</li>
+                    <li><strong>Least Common Ancestor (offline Tarjan's LCA):</strong> Tarjan's offline LCA algorithm processes queries in DFS order using Union-Find, answering all LCA queries in O(n α(n)).</li>
+                    <li><strong>Version control merge:</strong> Git's three-way merge and rebase operations conceptually compute connected components of modified hunks — Union-Find-like reasoning underlies conflict detection.</li>
+                </ul>
+            `
+        },
+
+        'bloom-filter': {
+            title: 'Bloom Filter',
+            content: `
+                <p><strong>What it is:</strong> A Bloom filter is a probabilistic, space-efficient data structure that answers the question "has element x been inserted?" with:</p>
+                <ul>
+                    <li><strong>No false negatives:</strong> If the filter says "no," x is definitely not present.</li>
+                    <li><strong>Possible false positives:</strong> If the filter says "yes," x is <em>probably</em> present — with a tunable false-positive rate (FPR) ε.</li>
+                </ul>
+                <p>The filter is a bit array of length <em>m</em>, initially all zeros, and uses <em>k</em> independent hash functions.</p>
+
+                <h3>Core Operations</h3>
+                <ul>
+                    <li><strong>Insert(x):</strong> Compute h₁(x), h₂(x), …, hₖ(x) and set those k bits to 1.</li>
+                    <li><strong>Query(x):</strong> Check all k bits. If any is 0, return "definitely not present." If all are 1, return "probably present."</li>
+                    <li><strong>Delete:</strong> Not supported in a basic Bloom filter (bits are shared). <em>Counting Bloom filters</em> replace each bit with a counter to allow deletion.</li>
+                </ul>
+
+                <h3>Optimal Parameters</h3>
+                <ul>
+                    <li><strong>Number of hash functions:</strong> <code>k = (m/n) ln 2</code>, where n is the number of inserted elements.</li>
+                    <li><strong>Bit array size:</strong> <code>m = −(n ln ε) / (ln 2)²</code> for a target false-positive rate ε.</li>
+                    <li>A Bloom filter for 1 million elements with 1% FPR requires only ~9.6 bits per element (~1.2 MB) — compared to ~20+ bytes per element in a hash set.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Database query optimisation:</strong> Apache Cassandra, HBase, and RocksDB use Bloom filters per SSTable. Before reading a slow disk file, query the Bloom filter. If "definitely not present," skip the file entirely. Reduces unnecessary I/O by ~10×.</li>
+                    <li><strong>Web cache (CDN):</strong> Akamai and Cloudflare use Bloom filters to decide whether a URL is "one-hit wonder" content that should not be cached (saving cache space for popular URLs).</li>
+                    <li><strong>Chrome Safe Browsing:</strong> Google Chrome ships a Bloom filter of known malicious URLs. Suspicious URLs are checked locally in microseconds without a round-trip to Google's servers.</li>
+                    <li><strong>Distributed systems (deduplication):</strong> Apache Kafka and stream processors use Bloom filters to detect and discard duplicate messages with near-zero memory overhead.</li>
+                    <li><strong>Cryptocurrency (Bitcoin SPV):</strong> Simplified Payment Verification clients send a Bloom filter of addresses they care about to full nodes, which filter transactions before sending — preserving bandwidth and partial privacy.</li>
+                </ul>
+            `
+        },
+
+        'skip-list': {
+            title: 'Skip List',
+            content: `
+                <p><strong>What it is:</strong> A skip list is a randomised data structure — a hierarchy of sorted linked lists where higher levels "skip" over many elements, acting as express lanes. It provides the same O(log n) expected operations as a balanced BST without the complexity of rotations, using only randomisation.</p>
+
+                <h3>Structure</h3>
+                <p>Level 0 is a standard sorted linked list containing all elements. Each higher level is a sublist of the level below — each node independently promoted to the next level with probability p (typically 0.5). The expected height of the structure is O(log_{1/p} n) ≈ O(log n).</p>
+
+                <h3>Core Operations &amp; Complexity (Expected)</h3>
+                <ul>
+                    <li><strong>Search:</strong> Start at the highest level; advance forward if the next node's key ≤ target; drop down a level when the next key exceeds target. Expected O(log n) steps.</li>
+                    <li><strong>Insert:</strong> Find the position at each level; coin-flip to determine height; insert new node with forward pointers. O(log n).</li>
+                    <li><strong>Delete:</strong> Find and splice out the node at every level it appears. O(log n).</li>
+                    <li><strong>Range query:</strong> Search for the lower bound, then scan level-0 list forward. O(log n + k).</li>
+                </ul>
+
+                <h3>Skip List vs. Balanced BST</h3>
+                <ul>
+                    <li><strong>Advantages:</strong> Simpler to implement; lock-free concurrent versions are practical; naturally supports range queries; no rebalancing.</li>
+                    <li><strong>Disadvantages:</strong> O(log n) only in expectation (BST with rotations is deterministic); higher constant factors due to pointer chasing; slightly worse cache performance than array-backed heaps.</li>
+                </ul>
+
+                <h3>Real-World Applications</h3>
+                <ul>
+                    <li><strong>Redis Sorted Sets (<code>ZSET</code>):</strong> Redis's sorted set data type is implemented with a skip list + hash table. Skip list provides O(log n) rank queries and range scans; hash table provides O(1) score lookup. Powers real-time leaderboards in games and live ranking boards.</li>
+                    <li><strong>LevelDB / RocksDB MemTable:</strong> Writes are buffered in an in-memory skip list (MemTable) before being flushed to SSTable files. Skip list provides ordered iteration for efficient SSTable generation and supports concurrent reads with a single writer.</li>
+                    <li><strong>Java <code>ConcurrentSkipListMap</code>:</strong> Java's standard library provides a lock-free concurrent sorted map backed by a skip list — used in high-throughput concurrent applications where multiple threads read/write without blocking.</li>
+                    <li><strong>Time-ordered event logs:</strong> Skip lists efficiently support inserting events with arbitrary timestamps and querying all events in a time range — useful for distributed tracing systems (Jaeger, Zipkin).</li>
+                    <li><strong>Lucene (Elasticsearch / Solr):</strong> Apache Lucene uses skip lists within its inverted index to accelerate the intersection of large posting lists, enabling fast boolean query evaluation over millions of documents.</li>
+                </ul>
+            `
+        }
+    };
+
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalBody = document.getElementById('modal-body');
+    const closeBtn = document.querySelector('.close');
+
+    document.querySelectorAll('.ds-card').forEach(card => {
+        card.addEventListener('click', function () {
+            const key = this.getAttribute('data-info');
+            const info = explanations[key];
+            if (info) {
+                modalTitle.textContent = info.title;
+                modalBody.innerHTML = info.content;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    });
+
+    closeBtn.addEventListener('click', () => {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    });
+    window.addEventListener('click', e => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && modal.style.display === 'block') {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+    </script>
+</body>
+</html>

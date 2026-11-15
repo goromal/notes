@@ -1,0 +1,981 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OSI Model - Network Layers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a3a6b 0%, #2563a8 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+
+        /* Use-case legend */
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95em;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .legend-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .dot-youtube  { background: #e53e3e; }
+        .dot-drone    { background: #2f855a; }
+        .dot-web      { background: #2b6cb0; }
+
+        /* Grid header */
+        .grid-header {
+            display: grid;
+            grid-template-columns: 160px 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: center;
+        }
+
+        .col-header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.9em;
+            color: white;
+            padding: 12px 10px;
+            border-radius: 10px;
+        }
+
+        .col-header-layer {
+            background: #4a5568;
+        }
+
+        .col-header-desc {
+            background: #4a5568;
+        }
+
+        .col-header-youtube {
+            background: linear-gradient(135deg, #c53030, #e53e3e);
+        }
+
+        .col-header-drone {
+            background: linear-gradient(135deg, #276749, #2f855a);
+        }
+
+        .col-header-web {
+            background: linear-gradient(135deg, #2a4a8a, #2b6cb0);
+        }
+
+        /* Layer rows */
+        .layer-row {
+            display: grid;
+            grid-template-columns: 160px 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 12px;
+            align-items: stretch;
+        }
+
+        /* Layer label cell */
+        .layer-label {
+            color: white;
+            padding: 16px 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 0.95em;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+        }
+
+        .layer-num {
+            font-size: 1.6em;
+            font-weight: 900;
+            opacity: 0.85;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .layer-name {
+            font-size: 0.82em;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* OSI layer colors - 7 distinct gradients */
+        .l7 { background: linear-gradient(135deg, #6b21a8, #9333ea); box-shadow: 0 4px 15px rgba(147,51,234,0.4); }
+        .l6 { background: linear-gradient(135deg, #1d4ed8, #3b82f6); box-shadow: 0 4px 15px rgba(59,130,246,0.4); }
+        .l5 { background: linear-gradient(135deg, #0369a1, #0ea5e9); box-shadow: 0 4px 15px rgba(14,165,233,0.4); }
+        .l4 { background: linear-gradient(135deg, #065f46, #10b981); box-shadow: 0 4px 15px rgba(16,185,129,0.4); }
+        .l3 { background: linear-gradient(135deg, #92400e, #f59e0b); box-shadow: 0 4px 15px rgba(245,158,11,0.4); }
+        .l2 { background: linear-gradient(135deg, #9a3412, #f97316); box-shadow: 0 4px 15px rgba(249,115,22,0.4); }
+        .l1 { background: linear-gradient(135deg, #881337, #e11d48); box-shadow: 0 4px 15px rgba(225,29,72,0.4); }
+
+        /* Content cells */
+        .cell {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            position: relative;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            min-height: 80px;
+        }
+
+        .cell:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Column-tinted borders on hover */
+        .cell-desc:hover   { border-color: #718096; }
+        .cell-youtube:hover { border-color: #e53e3e; box-shadow: 0 6px 16px rgba(229,62,62,0.2); }
+        .cell-drone:hover   { border-color: #2f855a; box-shadow: 0 6px 16px rgba(47,133,90,0.2); }
+        .cell-web:hover     { border-color: #2b6cb0; box-shadow: 0 6px 16px rgba(43,108,176,0.2); }
+
+        /* Subtle tint on column backgrounds */
+        .cell-desc     { background: #f7fafc; }
+        .cell-youtube  { background: #fff5f5; border-color: #fed7d7; }
+        .cell-drone    { background: #f0fff4; border-color: #c6f6d5; }
+        .cell-web      { background: #ebf8ff; border-color: #bee3f8; }
+
+        .cell-title {
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 0.9em;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .cell-detail {
+            font-size: 0.8em;
+            color: #718096;
+            line-height: 1.4;
+        }
+
+        .cell-tag {
+            display: inline-block;
+            font-size: 0.7em;
+            font-weight: bold;
+            padding: 2px 7px;
+            border-radius: 20px;
+            margin-top: 6px;
+            letter-spacing: 0.04em;
+        }
+
+        .tag-youtube { background: #fed7d7; color: #c53030; }
+        .tag-drone   { background: #c6f6d5; color: #276749; }
+        .tag-web     { background: #bee3f8; color: #2a4a8a; }
+
+        /* Divider arrows between sections */
+        .arrow {
+            text-align: center;
+            padding: 2px 0;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 8% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 700px;
+            max-height: 82vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-40px); opacity: 0; }
+            to   { transform: translateY(0);     opacity: 1; }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close:hover { color: #2d3748; }
+
+        .modal-title {
+            color: #1e56b0;
+            font-size: 1.7em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2563a8;
+            padding-right: 40px;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.8;
+            font-size: 1.02em;
+        }
+
+        .modal-body p { margin-bottom: 14px; }
+        .modal-body strong { color: #1e56b0; }
+
+        /* Summary bar */
+        .summary-bar {
+            background: #edf2f7;
+            padding: 16px 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 30px;
+            color: #2d3748;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 900px) {
+            body { padding: 20px 10px; }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            h1 { font-size: 1.5em; }
+
+            .grid-header,
+            .layer-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .col-header { display: none; }
+
+            .layer-label {
+                flex-direction: row;
+                gap: 10px;
+                padding: 12px 16px;
+                justify-content: flex-start;
+                text-align: left;
+            }
+
+            .layer-num { font-size: 1.3em; margin-bottom: 0; }
+
+            .cell { min-height: auto; }
+
+            .modal-content {
+                margin: 5% auto;
+                padding: 25px;
+                width: 95%;
+                max-width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-title { font-size: 1.3em; }
+
+            .legend { gap: 16px; }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .cell {
+                padding: 16px;
+                margin: 3px 0;
+            }
+            .cell:active {
+                transform: scale(0.98);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>OSI Network Model</h1>
+        <p class="subtitle">How data flows through seven layers — and what each layer does in three real-world scenarios</p>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot dot-youtube"></div>
+                Streaming YouTube on a phone
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-drone"></div>
+                Laptop sending gRPC to a drone via IP radio
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot dot-web"></div>
+                Accessing a webpage on a laptop
+            </div>
+        </div>
+
+        <!-- Column headers -->
+        <div class="grid-header">
+            <div class="col-header col-header-layer">OSI Layer</div>
+            <div class="col-header col-header-desc">What This Layer Does</div>
+            <div class="col-header col-header-youtube">📱 YouTube Stream</div>
+            <div class="col-header col-header-drone">🚁 Drone gRPC</div>
+            <div class="col-header col-header-web">💻 Web Page</div>
+        </div>
+
+        <!-- Layer 7: Application -->
+        <div class="layer-row">
+            <div class="layer-label l7">
+                <div class="layer-num">7</div>
+                <div class="layer-name">Application</div>
+            </div>
+            <div class="cell cell-desc" data-info="l7-desc">
+                <div class="cell-title">Application Layer</div>
+                <div class="cell-detail">User-facing protocols and data formats. The interface between software and the network.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l7-youtube">
+                <div class="cell-title">HTTPS + DASH/HLS</div>
+                <div class="cell-detail">YouTube app requests video segments via HTTPS. Adaptive streaming (DASH/HLS) selects quality based on bandwidth.</div>
+                <span class="cell-tag tag-youtube">HTTP/2, QUIC</span>
+            </div>
+            <div class="cell cell-drone" data-info="l7-drone">
+                <div class="cell-title">gRPC / Protobuf</div>
+                <div class="cell-detail">Ground control software sends typed RPC calls (e.g. SetThrottle, GetTelemetry) serialised as Protocol Buffers.</div>
+                <span class="cell-tag tag-drone">gRPC, Protobuf</span>
+            </div>
+            <div class="cell cell-web" data-info="l7-web">
+                <div class="cell-title">HTTP/HTTPS</div>
+                <div class="cell-detail">Browser sends an HTTP GET request for the page URL. Server responds with HTML, CSS, JS resources.</div>
+                <span class="cell-tag tag-web">HTTP/1.1, HTTP/2</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 6: Presentation -->
+        <div class="layer-row">
+            <div class="layer-label l6">
+                <div class="layer-num">6</div>
+                <div class="layer-name">Presentation</div>
+            </div>
+            <div class="cell cell-desc" data-info="l6-desc">
+                <div class="cell-title">Presentation Layer</div>
+                <div class="cell-detail">Data translation, encryption, and compression. Ensures both ends speak the same data format.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l6-youtube">
+                <div class="cell-title">TLS + H.264/VP9 Codec</div>
+                <div class="cell-detail">TLS encrypts the stream. Video codec decodes compressed frames into raw pixels for the display.</div>
+                <span class="cell-tag tag-youtube">TLS 1.3, VP9/AV1</span>
+            </div>
+            <div class="cell cell-drone" data-info="l6-drone">
+                <div class="cell-title">TLS + Protobuf Encoding</div>
+                <div class="cell-detail">Optional TLS secures the channel. Protobuf binary encoding translates typed structs into compact bytes.</div>
+                <span class="cell-tag tag-drone">TLS, binary encoding</span>
+            </div>
+            <div class="cell cell-web" data-info="l6-web">
+                <div class="cell-title">TLS Encryption</div>
+                <div class="cell-detail">TLS handshake establishes shared keys. All HTTP traffic is encrypted and decrypted transparently.</div>
+                <span class="cell-tag tag-web">TLS 1.3, X.509</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 5: Session -->
+        <div class="layer-row">
+            <div class="layer-label l5">
+                <div class="layer-num">5</div>
+                <div class="layer-name">Session</div>
+            </div>
+            <div class="cell cell-desc" data-info="l5-desc">
+                <div class="cell-title">Session Layer</div>
+                <div class="cell-detail">Establishes, manages, and terminates conversations between applications. Handles reconnection and checkpointing.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l5-youtube">
+                <div class="cell-title">QUIC Connection / HTTP/2 Stream</div>
+                <div class="cell-detail">A persistent QUIC session multiplexes video, audio, and metadata streams. Survives brief network interruptions.</div>
+                <span class="cell-tag tag-youtube">QUIC, multiplexing</span>
+            </div>
+            <div class="cell cell-drone" data-info="l5-drone">
+                <div class="cell-title">HTTP/2 Session over gRPC</div>
+                <div class="cell-detail">gRPC uses HTTP/2 which maintains a long-lived session with bidirectional streaming for real-time telemetry.</div>
+                <span class="cell-tag tag-drone">HTTP/2 streams</span>
+            </div>
+            <div class="cell cell-web" data-info="l5-web">
+                <div class="cell-title">TCP Session / Cookie</div>
+                <div class="cell-detail">TCP connection is the session. HTTP Keep-Alive reuses it for multiple requests. Cookies track authenticated state.</div>
+                <span class="cell-tag tag-web">Keep-Alive, cookies</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 4: Transport -->
+        <div class="layer-row">
+            <div class="layer-label l4">
+                <div class="layer-num">4</div>
+                <div class="layer-name">Transport</div>
+            </div>
+            <div class="cell cell-desc" data-info="l4-desc">
+                <div class="cell-title">Transport Layer</div>
+                <div class="cell-detail">End-to-end delivery, segmentation, error recovery, and flow control between ports on two hosts.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l4-youtube">
+                <div class="cell-title">UDP via QUIC</div>
+                <div class="cell-detail">QUIC runs over UDP — allowing the stack to retransmit lost packets without head-of-line blocking that plagues TCP streams.</div>
+                <span class="cell-tag tag-youtube">UDP port 443</span>
+            </div>
+            <div class="cell cell-drone" data-info="l4-drone">
+                <div class="cell-title">TCP (port 50051)</div>
+                <div class="cell-detail">gRPC defaults to TCP for reliable, ordered delivery of commands. Lost commands are retransmitted automatically.</div>
+                <span class="cell-tag tag-drone">TCP port 50051</span>
+            </div>
+            <div class="cell cell-web" data-info="l4-web">
+                <div class="cell-title">TCP (port 443)</div>
+                <div class="cell-detail">TCP three-way handshake, sequence numbers, ACKs, and congestion control ensure reliable page delivery.</div>
+                <span class="cell-tag tag-web">TCP port 443</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 3: Network -->
+        <div class="layer-row">
+            <div class="layer-label l3">
+                <div class="layer-num">3</div>
+                <div class="layer-name">Network</div>
+            </div>
+            <div class="cell cell-desc" data-info="l3-desc">
+                <div class="cell-title">Network Layer</div>
+                <div class="cell-detail">Logical addressing (IP) and routing across multiple networks. Packets find their path hop-by-hop.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l3-youtube">
+                <div class="cell-title">IP Routing via LTE/5G</div>
+                <div class="cell-detail">Phone has a public or NAT'd IP. Packets route from carrier core to YouTube CDN edge node nearest the user.</div>
+                <span class="cell-tag tag-youtube">IPv4/IPv6, BGP</span>
+            </div>
+            <div class="cell cell-drone" data-info="l3-drone">
+                <div class="cell-title">IP over Radio Link</div>
+                <div class="cell-detail">IP radio creates a point-to-point or mesh IP network. Both laptop and drone have IP addresses; packets are routed between them.</div>
+                <span class="cell-tag tag-drone">IPv4, static routes</span>
+            </div>
+            <div class="cell cell-web" data-info="l3-web">
+                <div class="cell-title">IP + DNS Resolution</div>
+                <div class="cell-detail">DNS resolves the domain to a server IP. Router uses IP routing table to forward packets toward the destination.</div>
+                <span class="cell-tag tag-web">IPv4/IPv6, DNS</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 2: Data Link -->
+        <div class="layer-row">
+            <div class="layer-label l2">
+                <div class="layer-num">2</div>
+                <div class="layer-name">Data Link</div>
+            </div>
+            <div class="cell cell-desc" data-info="l2-desc">
+                <div class="cell-title">Data Link Layer</div>
+                <div class="cell-detail">Reliable transfer between adjacent nodes on the same physical medium. MAC addressing, framing, and error detection.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l2-youtube">
+                <div class="cell-title">LTE/5G Radio Frames</div>
+                <div class="cell-detail">LTE/5G protocols (MAC sublayer) schedule radio time slots and provide HARQ error correction between the phone and base station.</div>
+                <span class="cell-tag tag-youtube">LTE MAC, HARQ</span>
+            </div>
+            <div class="cell cell-drone" data-info="l2-drone">
+                <div class="cell-title">Radio MAC Protocol</div>
+                <div class="cell-detail">The IP radio (e.g. 900 MHz or 2.4 GHz) uses its own link-layer framing with error correction and ARQ over the RF channel.</div>
+                <span class="cell-tag tag-drone">TDMA/CSMA, ARQ</span>
+            </div>
+            <div class="cell cell-web" data-info="l2-web">
+                <div class="cell-title">Ethernet / Wi-Fi Frames</div>
+                <div class="cell-detail">Ethernet or 802.11 Wi-Fi frame wraps the IP packet. MAC addresses identify src/dst on the local segment. CRC detects bit errors.</div>
+                <span class="cell-tag tag-web">802.3 / 802.11</span>
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="32" viewBox="0 0 36 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="20" stroke="#a0aec0" stroke-width="2" stroke-linecap="round"/>
+                <polyline points="9,13 18,24 27,13" fill="none" stroke="#a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Layer 1: Physical -->
+        <div class="layer-row">
+            <div class="layer-label l1">
+                <div class="layer-num">1</div>
+                <div class="layer-name">Physical</div>
+            </div>
+            <div class="cell cell-desc" data-info="l1-desc">
+                <div class="cell-title">Physical Layer</div>
+                <div class="cell-detail">Raw bit transmission over a medium. Defines voltages, frequencies, modulation, connectors, and cable specs.</div>
+            </div>
+            <div class="cell cell-youtube" data-info="l1-youtube">
+                <div class="cell-title">RF Radio Waves (LTE/5G)</div>
+                <div class="cell-detail">Bits are modulated onto radio frequency carriers (e.g. OFDM on LTE). The phone antenna transmits and receives electromagnetic waves.</div>
+                <span class="cell-tag tag-youtube">OFDM, MIMO</span>
+            </div>
+            <div class="cell cell-drone" data-info="l1-drone">
+                <div class="cell-title">RF Link (900 MHz / 2.4 GHz)</div>
+                <div class="cell-detail">IP radio modulates data onto a sub-GHz or 2.4 GHz carrier. Directional or omni antennas establish the air link.</div>
+                <span class="cell-tag tag-drone">FSK/FHSS, RF power</span>
+            </div>
+            <div class="cell cell-web" data-info="l1-web">
+                <div class="cell-title">Ethernet Copper / Wi-Fi RF</div>
+                <div class="cell-detail">Wired: voltage pulses on copper (100BASE-TX) or light pulses on fibre. Wireless: OFDM modulated signals on 2.4/5/6 GHz bands.</div>
+                <span class="cell-tag tag-web">Cat6 / 802.11ax</span>
+            </div>
+        </div>
+
+        <div class="summary-bar">
+            Data travels down all 7 layers on the sender — each layer adds a header (encapsulation) — and back up all 7 layers on the receiver, stripping headers as it goes.
+        </div>
+    </div>
+
+    <script>
+        const explanations = {
+
+            /* ── Layer 7 ── */
+            'l7-desc': {
+                title: 'Layer 7 — Application Layer',
+                content: `
+                    <p>The Application layer is the topmost layer and the one closest to the end user. It provides the protocols and interfaces that applications use to communicate over the network.</p>
+                    <p><strong>Key protocols:</strong> HTTP/HTTPS (web), DNS (name resolution), SMTP/IMAP (email), FTP (file transfer), SSH (secure shell), WebSocket, gRPC, MQTT, CoAP.</p>
+                    <p><strong>What it does:</strong> Defines the vocabulary of a conversation — what messages mean, what format data is in, and what operations are available (GET a resource, POST data, subscribe to a stream, call a remote function).</p>
+                    <p><strong>Common misconception:</strong> The Application layer is not "the application itself" — it's the network protocol your application uses. Your browser is not the Application layer; HTTP is.</p>
+                    <p><strong>PDU (Protocol Data Unit):</strong> Message or request/response.</p>
+                `
+            },
+            'l7-youtube': {
+                title: 'Layer 7 — YouTube Streaming (Application)',
+                content: `
+                    <p>The YouTube app on your phone uses <strong>HTTPS</strong> as its application-layer protocol, fetching video content over an encrypted HTTP channel.</p>
+                    <p><strong>Adaptive Bitrate Streaming (ABR):</strong> YouTube uses either MPEG-DASH (Dynamic Adaptive Streaming over HTTP) or HLS (HTTP Live Streaming). The video is split into short segments (2–10 seconds). The app requests each segment individually and selects the quality level (144p → 4K) based on real-time bandwidth estimates.</p>
+                    <p><strong>Why UDP/QUIC?</strong> YouTube increasingly uses HTTP/3 over QUIC. Unlike TCP, QUIC handles packet loss per-stream — a lost audio packet won't stall the video stream (head-of-line blocking elimination).</p>
+                    <p><strong>Content Delivery Network (CDN):</strong> At the application layer, your phone contacts a Google CDN edge node that may be just milliseconds away, not servers in California.</p>
+                    <p><strong>Authentication:</strong> OAuth 2.0 tokens in HTTP headers authenticate your Google account, enabling personalised recommendations and history tracking.</p>
+                `
+            },
+            'l7-drone': {
+                title: 'Layer 7 — Drone gRPC Control (Application)',
+                content: `
+                    <p><strong>gRPC</strong> (Google Remote Procedure Call) is a high-performance framework that lets the laptop call functions on the drone as if they were local function calls.</p>
+                    <p><strong>Protocol Buffers (Protobuf):</strong> The application layer defines a <code>.proto</code> schema file describing every message and RPC method. For example:</p>
+                    <p><em>SetThrottle(ThrottleRequest) → ThrottleResponse<br>GetTelemetry(Empty) → TelemetryStream</em></p>
+                    <p><strong>Bidirectional streaming:</strong> gRPC supports four call types: unary, server-streaming, client-streaming, and bidirectional streaming. For drone telemetry the laptop opens a server-streaming RPC and the drone continuously sends position, battery, and sensor data back.</p>
+                    <p><strong>Deadlines and cancellation:</strong> gRPC has built-in support for timeouts and cancellation — critical for safety-of-flight applications where stale commands must be discarded.</p>
+                    <p><strong>Service discovery:</strong> In simple deployments, the drone's IP is known statically or via mDNS/DNS-SD on the radio LAN.</p>
+                `
+            },
+            'l7-web': {
+                title: 'Layer 7 — Web Page Access (Application)',
+                content: `
+                    <p>Accessing a webpage is primarily an <strong>HTTP/HTTPS</strong> conversation at the application layer. When you type a URL, the browser issues a sequence of requests.</p>
+                    <p><strong>DNS first:</strong> Before HTTP even starts, the browser calls the DNS resolver to turn the hostname into an IP address. DNS is itself an Application layer protocol (UDP port 53).</p>
+                    <p><strong>HTTP GET:</strong> The browser sends a GET request with headers including Host, User-Agent, Accept-Encoding, Cookie, and more. The server responds with a status code, headers, and the HTML body.</p>
+                    <p><strong>Parsing and sub-requests:</strong> The browser parses HTML, discovers linked CSS, JavaScript, images, and fonts, and makes additional GET requests for each resource — potentially dozens or hundreds per page.</p>
+                    <p><strong>HTTP/2 advantages:</strong> Multiplexing lets the browser request many resources over a single connection simultaneously, instead of the sequential round-trips of HTTP/1.1.</p>
+                    <p><strong>HTTP/3:</strong> Modern CDNs increasingly offer HTTP/3 (over QUIC) for faster connection establishment and better performance on lossy networks.</p>
+                `
+            },
+
+            /* ── Layer 6 ── */
+            'l6-desc': {
+                title: 'Layer 6 — Presentation Layer',
+                content: `
+                    <p>The Presentation layer is responsible for data <strong>translation, encryption, and compression</strong>. It ensures that data produced by one system can be understood by another, regardless of internal representation differences.</p>
+                    <p><strong>Data translation:</strong> Converts between different character encodings (ASCII ↔ EBCDIC), byte orders (big-endian ↔ little-endian), or data formats (XML ↔ JSON).</p>
+                    <p><strong>Encryption (TLS/SSL):</strong> In modern practice, TLS (Transport Layer Security) lives conceptually at layer 6, encrypting application data before it's handed to the transport layer and decrypting it on receipt.</p>
+                    <p><strong>Compression:</strong> HTTP content encoding (gzip, Brotli) and media codecs (H.264, VP9, AV1) are presentation-layer concerns — they change how data is represented without changing what it means.</p>
+                    <p><strong>PDU:</strong> Encoded/encrypted data blocks.</p>
+                    <p><strong>Note:</strong> In TCP/IP practice, layers 5, 6, and 7 are often collapsed into a single "Application" layer. TLS straddles the boundary between layer 6 and the library used by the application.</p>
+                `
+            },
+            'l6-youtube': {
+                title: 'Layer 6 — YouTube Streaming (Presentation)',
+                content: `
+                    <p>Two presentation-layer concerns dominate YouTube streaming: <strong>TLS encryption</strong> and <strong>video codec decoding</strong>.</p>
+                    <p><strong>TLS 1.3:</strong> All YouTube traffic is encrypted. TLS 1.3 reduces the handshake to a single round-trip (versus two in TLS 1.2), minimising startup latency. The phone and server negotiate cipher suites, exchange keys via ECDHE, and establish an encrypted channel before any video data flows.</p>
+                    <p><strong>Video codec — VP9 / AV1:</strong> The raw video stream would be enormous (4K at 60fps ≈ 12 Gbps uncompressed). Codecs compress this by 100–300× using inter-frame prediction, discrete cosine transforms, and entropy coding. The phone's presentation layer decodes each compressed segment back into raw frames.</p>
+                    <p><strong>AV1:</strong> Google's royalty-free AV1 codec offers ~30% better compression than VP9 at the same quality. Modern Android phones include hardware AV1 decoders, offloading decode from the CPU.</p>
+                    <p><strong>Audio codec:</strong> Audio is typically Opus (within a WebM container) or AAC — also decoded at this layer.</p>
+                `
+            },
+            'l6-drone': {
+                title: 'Layer 6 — Drone gRPC (Presentation)',
+                content: `
+                    <p>The drone communication stack has two presentation-layer elements: <strong>Protobuf binary encoding</strong> and optional <strong>TLS</strong>.</p>
+                    <p><strong>Protocol Buffers encoding:</strong> Unlike JSON (human-readable, verbose) or XML, Protobuf encodes data in a compact binary format. Field numbers replace field names; variable-length integers save bytes for small values. A message that's 200 bytes as JSON might be 40 bytes as Protobuf — significant when bandwidth over the radio link is limited.</p>
+                    <p><strong>Schema evolution:</strong> Protobuf fields are identified by number, not name. New fields can be added with new numbers; old clients simply ignore unknown fields. This enables rolling firmware upgrades where ground station and drone may run different software versions.</p>
+                    <p><strong>TLS considerations:</strong> TLS adds ~50 bytes per record plus handshake overhead. On a low-bandwidth radio link (e.g. 115 kbps), this may be acceptable for security-critical commands but may be skipped for high-rate telemetry over a trusted private RF network, with application-layer HMAC used instead.</p>
+                `
+            },
+            'l6-web': {
+                title: 'Layer 6 — Web Page (Presentation)',
+                content: `
+                    <p>For web browsing, the primary presentation-layer activity is <strong>TLS</strong>. Without TLS, an HTTPS URL simply wouldn't load.</p>
+                    <p><strong>TLS Handshake:</strong></p>
+                    <p>1. Browser sends ClientHello (supported cipher suites, TLS version, random nonce).<br>
+                    2. Server sends ServerHello (chosen cipher, certificate).<br>
+                    3. Browser verifies certificate against trusted CAs.<br>
+                    4. ECDHE key exchange derives a shared session key.<br>
+                    5. Both parties confirm with Finished messages.</p>
+                    <p>In TLS 1.3, this takes one round-trip. With session resumption (0-RTT), repeat visits can send data in the very first packet.</p>
+                    <p><strong>Certificate chain:</strong> The server presents an X.509 certificate signed by an intermediate CA signed by a root CA in the browser's trust store. This proves the server is who it claims to be.</p>
+                    <p><strong>Content encoding:</strong> The server compresses HTTP response bodies with gzip or Brotli (another presentation-layer concern), reducing transfer size by 60–80% for text-heavy HTML/CSS/JS.</p>
+                `
+            },
+
+            /* ── Layer 5 ── */
+            'l5-desc': {
+                title: 'Layer 5 — Session Layer',
+                content: `
+                    <p>The Session layer manages the <strong>dialogue</strong> between two communicating processes. It establishes, coordinates, and terminates sessions — logical, sustained conversations above the level of individual packets.</p>
+                    <p><strong>Session establishment:</strong> Negotiates parameters before data exchange begins (who speaks first, how long to wait, etc.).</p>
+                    <p><strong>Synchronisation:</strong> Inserts checkpoints into a data stream so that if a transfer is interrupted, it can resume from the last checkpoint rather than restarting completely.</p>
+                    <p><strong>Dialog control:</strong> Manages half-duplex (one side speaks at a time) vs. full-duplex (both can speak simultaneously) modes.</p>
+                    <p><strong>In practice:</strong> Modern TCP/IP protocols collapse layers 5–7. Session management is typically handled by the application-layer protocol itself (e.g. HTTP Keep-Alive, WebSocket session, gRPC stream lifecycle).</p>
+                    <p><strong>PDU:</strong> Session data / token.</p>
+                `
+            },
+            'l5-youtube': {
+                title: 'Layer 5 — YouTube (Session)',
+                content: `
+                    <p>YouTube\'s session layer is embodied by the <strong>QUIC connection</strong> (or HTTP/2 session for older clients).</p>
+                    <p><strong>QUIC connection ID:</strong> QUIC assigns a connection ID independent of the underlying IP address and port. When your phone switches from Wi-Fi to LTE mid-video, the QUIC connection can survive because the server identifies it by connection ID, not the 4-tuple (src IP, src port, dst IP, dst port) that TCP requires to remain constant.</p>
+                    <p><strong>Multiplexed streams:</strong> Within one QUIC session, multiple logical streams exist simultaneously: one for video segments, one for audio, one for metadata/thumbnails. Stream IDs are session-level identifiers.</p>
+                    <p><strong>Session resumption:</strong> If a brief outage drops the connection, the YouTube app can establish a new QUIC session with 0-RTT resumption, replaying the session ticket and sending data before the server has even responded — reducing rebuffering events.</p>
+                `
+            },
+            'l5-drone': {
+                title: 'Layer 5 — Drone gRPC (Session)',
+                content: `
+                    <p>gRPC runs over HTTP/2, which maintains a persistent <strong>HTTP/2 session</strong> between the laptop and the drone's gRPC server.</p>
+                    <p><strong>HTTP/2 session lifecycle:</strong> A single TCP connection (the session) is opened at mission start. Over this connection, multiple concurrent HTTP/2 streams carry independent RPC calls — one stream per in-flight RPC.</p>
+                    <p><strong>Bidirectional streaming RPC:</strong> For continuous telemetry, the laptop opens one long-lived HTTP/2 stream. The drone sends telemetry frames continuously while the laptop sends control frames in the other direction — all within the same session, no need to re-establish connection for each reading.</p>
+                    <p><strong>Session health:</strong> HTTP/2 PING frames act as keepalives, detecting if the radio link has gone dead. On timeout, gRPC raises a DEADLINE_EXCEEDED or UNAVAILABLE status, allowing the safety logic to trigger a failsafe (e.g., hover or return-to-home).</p>
+                `
+            },
+            'l5-web': {
+                title: 'Layer 5 — Web Page (Session)',
+                content: `
+                    <p>HTTP sessions are managed through a combination of TCP connections and application-layer cookies/tokens.</p>
+                    <p><strong>HTTP Keep-Alive:</strong> HTTP/1.1 defaults to persistent connections — the TCP connection stays open between requests, avoiding the overhead of a new TCP handshake for each resource. The server or client closes it after a timeout or explicit Connection: close header.</p>
+                    <p><strong>HTTP/2 multiplexing:</strong> HTTP/2 goes further, multiplexing dozens of requests over a single TCP connection. This is the session layer at work: one conversation channel, many simultaneous exchanges within it.</p>
+                    <p><strong>Authentication sessions:</strong> Cookies carry session tokens (e.g. a signed JWT or a random session ID) that the server uses to recognise returning authenticated users without requiring a new login per request. The browser includes cookies automatically in every request to the matching domain.</p>
+                    <p><strong>WebSockets:</strong> For pages needing push updates (chat, live scores), the HTTP connection is "upgraded" to a WebSocket session — a full-duplex session over the same TCP connection.</p>
+                `
+            },
+
+            /* ── Layer 4 ── */
+            'l4-desc': {
+                title: 'Layer 4 — Transport Layer',
+                content: `
+                    <p>The Transport layer provides <strong>end-to-end communication services</strong> for applications. It segments data from upper layers into smaller units and reassembles them at the destination.</p>
+                    <p><strong>TCP (Transmission Control Protocol):</strong> Connection-oriented, reliable, ordered delivery with flow control and congestion control. Uses three-way handshake (SYN, SYN-ACK, ACK). Guarantees every byte arrives once and in order. Penalty: added latency for retransmission.</p>
+                    <p><strong>UDP (User Datagram Protocol):</strong> Connectionless, no reliability guarantees, minimal overhead. Each datagram is independent. Useful when latency matters more than reliability (video streaming, gaming, DNS, VoIP).</p>
+                    <p><strong>Ports:</strong> Transport layer introduces port numbers — 16-bit identifiers that distinguish different services/applications on the same host. (HTTP=80, HTTPS=443, DNS=53, gRPC default=50051)</p>
+                    <p><strong>Flow control:</strong> TCP's sliding window prevents a fast sender from overwhelming a slow receiver.</p>
+                    <p><strong>Congestion control:</strong> TCP algorithms (CUBIC, BBR) detect network congestion and reduce sending rate to avoid collapse.</p>
+                    <p><strong>PDU:</strong> Segment (TCP) or Datagram (UDP).</p>
+                `
+            },
+            'l4-youtube': {
+                title: 'Layer 4 — YouTube (Transport)',
+                content: `
+                    <p>YouTube uses <strong>UDP as the transport for QUIC</strong>, which provides its own reliability mechanisms above UDP.</p>
+                    <p><strong>Why not TCP?</strong> TCP suffers from head-of-line blocking: if one packet is lost, all subsequent data is buffered until the missing packet is retransmitted, stalling delivery even for unrelated streams. For adaptive video with multiple quality levels, this causes visible buffering.</p>
+                    <p><strong>QUIC over UDP:</strong> QUIC implements its own reliable, ordered delivery per-stream, but loss in one stream (say, a quality-level switch) doesn't block other streams (the audio). QUIC also handles connection migration natively at the transport level, not just the session level.</p>
+                    <p><strong>UDP port 443:</strong> QUIC uses UDP port 443 (same as HTTPS) — this helps traverse firewalls that block non-standard UDP ports, since port 443 is nearly universally allowed.</p>
+                    <p><strong>Fallback:</strong> If UDP/QUIC is blocked, YouTube falls back to HTTP/2 over TCP, accepting the head-of-line blocking trade-off.</p>
+                `
+            },
+            'l4-drone': {
+                title: 'Layer 4 — Drone gRPC (Transport)',
+                content: `
+                    <p>gRPC uses <strong>TCP</strong> as its transport, which is why reliable, ordered command delivery is guaranteed — a critical safety requirement for flight control.</p>
+                    <p><strong>TCP three-way handshake:</strong> Before any gRPC message is exchanged, TCP establishes the connection: laptop sends SYN → drone replies SYN-ACK → laptop sends ACK. This takes one round-trip time (RTT) on the radio link.</p>
+                    <p><strong>Reliability for safety:</strong> If a SetThrottle command is lost in transit, TCP automatically retransmits it. The drone's flight controller cannot receive commands out of order. For flight, missing or reordered commands could be dangerous.</p>
+                    <p><strong>Congestion and radio:</strong> TCP's congestion window can shrink aggressively when the radio link introduces packet loss. TCP interprets loss as congestion (even if it's just RF noise), reducing throughput. Some deployments use specialised TCP variants (e.g. TCP-Hybla or BBR) tuned for radio links with higher baseline loss rates.</p>
+                    <p><strong>Port 50051:</strong> gRPC conventionally uses TCP port 50051, though any port can be configured.</p>
+                `
+            },
+            'l4-web': {
+                title: 'Layer 4 — Web Page (Transport)',
+                content: `
+                    <p>Web browsing uses <strong>TCP</strong> on port 443 (HTTPS) or port 80 (HTTP). TCP provides the reliable, ordered byte stream that HTTP depends on.</p>
+                    <p><strong>Three-way handshake latency:</strong> Before the first HTTP byte is sent, TCP needs one RTT (round-trip time) for the handshake. Add TLS on top (another 1 RTT for TLS 1.3) and the first byte of HTML arrives after 2 RTTs minimum. For a server 50ms away, that's 100ms before anything renders.</p>
+                    <p><strong>TCP Fast Open:</strong> TFO allows data to be sent in the SYN packet for repeat connections, saving one RTT. Not universally deployed.</p>
+                    <p><strong>Congestion control:</strong> TCP CUBIC or BBR manages how quickly the browser can push requests. On a fast home fibre connection, the congestion window grows quickly and throughput is limited by the server or CDN, not the network.</p>
+                    <p><strong>HTTP/3 advantage:</strong> HTTP/3 (QUIC over UDP) eliminates the TCP handshake entirely, combining connection and TLS handshake in one step — reducing connection setup from 2 RTTs to 1 RTT (0 for resumption).</p>
+                `
+            },
+
+            /* ── Layer 3 ── */
+            'l3-desc': {
+                title: 'Layer 3 — Network Layer',
+                content: `
+                    <p>The Network layer provides <strong>logical addressing and routing</strong> — it determines how packets get from source to destination across potentially many intermediate networks.</p>
+                    <p><strong>IP (Internet Protocol):</strong> The dominant layer-3 protocol. Every host has a logical IP address. IPv4 uses 32-bit addresses (4.3 billion); IPv6 uses 128-bit addresses (essentially unlimited).</p>
+                    <p><strong>Routing:</strong> Routers at layer 3 examine destination IP addresses and use routing tables to forward packets toward their destination, one hop at a time. No single router knows the full path — each knows only the next hop.</p>
+                    <p><strong>Routing protocols:</strong> OSPF (within an organisation), BGP (between autonomous systems on the Internet) build and maintain routing tables dynamically.</p>
+                    <p><strong>Fragmentation:</strong> If a packet is larger than the MTU of a link, IP can fragment it into smaller pieces (IPv4 only; IPv6 requires the source to perform path MTU discovery).</p>
+                    <p><strong>ICMP:</strong> Diagnostic protocol at layer 3 — used by ping and traceroute to probe network paths.</p>
+                    <p><strong>PDU:</strong> Packet.</p>
+                `
+            },
+            'l3-youtube': {
+                title: 'Layer 3 — YouTube (Network)',
+                content: `
+                    <p>Your phone's video packets traverse multiple IP networks before reaching YouTube's servers.</p>
+                    <p><strong>Mobile IP addressing:</strong> Your LTE/5G carrier assigns your phone an IP address — often a private address with carrier-grade NAT (CGNAT), where thousands of subscribers share a single public IP. The carrier's CGNAT box maps your private IP:port to a public IP:port for outbound connections.</p>
+                    <p><strong>Path to CDN:</strong> Packets leave your phone, traverse the carrier's core network, exit to the public Internet, and arrive at a Google CDN edge node selected by anycast routing — the same IP address is announced from multiple locations, and BGP delivers you to the closest one.</p>
+                    <p><strong>IPv6:</strong> Google and major carriers support IPv6. A phone with an IPv6 address can connect directly to YouTube's IPv6 address without CGNAT, simplifying the path and slightly reducing latency.</p>
+                    <p><strong>QoS:</strong> Carriers may implement traffic shaping at layer 3 — prioritising video streaming traffic or throttling it during congestion based on DSCP markings in the IP header.</p>
+                `
+            },
+            'l3-drone': {
+                title: 'Layer 3 — Drone gRPC (Network)',
+                content: `
+                    <p>The IP radio creates a private IP network between the laptop and the drone — a self-contained layer-3 domain in the field.</p>
+                    <p><strong>IP addressing:</strong> The radio manufacturer typically sets up a small subnet (e.g. 192.168.2.0/24). The laptop's radio module gets .1, the drone's radio module gets .2. Static assignment avoids the complexity of running DHCP over a radio link.</p>
+                    <p><strong>No routing complexity:</strong> With only two nodes, there is no routing — both endpoints are on the same subnet. The IP layer directly ARP-resolves the peer's MAC address (radio hardware address) and sends packets directly.</p>
+                    <p><strong>Multi-hop mesh (advanced):</strong> Some deployments use mesh-capable radios (e.g. 900 MHz FHSS with OLSR routing) to relay packets through multiple ground nodes to extend range. In this case, OLSR (layer-3 routing) manages the path.</p>
+                    <p><strong>MTU considerations:</strong> IP radio links often have small MTUs (e.g. 256–512 bytes) due to radio frame size constraints. The network layer may fragment larger TCP segments; alternatively, TCP MSS clamping at the radio driver level prevents this.</p>
+                `
+            },
+            'l3-web': {
+                title: 'Layer 3 — Web Page (Network)',
+                content: `
+                    <p>Two layer-3 activities happen before your browser sends a single HTTP byte: <strong>DNS resolution</strong> and <strong>IP routing</strong>.</p>
+                    <p><strong>DNS resolution:</strong> DNS is itself a layer-7 protocol that operates over UDP (layer 4) and IP (layer 3). The browser asks the local resolver "what is the IP for example.com?" — the resolver queries the DNS hierarchy (root → TLD → authoritative) and returns an IP address. Modern DNS uses DoH (DNS over HTTPS) for privacy.</p>
+                    <p><strong>IP routing:</strong> Your laptop's IP stack looks at the destination IP: is it on the local subnet? If not, forward to the default gateway (your router). The router checks its routing table — if it doesn't have a more specific route, it forwards to the ISP. ISP routers use BGP to route across the Internet.</p>
+                    <p><strong>NAT:</strong> Most home routers perform NAT (Network Address Translation), replacing your private IP (192.168.x.x) with the router's public IP in outbound packets and reversing the mapping for responses.</p>
+                    <p><strong>TTL:</strong> Each router decrements the IP TTL field. If TTL reaches zero, the packet is discarded and an ICMP "Time Exceeded" message is sent back — this is how traceroute works.</p>
+                `
+            },
+
+            /* ── Layer 2 ── */
+            'l2-desc': {
+                title: 'Layer 2 — Data Link Layer',
+                content: `
+                    <p>The Data Link layer provides <strong>reliable transfer between directly connected nodes</strong> — a single "hop" on the network. It doesn't know about end-to-end routing; it only cares about the immediate next hop.</p>
+                    <p><strong>Framing:</strong> Wraps network-layer packets in frames with a header (source/destination MAC address) and a trailer (CRC/FCS for error detection).</p>
+                    <p><strong>MAC addresses:</strong> 48-bit hardware addresses burned into network interface cards. Unique per device on the local network. Unlike IP addresses, they're not routable — only meaningful on a single network segment.</p>
+                    <p><strong>Error detection:</strong> CRC (Cyclic Redundancy Check) in the frame trailer detects bit errors. Corrupted frames are discarded (layer 4 TCP handles retransmission).</p>
+                    <p><strong>Two sublayers:</strong><br>
+                    - LLC (Logical Link Control): Provides a common interface to higher layers<br>
+                    - MAC (Medium Access Control): Controls who can access the shared medium and when</p>
+                    <p><strong>Examples:</strong> Ethernet (802.3), Wi-Fi (802.11), PPP, HDLC, LTE MAC.</p>
+                    <p><strong>PDU:</strong> Frame.</p>
+                `
+            },
+            'l2-youtube': {
+                title: 'Layer 2 — YouTube (Data Link)',
+                content: `
+                    <p>For mobile video streaming, the data link layer is the <strong>LTE/5G radio access technology</strong> — specifically the MAC and RLC sublayers of the LTE/5G protocol stack.</p>
+                    <p><strong>LTE MAC sublayer:</strong> Schedules when your phone transmits on the shared radio spectrum. The base station (eNB/gNB) allocates resource blocks (12 subcarriers × 0.5 ms time slot) to different UEs based on their channel quality and buffer status reports.</p>
+                    <p><strong>HARQ (Hybrid ARQ):</strong> LTE uses HARQ for fast retransmission — if a transmission is received with errors, the base station sends a NACK and retransmits within 8 ms. The receiver combines the original and retransmitted signals to improve decode probability (chase combining or incremental redundancy).</p>
+                    <p><strong>RLC (Radio Link Control):</strong> Above MAC, RLC can provide additional ARQ segmentation and reordering of PDUs for reliable mode — especially important at the cell edge where errors are more frequent.</p>
+                    <p><strong>MAC addresses in LTE:</strong> LTE doesn't use traditional Ethernet MAC addresses. Instead, each UE is identified by a C-RNTI (Cell Radio Network Temporary Identifier) assigned by the base station.</p>
+                `
+            },
+            'l2-drone': {
+                title: 'Layer 2 — Drone gRPC (Data Link)',
+                content: `
+                    <p>The IP radio module provides the data link layer for the drone communication system — a specialised wireless link with its own framing and error correction.</p>
+                    <p><strong>Radio link framing:</strong> Common IP radios (e.g. RFD900, mLRS, SiK-based radios, or commercial units like Doodle Labs) implement their own link-layer frames. A typical frame includes: sync bytes, destination address, payload, CRC.</p>
+                    <p><strong>ARQ (Automatic Repeat reQuest):</strong> Most IP radios implement ARQ at the link layer — the receiving radio ACKs each frame and the sender retransmits on NAK. This provides a degree of link-layer reliability before TCP even gets involved.</p>
+                    <p><strong>FHSS / TDMA:</strong> Frequency-hopping spread spectrum (FHSS) radios change carrier frequency thousands of times per second to resist interference and jamming. TDMA (Time Division Multiple Access) schemes coordinate transmit/receive timing to allow full-duplex communication.</p>
+                    <p><strong>Forward Error Correction (FEC):</strong> Many link-layer radio protocols add redundancy bits (Reed-Solomon, convolutional codes) that allow the receiver to correct some bit errors without retransmission — important for real-time control where retransmission latency is unacceptable.</p>
+                `
+            },
+            'l2-web': {
+                title: 'Layer 2 — Web Page (Data Link)',
+                content: `
+                    <p>Home and office web browsing uses either <strong>Ethernet (IEEE 802.3)</strong> for wired connections or <strong>Wi-Fi (IEEE 802.11)</strong> for wireless.</p>
+                    <p><strong>Ethernet frame:</strong><br>
+                    - Preamble (7 bytes) + SFD (1 byte): synchronise receiver<br>
+                    - Destination MAC (6 bytes): where it's going<br>
+                    - Source MAC (6 bytes): where it came from<br>
+                    - EtherType (2 bytes): identifies the payload protocol (0x0800 = IPv4)<br>
+                    - Payload (46–1500 bytes): the IP packet<br>
+                    - FCS (4 bytes): CRC for error detection</p>
+                    <p><strong>ARP:</strong> Before sending the first frame to the gateway, the laptop broadcasts an ARP (Address Resolution Protocol) request: "Who has IP 192.168.1.1? Tell 192.168.1.42." The router responds with its MAC address, which the laptop caches for future frames.</p>
+                    <p><strong>Wi-Fi specifics:</strong> 802.11 frames carry additional fields (BSSID for the access point MAC, QoS fields, sequence number for duplication detection). Wi-Fi also uses CSMA/CA (listen before transmit) to avoid collisions on the shared radio channel.</p>
+                    <p><strong>VLANs:</strong> In enterprise networks, 802.1Q VLAN tags are added to Ethernet frames to segment traffic logically over the same physical infrastructure.</p>
+                `
+            },
+
+            /* ── Layer 1 ── */
+            'l1-desc': {
+                title: 'Layer 1 — Physical Layer',
+                content: `
+                    <p>The Physical layer is the most fundamental — it defines how <strong>raw bits are converted into physical signals</strong> and transmitted over a medium.</p>
+                    <p><strong>Transmission media:</strong><br>
+                    - Copper wire (electrical voltage pulses)<br>
+                    - Optical fibre (light pulses)<br>
+                    - Radio frequency (modulated electromagnetic waves)<br>
+                    - Infrared (IrDA, TV remotes)</p>
+                    <p><strong>Modulation:</strong> The process of encoding digital bits onto an analogue carrier. Common schemes: NRZ (Non-Return-to-Zero) for Ethernet, OFDM (Orthogonal Frequency-Division Multiplexing) for Wi-Fi and LTE, PAM4 (4-level Pulse Amplitude Modulation) for 100GbE.</p>
+                    <p><strong>Bit rate vs. baud rate:</strong> Baud rate is symbols per second; bit rate depends on how many bits each symbol encodes. OFDM encodes multiple bits per symbol per subcarrier.</p>
+                    <p><strong>Specifications:</strong> Layer 1 defines connector types, cable categories, pin assignments, signal voltages, frequencies, and timing.</p>
+                    <p><strong>PDU:</strong> Bit (or symbol).</p>
+                `
+            },
+            'l1-youtube': {
+                title: 'Layer 1 — YouTube (Physical)',
+                content: `
+                    <p>Mobile video streaming uses <strong>LTE or 5G radio frequency transmission</strong> as the physical medium.</p>
+                    <p><strong>OFDM modulation:</strong> LTE and 5G use Orthogonal Frequency-Division Multiplexing. The available spectrum is divided into hundreds of narrow subcarriers (15 kHz spacing in LTE). Each subcarrier carries a separate modulated symbol, and all subcarriers transmit simultaneously. This provides robustness against multipath fading.</p>
+                    <p><strong>MIMO (Multiple-Input Multiple-Output):</strong> Modern phones and base stations have multiple antennas. MIMO techniques use these simultaneously to multiply throughput (spatial multiplexing) or improve link reliability (beamforming, diversity).</p>
+                    <p><strong>Modulation order:</strong> Higher-order modulation encodes more bits per symbol — QPSK (2 bits), 16-QAM (4 bits), 64-QAM (6 bits), 256-QAM (8 bits). When the signal is strong (you're near a tower), the base station uses 256-QAM for maximum throughput. At the cell edge with a weaker signal, it falls back to QPSK for reliability.</p>
+                    <p><strong>5G NR:</strong> 5G New Radio adds mmWave (24–100 GHz) for very high bandwidth in dense areas, and sub-6 GHz for broader coverage. mmWave provides multi-Gbps throughput but doesn't penetrate walls.</p>
+                `
+            },
+            'l1-drone': {
+                title: 'Layer 1 — Drone gRPC (Physical)',
+                content: `
+                    <p>The drone radio link operates on <strong>sub-GHz (e.g. 900 MHz) or 2.4 GHz ISM bands</strong>, with physical layer characteristics optimised for range and reliability over raw throughput.</p>
+                    <p><strong>Frequency choice:</strong> 900 MHz propagates further than 2.4 GHz and penetrates vegetation better, making it popular for UAV control links. 2.4 GHz offers higher bandwidth but shorter range.</p>
+                    <p><strong>FSK / GFSK modulation:</strong> Many narrowband radios use Frequency-Shift Keying — "0" is one frequency, "1" is another. Gaussian FSK (GFSK) smooths transitions to reduce spectral bandwidth. This is simpler and more robust than OFDM for low-data-rate links.</p>
+                    <p><strong>FHSS (Frequency-Hopping Spread Spectrum):</strong> The radio pseudo-randomly hops between dozens of frequencies per second. An interferer on one frequency only disrupts a small fraction of transmissions. Required by FCC for Part 15 spread-spectrum devices.</p>
+                    <p><strong>TX power and antennas:</strong> Link budget is critical for range. Higher TX power (up to regulatory limits — typically 30 dBm / 1W) and directional antennas (patch, helical) at the ground station increase link margin.</p>
+                    <p><strong>Duplex:</strong> Most IP radios use half-duplex (TDD — Time Division Duplex): radio transmits, then switches to receive. Full-duplex would require expensive RF isolation hardware.</p>
+                `
+            },
+            'l1-web': {
+                title: 'Layer 1 — Web Page (Physical)',
+                content: `
+                    <p>The physical medium for home/office web browsing is typically <strong>twisted-pair copper Ethernet cable or Wi-Fi radio</strong>.</p>
+                    <p><strong>1000BASE-T Ethernet:</strong> Gigabit Ethernet over Cat5e/Cat6 uses all four twisted pairs simultaneously. Each pair carries data using PAM-5 (5-level pulse amplitude modulation), transmitting in both directions at once (full duplex). 125 MHz clock, 250 Mbps per pair × 4 pairs = 1 Gbps.</p>
+                    <p><strong>Wi-Fi 6 (802.11ax):</strong> Uses OFDMA (Orthogonal Frequency-Division Multiple Access) and 1024-QAM. In the 5 GHz band with 80 MHz channels, peak rates reach ~600 Mbps per spatial stream. Wi-Fi 6E extends into the 6 GHz band for less congestion.</p>
+                    <p><strong>Optical fibre (ISP):</strong> Somewhere in the path between your home and the webserver, photons travel through glass fibre at 2/3 the speed of light. Single-mode fibre carries a single wavelength for long distances; multi-mode fibre supports short runs. DWDM multiplexes hundreds of wavelengths onto one fibre for terabit-scale backbone links.</p>
+                    <p><strong>Signal attenuation:</strong> Copper cables lose signal over distance. Cat6 supports Gigabit up to 100 m. Beyond that, fibre or repeaters are needed. Wi-Fi range depends on transmit power, antenna gain, and obstacles (walls, furniture).</p>
+                `
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.cell').forEach(cell => {
+            cell.addEventListener('click', function () {
+                const key = this.getAttribute('data-info');
+                const info = explanations[key];
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalBody.innerHTML = info.content;
+                    modal.style.display = 'block';
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+        window.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape' && modal.style.display === 'block') modal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

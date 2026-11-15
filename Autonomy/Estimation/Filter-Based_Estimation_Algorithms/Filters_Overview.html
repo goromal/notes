@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Processing Filters Overview</title>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f3460 0%, #16537e 50%, #1a6e5c 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .legend {
+            text-align: center;
+            color: #a0aec0;
+            margin-bottom: 45px;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        .tier {
+            display: grid;
+            grid-template-columns: 200px 1fr 350px;
+            gap: 30px;
+            margin-bottom: 40px;
+            align-items: start;
+        }
+
+        .tier-label {
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            font-size: 1.05em;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .tier-label .tier-subtitle {
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-top: 6px;
+            opacity: 0.85;
+        }
+
+        .tier-fundamental .tier-label {
+            background: linear-gradient(135deg, #2e7d32 0%, #43a047 100%);
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.4);
+        }
+
+        .tier-classical .tier-label {
+            background: linear-gradient(135deg, #1565c0 0%, #2196f3 100%);
+            box-shadow: 0 4px 15px rgba(21, 101, 192, 0.4);
+        }
+
+        .tier-optimal .tier-label {
+            background: linear-gradient(135deg, #6a1b9a 0%, #ab47bc 100%);
+            box-shadow: 0 4px 15px rgba(106, 27, 154, 0.4);
+        }
+
+        .tier-specialized .tier-label {
+            background: linear-gradient(135deg, #bf360c 0%, #e64a19 100%);
+            box-shadow: 0 4px 15px rgba(191, 54, 12, 0.4);
+        }
+
+        .tier-design .tier-label {
+            background: linear-gradient(135deg, #37474f 0%, #607d8b 100%);
+            box-shadow: 0 4px 15px rgba(55, 71, 79, 0.4);
+        }
+
+        .tier-components {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .filter-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #2563a8;
+        }
+
+        .filter-card .card-title {
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 4px;
+        }
+
+        .filter-card .card-detail {
+            font-size: 0.9em;
+            color: #718096;
+        }
+
+        .filter-card .card-tags {
+            margin-top: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.72em;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .tag-fir {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .tag-iir {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .tag-nonlinear {
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .tag-adaptive {
+            background: #f3e5f5;
+            color: #6a1b9a;
+        }
+
+        .tag-recursive {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .explanation {
+            background: #eff6ff;
+            border-left: 4px solid #2563a8;
+            padding: 20px;
+            border-radius: 8px;
+            line-height: 1.6;
+            color: #2d3748;
+        }
+
+        .explanation h3 {
+            color: #1e56b0;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .arrow {
+            text-align: center;
+            margin: 0;
+            line-height: 0;
+            padding: 4px 0;
+        }
+
+        .arrow svg {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .cross-cutting {
+            margin-top: 50px;
+            margin-bottom: 40px;
+        }
+
+        .cross-cutting h2 {
+            color: #2d3748;
+            font-size: 1.6em;
+            margin-bottom: 6px;
+        }
+
+        .cross-cutting .section-subtitle {
+            color: #718096;
+            margin-bottom: 25px;
+            font-size: 1em;
+        }
+
+        .principle-card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+
+        .principle-card .principle-title {
+            font-weight: bold;
+            color: #2d3748;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+
+        .principle-card .principle-body {
+            color: #4a5568;
+            line-height: 1.7;
+            font-size: 0.95em;
+        }
+
+        .principle-card .principle-body p {
+            margin-bottom: 10px;
+        }
+
+        .principle-card .principle-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .principle-card .principle-examples {
+            margin-top: 12px;
+            padding-left: 20px;
+        }
+
+        .principle-card .principle-examples li {
+            color: #4a5568;
+            margin-bottom: 4px;
+            line-height: 1.6;
+        }
+
+        .footer-note {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 40px;
+            color: #4a5568;
+            line-height: 1.6;
+        }
+
+        .footer-note strong {
+            color: #2d3748;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 40px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 750px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close {
+            color: #a0aec0;
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #2d3748;
+        }
+
+        .modal-title {
+            color: #1e56b0;
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2563a8;
+            padding-right: 40px;
+        }
+
+        .modal-body {
+            color: #2d3748;
+            line-height: 1.8;
+            font-size: 1.02em;
+        }
+
+        .modal-body p {
+            margin-bottom: 14px;
+        }
+
+        .modal-body strong {
+            color: #1e56b0;
+        }
+
+        .modal-body .formula-block {
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 16px 0;
+            text-align: center;
+            font-size: 1.05em;
+            overflow-x: auto;
+        }
+
+        .modal-body .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .modal-body .pros, .modal-body .cons {
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 0.95em;
+        }
+
+        .modal-body .pros {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+        }
+
+        .modal-body .cons {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+        }
+
+        .modal-body .pros h4 {
+            color: #166534;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .cons h4 {
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .pros li, .modal-body .cons li {
+            margin-bottom: 4px;
+            margin-left: 16px;
+        }
+
+        .modal-body .examples {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 14px;
+            margin: 16px 0;
+        }
+
+        .modal-body .examples h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .modal-body .examples li {
+            margin-bottom: 4px;
+            margin-left: 16px;
+        }
+
+        /* Responsive */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 12px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 8px;
+            }
+
+            .subtitle {
+                font-size: 0.95em;
+                margin-bottom: 10px;
+            }
+
+            .legend {
+                margin-bottom: 30px;
+            }
+
+            .tier {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .tier-label {
+                padding: 15px;
+                font-size: 1em;
+                min-height: auto;
+                flex-direction: row;
+                gap: 8px;
+            }
+
+            .tier-label .tier-subtitle {
+                margin-top: 0;
+            }
+
+            .filter-card {
+                padding: 12px 15px;
+            }
+
+            .filter-card .card-title {
+                font-size: 0.95em;
+            }
+
+            .filter-card .card-detail {
+                font-size: 0.85em;
+            }
+
+            .explanation {
+                padding: 15px;
+                font-size: 0.9em;
+            }
+
+            .modal-content {
+                margin: 5% auto;
+                padding: 25px;
+                width: 95%;
+                max-width: 95%;
+                max-height: 90vh;
+            }
+
+            .modal-title {
+                font-size: 1.3em;
+            }
+
+            .modal-body {
+                font-size: 0.95em;
+                line-height: 1.6;
+            }
+
+            .modal-body .pros-cons {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .close {
+                right: 15px;
+                top: 15px;
+                font-size: 28px;
+            }
+        }
+
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .container {
+                padding: 30px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .tier {
+                grid-template-columns: 150px 1fr 280px;
+                gap: 20px;
+            }
+
+            .tier-label {
+                padding: 15px;
+                font-size: 0.95em;
+            }
+
+            .explanation {
+                font-size: 0.9em;
+            }
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .filter-card {
+                padding: 15px 18px;
+                margin: 3px 0;
+            }
+
+            .filter-card:active {
+                transform: scale(0.98);
+                background: #edf2f7;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="modal-title" id="modal-title"></h2>
+            <div class="modal-body" id="modal-body"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Signal Processing Filters</h1>
+        <p class="subtitle">A practical overview of the most widely used filters, organized from simple to advanced</p>
+        <p class="legend">Click any filter for detailed formulas, pros &amp; cons, and real-world applications</p>
+
+        <!-- Tier 1: Fundamental / Time-Domain -->
+        <div class="tier tier-fundamental">
+            <div class="tier-label">
+                FUNDAMENTAL
+                <span class="tier-subtitle">Time-Domain</span>
+            </div>
+            <div class="tier-components">
+                <div class="filter-card" data-filter="moving-average">
+                    <div class="card-title">Moving Average Filter</div>
+                    <div class="card-detail">Averages a sliding window of N samples to smooth noise</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="ema">
+                    <div class="card-title">Exponential Moving Average (EMA)</div>
+                    <div class="card-detail">Weighted average giving recent samples exponentially more influence</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                        <span class="tag tag-recursive">Recursive</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="median">
+                    <div class="card-title">Median Filter</div>
+                    <div class="card-detail">Selects the median of a sliding window, rejecting outliers</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>Why Start Here</h3>
+                These filters require no knowledge of frequency analysis or z-transforms. They operate directly on
+                sample values in the time domain. Despite their simplicity, they solve the majority of noise-reduction
+                problems encountered in embedded systems, sensor fusion, and data visualization.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 2: Classical Frequency-Domain -->
+        <div class="tier tier-classical">
+            <div class="tier-label">
+                CLASSICAL
+                <span class="tier-subtitle">Frequency-Domain</span>
+            </div>
+            <div class="tier-components">
+                <div class="filter-card" data-filter="butterworth">
+                    <div class="card-title">Butterworth Filter</div>
+                    <div class="card-detail">Maximally flat magnitude response in the passband</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="chebyshev">
+                    <div class="card-title">Chebyshev Filter (Type I &amp; II)</div>
+                    <div class="card-detail">Sharper roll-off than Butterworth at the cost of passband ripple</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="elliptic">
+                    <div class="card-title">Elliptic (Cauer) Filter</div>
+                    <div class="card-detail">Sharpest possible transition band for a given filter order</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="bessel">
+                    <div class="card-title">Bessel Filter</div>
+                    <div class="card-detail">Maximally flat group delay &mdash; preserves waveform shape</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>The Analog Heritage</h3>
+                These are the workhorses of analog and digital filter design, each optimizing a different property
+                of the frequency response. Choosing among them is an exercise in trade-offs: flat passband vs.
+                sharp roll-off vs. linear phase. They are typically designed in the s-domain (Laplace) and converted
+                to digital form via the bilinear transform.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 3: Optimal / Adaptive -->
+        <div class="tier tier-optimal">
+            <div class="tier-label">
+                OPTIMAL &amp;<br>ADAPTIVE
+                <span class="tier-subtitle">Model-Based</span>
+            </div>
+            <div class="tier-components">
+                <div class="filter-card" data-filter="kalman">
+                    <div class="card-title">Kalman Filter</div>
+                    <div class="card-detail">Recursive Bayesian estimator &mdash; optimal for linear Gaussian systems</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                        <span class="tag tag-adaptive">Adaptive</span>
+                        <span class="tag tag-recursive">Recursive</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="wiener">
+                    <div class="card-title">Wiener Filter</div>
+                    <div class="card-detail">Minimizes mean square error using signal and noise power spectra</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR or IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="lms">
+                    <div class="card-title">LMS Adaptive Filter</div>
+                    <div class="card-detail">Online gradient descent that tracks time-varying statistics</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR</span>
+                        <span class="tag tag-adaptive">Adaptive</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="particle">
+                    <div class="card-title">Particle Filter</div>
+                    <div class="card-detail">Sequential Monte Carlo for nonlinear, non-Gaussian estimation</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-adaptive">Adaptive</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>Statistical Optimality</h3>
+                These filters use knowledge of the signal's statistical structure (or a dynamic model) to
+                achieve performance that fixed-coefficient filters cannot match. The Kalman filter, in particular,
+                is ubiquitous in navigation, control, and tracking. The Wiener filter is its frequency-domain
+                counterpart. Adaptive filters like LMS learn online when statistics are unknown.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 4: Specialized -->
+        <div class="tier tier-specialized">
+            <div class="tier-label">
+                SPECIALIZED
+                <span class="tier-subtitle">Purpose-Built</span>
+            </div>
+            <div class="tier-components">
+                <div class="filter-card" data-filter="savitzky-golay">
+                    <div class="card-title">Savitzky-Golay Filter</div>
+                    <div class="card-detail">Polynomial least-squares fit that preserves peaks and edges</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="notch">
+                    <div class="card-title">Notch (Band-Stop) Filter</div>
+                    <div class="card-detail">Surgically removes a narrow frequency band</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="complementary">
+                    <div class="card-title">Complementary Filter</div>
+                    <div class="card-detail">Fuses high-frequency and low-frequency sensor data</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="mahony">
+                    <div class="card-title">Mahony Filter</div>
+                    <div class="card-detail">Nonlinear complementary filter for attitude estimation on SO(3)</div>
+                    <div class="card-tags">
+                        <span class="tag tag-nonlinear">Nonlinear</span>
+                        <span class="tag tag-recursive">Recursive</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="matched">
+                    <div class="card-title">Matched Filter</div>
+                    <div class="card-detail">Maximizes SNR for detecting a known pulse shape in noise</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>The Right Tool</h3>
+                General-purpose filters are not always the best choice. These specialized designs solve specific
+                problems more elegantly: removing power-line hum, fusing accelerometer and gyroscope data, detecting
+                radar pulses, or smoothing spectroscopy data without distorting peak shapes.
+            </div>
+        </div>
+
+        <div class="arrow">
+            <svg width="36" height="48" viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="0" x2="18" y2="36" stroke="#2563a8" stroke-width="3" stroke-linecap="round"/>
+                <polyline points="6,26 18,40 30,26" fill="none" stroke="#2563a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <!-- Tier 5: Design Paradigms -->
+        <div class="tier tier-design">
+            <div class="tier-label">
+                DESIGN<br>PARADIGMS
+                <span class="tier-subtitle">FIR vs IIR</span>
+            </div>
+            <div class="tier-components">
+                <div class="filter-card" data-filter="fir">
+                    <div class="card-title">Finite Impulse Response (FIR)</div>
+                    <div class="card-detail">Non-recursive: output depends only on current and past inputs</div>
+                    <div class="card-tags">
+                        <span class="tag tag-fir">FIR</span>
+                    </div>
+                </div>
+                <div class="filter-card" data-filter="iir">
+                    <div class="card-title">Infinite Impulse Response (IIR)</div>
+                    <div class="card-detail">Recursive: output feeds back, achieving steep roll-off with fewer coefficients</div>
+                    <div class="card-tags">
+                        <span class="tag tag-iir">IIR</span>
+                        <span class="tag tag-recursive">Recursive</span>
+                    </div>
+                </div>
+            </div>
+            <div class="explanation">
+                <h3>The Fundamental Choice</h3>
+                Every digital filter is either FIR or IIR. FIR filters are always stable and can have exactly
+                linear phase, but require many taps for sharp cutoffs. IIR filters are computationally efficient
+                but can be unstable and introduce phase distortion. Understanding this trade-off is the foundation
+                of all digital filter design.
+            </div>
+        </div>
+
+        <div class="cross-cutting">
+            <h2>Cross-Cutting Design Principles</h2>
+            <p class="section-subtitle">Considerations that cut across every tier and influence filter selection regardless of category</p>
+
+            <div class="principle-card">
+                <div class="principle-title">Statistical Consistency</div>
+                <div class="principle-body">
+                    <p>Statistical consistency is about properly representing the statistical distribution of your input &mdash; often in parametric form &mdash; to your downstream consumer. What this really comes down to is your filter's ability to accurately represent probability.</p>
+                    <p>This is a spectrum, not a binary property. At one end, the <strong>Kalman filter</strong> commits fully: it assumes unbiased Gaussian distributions and propagates exact covariances, so its output is only statistically consistent when those assumptions hold. At the other end, the <strong>particle filter</strong> can represent an arbitrarily complex likelihood function in theory, giving it the flexibility to remain consistent under non-Gaussian, multimodal, or heavily skewed distributions. In between, the <strong>complementary filter</strong> works well for the opposite reason entirely: it makes no claims about the statistical model of its input and does not claim to be analytically optimal. It simply cannot be statistically <em>in</em>consistent, because it never promised consistency in the first place.</p>
+                    <ul class="principle-examples">
+                        <li><strong>Kalman filter:</strong> Restricted to unbiased Gaussian probabilities &mdash; statistically consistent only when that assumption is met</li>
+                        <li><strong>Particle filter:</strong> Can define arbitrarily complex likelihood functions, so it can maintain consistency in a much wider range of scenarios</li>
+                        <li><strong>Complementary filter:</strong> Agnostic to the statistical model &mdash; no optimality claims, so no consistency guarantees to violate</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-note">
+            <strong>Rule of thumb:</strong> Start simple. A moving average or EMA solves most noise problems.
+            Move to classical IIR filters when you need precise frequency selectivity. Reach for Kalman or adaptive
+            filters when the signal has known dynamics or the noise statistics change over time.
+        </div>
+    </div>
+
+    <script>
+        const filters = {
+            'moving-average': {
+                title: 'Moving Average Filter',
+                content: `
+                    <p>The moving average is the simplest and most intuitive digital filter. It computes the arithmetic mean of the last N samples, sliding the window forward one sample at a time.</p>
+
+                    <div class="formula-block">
+                        $$y[n] = \\frac{1}{N} \\sum_{k=0}^{N-1} x[n-k]$$
+                    </div>
+
+                    <p>The window length <strong>N</strong> controls the trade-off: larger N gives more smoothing but introduces more lag (group delay of (N&minus;1)/2 samples).</p>
+
+                    <p><strong>Frequency response:</strong> The magnitude is a sinc-like function with nulls at multiples of f<sub>s</sub>/N. It acts as a low-pass filter, but with poor stopband attenuation (only &minus;13 dB at the first sidelobe).</p>
+
+                    <div class="formula-block">
+                        $$H(f) = \\frac{1}{N} \\cdot \\frac{\\sin(\\pi f N / f_s)}{\\sin(\\pi f / f_s)}$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Trivial to implement (no multiply needed with equal weights)</li>
+                                <li>Always stable (FIR)</li>
+                                <li>Exactly linear phase (symmetric coefficients)</li>
+                                <li>Optimal for reducing white noise while keeping sharpest step response</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Poor frequency selectivity (wide transition band)</li>
+                                <li>Requires O(N) storage</li>
+                                <li>Fixed group delay of (N&minus;1)/2 samples</li>
+                                <li>Treats all points in the window equally (no weighting)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Stock market analysis:</strong> 20-day and 200-day moving averages to identify trends</li>
+                            <li><strong>Sensor smoothing:</strong> Averaging accelerometer or temperature readings on a microcontroller</li>
+                            <li><strong>Audio metering:</strong> VU meters average rectified audio to show perceived loudness</li>
+                            <li><strong>Network monitoring:</strong> Smoothing packet rate or latency measurements in dashboards</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'ema': {
+                title: 'Exponential Moving Average (EMA)',
+                content: `
+                    <p>The EMA is a first-order IIR low-pass filter that gives exponentially decreasing weight to older samples. It requires only one multiplication, one addition, and a single stored value &mdash; the cheapest possible recursive filter.</p>
+
+                    <div class="formula-block">
+                        $$y[n] = \\alpha \\cdot x[n] + (1 - \\alpha) \\cdot y[n-1]$$
+                    </div>
+
+                    <p>The smoothing factor <strong>&alpha;</strong> &isin; (0, 1] controls bandwidth. A small &alpha; gives heavy smoothing (low cutoff frequency); &alpha; = 1 means no filtering (output equals input).</p>
+
+                    <p><strong>Cutoff frequency relationship:</strong></p>
+
+                    <div class="formula-block">
+                        $$\\alpha = \\frac{2\\pi \\, f_c / f_s}{1 + 2\\pi \\, f_c / f_s} \\qquad \\text{or equivalently} \\qquad f_c = \\frac{\\alpha \\, f_s}{2\\pi(1 - \\alpha)}$$
+                    </div>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$H(z) = \\frac{\\alpha}{1 - (1 - \\alpha) z^{-1}}$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Extremely low memory (one state variable)</li>
+                                <li>One multiply, one add per sample</li>
+                                <li>No window length to choose &mdash; tunes continuously via &alpha;</li>
+                                <li>Responds instantly to transients (no fixed look-back)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Nonlinear phase (distorts waveform shape)</li>
+                                <li>Only &minus;20 dB/decade roll-off (gentle slope)</li>
+                                <li>Cannot achieve sharp cutoff without cascading stages</li>
+                                <li>Sensitive to initial condition (first output depends on y[&minus;1])</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Embedded control:</strong> Smoothing ADC readings on microcontrollers with limited RAM</li>
+                            <li><strong>TCP congestion control:</strong> EWMA estimates of round-trip time in TCP/IP stacks</li>
+                            <li><strong>Financial trading:</strong> 12-day and 26-day EMA form the basis of the MACD indicator</li>
+                            <li><strong>Touch input smoothing:</strong> Reducing jitter in stylus/finger position on touchscreens</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'median': {
+                title: 'Median Filter',
+                content: `
+                    <p>The median filter replaces each sample with the median of itself and its neighbors. Unlike linear filters, it is fundamentally nonlinear &mdash; you cannot describe it with a transfer function or impulse response.</p>
+
+                    <div class="formula-block">
+                        $$y[n] = \\text{median}\\{x[n-k], \\ldots, x[n], \\ldots, x[n+k]\\}$$
+                        <br>where the window has 2k+1 samples (always odd).
+                    </div>
+
+                    <p><strong>Key property:</strong> The median is immune to outliers. A single sample that is wildly different from its neighbors (an impulse, a spike, a salt-and-pepper pixel) is simply discarded, because one outlier cannot shift the median of a majority of good values.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Removes impulsive noise without blurring edges</li>
+                                <li>Preserves step edges and sharp transitions exactly</li>
+                                <li>No ringing or Gibbs-like artifacts</li>
+                                <li>Robust to extreme outliers (breakdown point of ~50%)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Computationally expensive (sorting required per window)</li>
+                                <li>Cannot be described by a transfer function (nonlinear)</li>
+                                <li>Destroys fine texture and thin features smaller than the window</li>
+                                <li>Not optimal for Gaussian noise (moving average is better for that)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Image processing:</strong> Removing salt-and-pepper noise from camera images</li>
+                            <li><strong>Radar/lidar:</strong> Rejecting transient interference spikes from range measurements</li>
+                            <li><strong>ECG processing:</strong> Removing baseline wander and motion artifacts from heart signals</li>
+                            <li><strong>Ultrasonic sensors:</strong> Filtering spurious readings from sonar range finders in robotics</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'butterworth': {
+                title: 'Butterworth Filter',
+                content: `
+                    <p>The Butterworth filter is designed for the flattest possible magnitude response in the passband. It has no ripple &mdash; the magnitude decreases monotonically from the passband into the stopband. This "maximally flat magnitude" property makes it the default choice when you want clean passband behavior.</p>
+
+                    <p><strong>Analog prototype (low-pass):</strong></p>
+                    <div class="formula-block">
+                        $$|H(j\\omega)|^2 = \\frac{1}{1 + \\left(\\omega / \\omega_c\\right)^{2N}}$$
+                    </div>
+
+                    <p>where N is the filter order and &omega;<sub>c</sub> is the cutoff frequency (&minus;3 dB point). The roll-off is &minus;20N dB/decade.</p>
+
+                    <p><strong>Pole placement:</strong> The 2N poles of |H(s)|&sup2; lie equally spaced on a circle of radius &omega;<sub>c</sub> in the s-plane. The stable filter uses the N poles in the left half-plane.</p>
+
+                    <div class="formula-block">
+                        $$s_k = \\omega_c \\, e^{j\\pi(2k + N - 1)/(2N)}, \\quad k = 1, 2, \\ldots, N$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>No passband ripple (maximally flat)</li>
+                                <li>Monotonic magnitude response everywhere</li>
+                                <li>Well-understood, easy to design with standard tables</li>
+                                <li>Good all-round choice when no special constraints exist</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Wide transition band compared to Chebyshev or Elliptic</li>
+                                <li>Requires higher order (more computation) for sharp cutoff</li>
+                                <li>Nonlinear phase &mdash; distorts waveform shape</li>
+                                <li>Group delay varies with frequency</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Audio crossovers:</strong> Splitting audio into bass/mid/treble bands for speakers</li>
+                            <li><strong>Anti-aliasing:</strong> Low-pass before ADC sampling in data acquisition systems</li>
+                            <li><strong>Seismology:</strong> Band-pass filtering seismic data to isolate frequency bands of interest</li>
+                            <li><strong>Biomedical:</strong> Filtering EMG/EEG signals to standard clinical frequency bands</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'chebyshev': {
+                title: 'Chebyshev Filter (Type I & Type II)',
+                content: `
+                    <p>Chebyshev filters trade passband flatness for a sharper transition from passband to stopband. They come in two variants:</p>
+
+                    <p><strong>Type I (passband ripple):</strong></p>
+                    <div class="formula-block">
+                        $$|H(j\\omega)|^2 = \\frac{1}{1 + \\varepsilon^2 \\, T_N^2(\\omega / \\omega_c)}$$
+                    </div>
+                    <p>where T<sub>N</sub> is the Chebyshev polynomial of order N and &epsilon; controls the ripple amplitude. The passband oscillates within a specified dB band, but the transition to stopband is much steeper than Butterworth of the same order.</p>
+
+                    <p><strong>Type II (stopband ripple):</strong> Also called "inverse Chebyshev." The passband is flat (like Butterworth), but the stopband has equiripple behavior. Less commonly used because the roll-off is not as steep as Type I.</p>
+
+                    <div class="formula-block">
+                        $$\\text{For Type I, ripple in dB:} \\quad R_p = 10 \\log_{10}(1 + \\varepsilon^2)$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Steeper roll-off than Butterworth for the same order</li>
+                                <li>Lower order needed to meet a given transition-band spec</li>
+                                <li>Type II gives flat passband with sharp roll-off</li>
+                                <li>Well-characterized design equations</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Passband ripple (Type I) distorts amplitude of signals in-band</li>
+                                <li>Worse group delay variation than Butterworth</li>
+                                <li>Phase response is more nonlinear</li>
+                                <li>More ringing in step response compared to Butterworth</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>RF/communications:</strong> Channel selection filters where sharp roll-off is critical</li>
+                            <li><strong>Power-line filtering:</strong> Tight rejection of 50/60 Hz with minimal passband impact</li>
+                            <li><strong>Audio equalization:</strong> Where slight passband ripple is acceptable for steep cut</li>
+                            <li><strong>Instrumentation:</strong> Anti-alias filters in high-speed oscilloscopes</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'elliptic': {
+                title: 'Elliptic (Cauer) Filter',
+                content: `
+                    <p>The elliptic filter achieves the absolute sharpest transition band for a given filter order by allowing ripple in <em>both</em> the passband and the stopband. It is the optimal solution when the transition width is the primary constraint.</p>
+
+                    <div class="formula-block">
+                        $$|H(j\\omega)|^2 = \\frac{1}{1 + \\varepsilon^2 \\, R_N^2(\\xi, \\omega / \\omega_c)}$$
+                    </div>
+
+                    <p>where R<sub>N</sub> is the Nth-order Chebyshev rational function (ratio of Chebyshev polynomials), and &xi; is related to the selectivity factor. The equiripple behavior in both bands is the mathematical consequence of the Chebyshev-like optimization in both regions.</p>
+
+                    <p><strong>Design parameters:</strong> passband ripple R<sub>p</sub>, stopband attenuation A<sub>s</sub>, passband edge &omega;<sub>p</sub>, and stopband edge &omega;<sub>s</sub>. Given these four, the minimum required order N is uniquely determined.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Sharpest possible transition band for given order</li>
+                                <li>Lowest order needed to meet simultaneous passband/stopband specs</li>
+                                <li>Most computationally efficient for tight filter specs</li>
+                                <li>Generalizes both Butterworth and Chebyshev as special cases</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Ripple in both passband and stopband</li>
+                                <li>Worst group delay variation of the classical filters</li>
+                                <li>Most complex to design (elliptic integral calculations)</li>
+                                <li>Highest ringing in step/impulse response</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Telecommunications:</strong> Tight channel-select filters in radio receivers</li>
+                            <li><strong>Spectrum analyzers:</strong> Resolution bandwidth filters requiring minimal transition width</li>
+                            <li><strong>ADSL modems:</strong> Splitting voice and data bands on phone lines</li>
+                            <li><strong>Medical ultrasound:</strong> Band-pass filters to isolate narrow transducer frequency bands</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'bessel': {
+                title: 'Bessel (Thomson) Filter',
+                content: `
+                    <p>The Bessel filter is designed for maximally flat group delay. This means it passes all frequency components through the filter with nearly the same time delay, preserving the waveform shape of the signal. This is the opposite priority from Chebyshev/Elliptic, which optimize magnitude at the expense of phase.</p>
+
+                    <div class="formula-block">
+                        $$H(s) = \\frac{\\theta_N(0)}{\\theta_N(s/\\omega_0)}$$
+                    </div>
+
+                    <p>where &theta;<sub>N</sub>(s) is the reverse Bessel polynomial. The group delay is approximately constant up to roughly the &minus;3 dB frequency.</p>
+
+                    <p><strong>Group delay:</strong></p>
+                    <div class="formula-block">
+                        $$\\tau(\\omega) = -\\frac{d\\phi(\\omega)}{d\\omega} \\approx \\text{const} \\quad \\text{for } \\omega < \\omega_c$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Best waveform preservation (near-linear phase)</li>
+                                <li>Minimal overshoot in step response</li>
+                                <li>No ringing &mdash; ideal for pulse and transient signals</li>
+                                <li>Monotonic magnitude response (no ripple)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Very gradual roll-off (much worse than Butterworth)</li>
+                                <li>Requires high order for any meaningful stopband rejection</li>
+                                <li>Linear phase advantage lost in bilinear transform (use FIR instead for digital)</li>
+                                <li>Rarely the right choice for digital filters</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Oscilloscope front-ends:</strong> Anti-alias filter must not distort pulse shapes</li>
+                            <li><strong>Analog video processing:</strong> Preserving sharp edges in composite video signals</li>
+                            <li><strong>Pulse transmission:</strong> Communications systems where pulse shape integrity matters</li>
+                            <li><strong>Audio mastering:</strong> Gentle low-pass without phase coloration</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'kalman': {
+                title: 'Kalman Filter',
+                content: `
+                    <p>The Kalman filter is a recursive algorithm that estimates the state of a linear dynamical system from noisy measurements. It is provably <em>optimal</em> (minimum mean-square error) when the system is linear and the noise is Gaussian.</p>
+
+                    <p><strong>State-space model:</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{x}_{k} = \\mathbf{F}\\mathbf{x}_{k-1} + \\mathbf{B}\\mathbf{u}_{k} + \\mathbf{w}_{k}, \\quad \\mathbf{w}_k \\sim \\mathcal{N}(0, \\mathbf{Q})$$
+                        $$\\mathbf{z}_{k} = \\mathbf{H}\\mathbf{x}_{k} + \\mathbf{v}_{k}, \\quad \\mathbf{v}_k \\sim \\mathcal{N}(0, \\mathbf{R})$$
+                    </div>
+
+                    <p><strong>Predict step:</strong></p>
+                    <div class="formula-block">
+                        $$\\hat{\\mathbf{x}}_{k|k-1} = \\mathbf{F}\\hat{\\mathbf{x}}_{k-1|k-1} + \\mathbf{B}\\mathbf{u}_k$$
+                        $$\\mathbf{P}_{k|k-1} = \\mathbf{F}\\mathbf{P}_{k-1|k-1}\\mathbf{F}^T + \\mathbf{Q}$$
+                    </div>
+
+                    <p><strong>Update step:</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{K}_k = \\mathbf{P}_{k|k-1}\\mathbf{H}^T(\\mathbf{H}\\mathbf{P}_{k|k-1}\\mathbf{H}^T + \\mathbf{R})^{-1}$$
+                        $$\\hat{\\mathbf{x}}_{k|k} = \\hat{\\mathbf{x}}_{k|k-1} + \\mathbf{K}_k(\\mathbf{z}_k - \\mathbf{H}\\hat{\\mathbf{x}}_{k|k-1})$$
+                        $$\\mathbf{P}_{k|k} = (\\mathbf{I} - \\mathbf{K}_k\\mathbf{H})\\mathbf{P}_{k|k-1}$$
+                    </div>
+
+                    <p>The <strong>Kalman gain K</strong> automatically balances trust between the model prediction and the measurement, depending on the relative uncertainties P, Q, and R.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Provably optimal (MMSE) for linear Gaussian systems</li>
+                                <li>Adapts bandwidth in real time via the Kalman gain</li>
+                                <li>Fuses multiple sensors naturally via the measurement model</li>
+                                <li>Provides uncertainty estimate (covariance P) alongside the state</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires a known linear model (F, H, Q, R)</li>
+                                <li>Suboptimal if noise is non-Gaussian or system is nonlinear</li>
+                                <li>Sensitive to incorrect noise parameters (Q and R tuning is an art)</li>
+                                <li>Matrix operations can be expensive for high-dimensional state</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>GPS/INS navigation:</strong> Fusing GPS position with inertial measurements for aircraft, spacecraft, and phones</li>
+                            <li><strong>Object tracking:</strong> Predicting and correcting the position of targets in radar and computer vision</li>
+                            <li><strong>Robotics:</strong> Estimating robot pose from odometry, lidar, and camera data (via EKF/UKF)</li>
+                            <li><strong>Economics:</strong> Estimating hidden state variables in macroeconomic models</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'wiener': {
+                title: 'Wiener Filter',
+                content: `
+                    <p>The Wiener filter is the frequency-domain counterpart to the Kalman filter. It finds the linear filter that minimizes the mean square error between the desired signal and the estimated signal, given knowledge of the signal and noise power spectral densities.</p>
+
+                    <p><strong>Non-causal Wiener filter:</strong></p>
+                    <div class="formula-block">
+                        $$H(f) = \\frac{S_{xx}(f)}{S_{xx}(f) + S_{nn}(f)} = \\frac{\\text{SNR}(f)}{1 + \\text{SNR}(f)}$$
+                    </div>
+
+                    <p>where S<sub>xx</sub>(f) is the power spectral density of the clean signal and S<sub>nn</sub>(f) is the noise PSD. At frequencies where SNR is high, H &approx; 1 (pass the signal). Where SNR is low, H &approx; 0 (suppress the noise).</p>
+
+                    <p><strong>Wiener-Hopf equation (time-domain):</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{R}_{xx} \\mathbf{h} = \\mathbf{r}_{xd}$$
+                    </div>
+                    <p>where R<sub>xx</sub> is the autocorrelation matrix of the input and r<sub>xd</sub> is the cross-correlation between input and desired signal.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Optimal (MMSE) in the frequency domain for stationary signals</li>
+                                <li>Intuitive interpretation: attenuates based on local SNR</li>
+                                <li>Efficient to compute via FFT for block processing</li>
+                                <li>Foundation for spectral subtraction and denoising</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires known (or estimated) signal and noise PSDs</li>
+                                <li>Assumes stationarity &mdash; performance degrades for time-varying signals</li>
+                                <li>Non-causal form is not realizable for real-time use</li>
+                                <li>Causal version is mathematically harder (spectral factorization)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Audio noise reduction:</strong> Removing background noise from speech recordings</li>
+                            <li><strong>Image deblurring:</strong> Restoring images degraded by known point-spread functions</li>
+                            <li><strong>Astronomy:</strong> Denoising telescope images where noise statistics are well characterized</li>
+                            <li><strong>Hearing aids:</strong> Real-time speech enhancement in noisy environments</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'lms': {
+                title: 'LMS (Least Mean Squares) Adaptive Filter',
+                content: `
+                    <p>The LMS filter is an adaptive FIR filter that adjusts its coefficients in real time using stochastic gradient descent. It is the practical, online version of the Wiener filter &mdash; it converges to the Wiener solution without needing to know the signal statistics in advance.</p>
+
+                    <p><strong>Update equations:</strong></p>
+                    <div class="formula-block">
+                        $$y[n] = \\mathbf{w}^T[n] \\, \\mathbf{x}[n]$$
+                        $$e[n] = d[n] - y[n]$$
+                        $$\\mathbf{w}[n+1] = \\mathbf{w}[n] + \\mu \\, e[n] \\, \\mathbf{x}[n]$$
+                    </div>
+
+                    <p>where <strong>&mu;</strong> is the step size (learning rate), <strong>w</strong> is the coefficient vector, <strong>x</strong> is the input vector, and <strong>d</strong> is the desired (reference) signal. The step size must satisfy 0 &lt; &mu; &lt; 2/(&lambda;<sub>max</sub>) for stability, where &lambda;<sub>max</sub> is the largest eigenvalue of the input autocorrelation matrix.</p>
+
+                    <p><strong>Normalized LMS (NLMS):</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{w}[n+1] = \\mathbf{w}[n] + \\frac{\\mu}{\\|\\mathbf{x}[n]\\|^2 + \\delta} \\, e[n] \\, \\mathbf{x}[n]$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>No prior knowledge of signal statistics needed</li>
+                                <li>Tracks time-varying environments automatically</li>
+                                <li>Very simple to implement (one inner product + weight update)</li>
+                                <li>Guaranteed convergence with proper step size</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Slow convergence when input eigenvalue spread is large</li>
+                                <li>Step size trade-off: fast convergence vs. low steady-state error</li>
+                                <li>Requires a reference (desired) signal</li>
+                                <li>FIR structure means many taps needed for narrowband filtering</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Active noise cancellation:</strong> ANC headphones use LMS to generate anti-noise in real time</li>
+                            <li><strong>Echo cancellation:</strong> Removing acoustic echo in speakerphone and conferencing systems</li>
+                            <li><strong>Channel equalization:</strong> Compensating for ISI in digital communication receivers</li>
+                            <li><strong>Biomedical:</strong> Removing 50/60 Hz interference from ECG using a reference electrode</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'particle': {
+                title: 'Particle Filter (Sequential Monte Carlo)',
+                content: `
+                    <p>The particle filter represents the posterior distribution of the state using a set of weighted samples ("particles"). Unlike the Kalman filter, it makes <em>no assumptions</em> about linearity or Gaussianity &mdash; it can handle arbitrary nonlinear dynamics and non-Gaussian noise.</p>
+
+                    <p><strong>Algorithm sketch:</strong></p>
+                    <div class="formula-block">
+                        $$\\text{1. Sample: } \\mathbf{x}_k^{(i)} \\sim p(\\mathbf{x}_k | \\mathbf{x}_{k-1}^{(i)}) \\quad \\text{(propagate each particle through the dynamics)}$$
+                        $$\\text{2. Weight: } w_k^{(i)} \\propto p(\\mathbf{z}_k | \\mathbf{x}_k^{(i)}) \\quad \\text{(score by measurement likelihood)}$$
+                        $$\\text{3. Resample: draw N particles from } \\{\\mathbf{x}_k^{(i)}\\} \\text{ with probability } \\propto w_k^{(i)}$$
+                    </div>
+
+                    <p>The state estimate is the weighted mean of the particles. As the number of particles N &rarr; &infin;, the estimate converges to the true Bayesian posterior.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Handles any nonlinear dynamics and observation models</li>
+                                <li>No Gaussian assumption &mdash; represents multimodal distributions</li>
+                                <li>Conceptually simple and easy to implement</li>
+                                <li>Naturally handles ambiguity (e.g., "the robot might be here or there")</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Computationally expensive &mdash; cost scales with particle count</li>
+                                <li>Particle degeneracy in high dimensions (curse of dimensionality)</li>
+                                <li>No closed-form uncertainty (must be estimated from particles)</li>
+                                <li>Difficult to tune: number of particles, resampling strategy</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Robot localization:</strong> Monte Carlo Localization (MCL) for mobile robots using lidar maps</li>
+                            <li><strong>SLAM:</strong> FastSLAM uses particles for robot pose and Kalman filters for landmarks</li>
+                            <li><strong>Visual tracking:</strong> Tracking faces or objects in video with occlusion and appearance change</li>
+                            <li><strong>Finance:</strong> Estimating stochastic volatility models with non-Gaussian jumps</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'savitzky-golay': {
+                title: 'Savitzky-Golay Filter',
+                content: `
+                    <p>The Savitzky-Golay filter fits a polynomial of degree p to a sliding window of 2m+1 points using least-squares, then evaluates the polynomial at the center point. It is equivalent to convolution with a specific set of FIR coefficients, but the coefficients are derived from the polynomial fit rather than frequency-domain design.</p>
+
+                    <p><strong>Key formula:</strong> The filter coefficients are computed from the pseudoinverse of the Vandermonde matrix:</p>
+                    <div class="formula-block">
+                        $$\\mathbf{h} = (\\mathbf{A}^T \\mathbf{A})^{-1} \\mathbf{A}^T \\mathbf{e}_0$$
+                    </div>
+                    <p>where A is the Vandermonde matrix of the window indices and e<sub>0</sub> selects the 0th-derivative (smoothing) row. By selecting different rows, the same framework gives smoothed derivatives of any order.</p>
+
+                    <p><strong>Example (quadratic, 5-point window):</strong></p>
+                    <div class="formula-block">
+                        $$y[n] = \\frac{-3 x[n-2] + 12 x[n-1] + 17 x[n] + 12 x[n+1] - 3 x[n+2]}{35}$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Preserves peak height, width, and position (unlike moving average)</li>
+                                <li>Simultaneously provides smoothed derivatives</li>
+                                <li>FIR &mdash; always stable, exactly linear phase</li>
+                                <li>Polynomial order gives control over what features to preserve</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Poor at suppressing narrowband interference</li>
+                                <li>Window edges can introduce artifacts (Runge-like effects for high degree)</li>
+                                <li>Not optimal for any standard statistical criterion</li>
+                                <li>Choice of polynomial degree and window size can be tricky</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Spectroscopy:</strong> Smoothing absorption/emission spectra without distorting peaks</li>
+                            <li><strong>Chromatography:</strong> Peak detection and baseline correction in HPLC and GC data</li>
+                            <li><strong>Numerical differentiation:</strong> Computing smooth velocity/acceleration from noisy position data</li>
+                            <li><strong>Electrochemistry:</strong> Smoothing voltammetry curves while preserving peak shapes</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'notch': {
+                title: 'Notch (Band-Stop) Filter',
+                content: `
+                    <p>A notch filter removes a narrow frequency band while passing everything else. It is the surgical instrument of signal processing: when you know exactly which frequency is the problem, a notch filter excises it with minimal damage to the rest of the spectrum.</p>
+
+                    <p><strong>Second-order IIR notch filter:</strong></p>
+                    <div class="formula-block">
+                        $$H(z) = \\frac{1 - 2\\cos(\\omega_0) z^{-1} + z^{-2}}{1 - 2r\\cos(\\omega_0) z^{-1} + r^2 z^{-2}}$$
+                    </div>
+
+                    <p>where &omega;<sub>0</sub> = 2&pi;f<sub>0</sub>/f<sub>s</sub> is the normalized notch frequency and <strong>r</strong> (0 &lt; r &lt; 1) controls the notch width. Closer to 1 gives a narrower notch. The numerator places zeros on the unit circle at &omega;<sub>0</sub>, giving exactly zero gain at that frequency. The denominator poles (at radius r) control how quickly the gain recovers.</p>
+
+                    <p><strong>Notch bandwidth:</strong></p>
+                    <div class="formula-block">
+                        $$\\text{BW}_{-3\\text{dB}} \\approx \\frac{(1 - r^2)}{r} \\cdot \\frac{f_s}{2\\pi}$$
+                    </div>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Precisely removes a single interfering frequency</li>
+                                <li>Minimal disturbance to the rest of the spectrum</li>
+                                <li>Very low computational cost (second-order IIR)</li>
+                                <li>Can cascade multiple notches for harmonics</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Only works when interference frequency is known and stable</li>
+                                <li>Narrow notch &rarr; pole close to unit circle &rarr; sensitivity to coefficient quantization</li>
+                                <li>Phase distortion near the notch frequency</li>
+                                <li>If interference drifts in frequency, an adaptive notch is needed</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Power-line interference:</strong> Removing 50/60 Hz hum from ECG, EEG, and audio recordings</li>
+                            <li><strong>Guitar effects:</strong> Feedback suppression by notching the resonant frequency</li>
+                            <li><strong>Vibration analysis:</strong> Removing known machine rotation frequencies to see anomalies</li>
+                            <li><strong>Radio:</strong> Rejecting a single strong interferer near the desired signal</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'complementary': {
+                title: 'Complementary Filter',
+                content: `
+                    <p>A complementary filter combines a high-pass and low-pass filter whose transfer functions sum to unity: H<sub>LP</sub>(s) + H<sub>HP</sub>(s) = 1. This is typically used to fuse two sensors that are accurate in complementary frequency ranges.</p>
+
+                    <p><strong>Classic form (first-order):</strong></p>
+                    <div class="formula-block">
+                        $$\\hat{\\theta} = \\alpha \\cdot (\\hat{\\theta}_{\\text{prev}} + \\omega_{\\text{gyro}} \\cdot \\Delta t) + (1 - \\alpha) \\cdot \\theta_{\\text{accel}}$$
+                    </div>
+
+                    <p>The gyroscope is accurate at high frequencies but drifts at low frequencies. The accelerometer is accurate at low frequencies but noisy at high frequencies. The complementary filter takes the best of both:</p>
+
+                    <div class="formula-block">
+                        $$H_{\\text{gyro}}(s) = \\frac{\\tau s}{1 + \\tau s}, \\qquad H_{\\text{accel}}(s) = \\frac{1}{1 + \\tau s}$$
+                        $$H_{\\text{gyro}}(s) + H_{\\text{accel}}(s) = 1$$
+                    </div>
+
+                    <p>The time constant &tau; (or equivalently &alpha;) determines the crossover frequency between the two sensors.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Extremely simple to implement (one line of code)</li>
+                                <li>No matrix math or model needed (unlike Kalman)</li>
+                                <li>Provides drift-free estimates from drifting sensors</li>
+                                <li>Unity gain at all frequencies (no signal attenuation)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Only one tuning parameter (crossover frequency)</li>
+                                <li>No formal uncertainty estimate</li>
+                                <li>Cannot handle sensor biases or scale factors explicitly</li>
+                                <li>Suboptimal compared to Kalman filter for the same sensor pair</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Drone attitude estimation:</strong> Fusing gyroscope and accelerometer for roll/pitch</li>
+                            <li><strong>Smartphone orientation:</strong> Combining gyro, accel, and magnetometer in AHRS</li>
+                            <li><strong>Camera stabilization:</strong> Gimbal controllers fusing rate gyros with horizon references</li>
+                            <li><strong>Balancing robots:</strong> Estimating tilt angle from IMU for PID control</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'mahony': {
+                title: 'Mahony Filter',
+                content: `
+                    <p>The Mahony filter is a nonlinear complementary filter that estimates orientation (attitude) directly on the rotation group SO(3). It fuses gyroscope and accelerometer (and optionally magnetometer) data using a proportional-integral correction scheme applied to the rotation kinematics, avoiding the singularities and linearization errors of Euler-angle or quaternion-based EKFs.</p>
+
+                    <p><strong>Core idea:</strong> Integrate gyroscope angular velocity to propagate the attitude estimate, then correct drift using the error between the predicted and measured gravity (and magnetic field) directions.</p>
+
+                    <p><strong>Error metric (vector cross-product):</strong></p>
+                    <div class="formula-block">
+                        $$\\mathbf{e} = \\hat{\\mathbf{v}} \\times \\mathbf{a}_{\\text{meas}}$$
+                    </div>
+                    <p>where \\(\\hat{\\mathbf{v}}\\) is the estimated gravity direction (from the current attitude) and \\(\\mathbf{a}_{\\text{meas}}\\) is the normalized accelerometer reading. This cross-product is approximately proportional to the attitude error for small errors.</p>
+
+                    <p><strong>Corrected gyroscope rate:</strong></p>
+                    <div class="formula-block">
+                        $$\\boldsymbol{\\omega}_{\\text{corr}} = \\boldsymbol{\\omega}_{\\text{gyro}} + K_p \\mathbf{e} + K_i \\int \\mathbf{e} \\, dt$$
+                    </div>
+
+                    <p><strong>Quaternion integration:</strong></p>
+                    <div class="formula-block">
+                        $$\\dot{\\mathbf{q}} = \\tfrac{1}{2} \\mathbf{q} \\otimes \\begin{bmatrix} 0 \\\\ \\boldsymbol{\\omega}_{\\text{corr}} \\end{bmatrix}$$
+                    </div>
+
+                    <p>The proportional gain <strong>K<sub>p</sub></strong> controls how aggressively the accelerometer corrects drift (analogous to &alpha; in the linear complementary filter). The integral gain <strong>K<sub>i</sub></strong> estimates and removes gyroscope bias online.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Works directly on SO(3) &mdash; no gimbal lock or singularities</li>
+                                <li>Very lightweight: no matrices, no covariance propagation</li>
+                                <li>Built-in gyroscope bias estimation via the integral term</li>
+                                <li>Proven stability guarantees on the rotation manifold</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>No formal uncertainty output (unlike a Kalman filter)</li>
+                                <li>Two gains to tune (K<sub>p</sub>, K<sub>i</sub>) with limited systematic guidance</li>
+                                <li>Accelerometer correction assumes quasi-static conditions (degrades under sustained linear acceleration)</li>
+                                <li>Cannot easily fuse additional sensor types beyond the IMU triad</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Multirotor flight controllers:</strong> Default AHRS in many open-source autopilots (ArduPilot, Betaflight, PX4)</li>
+                            <li><strong>Wearable motion capture:</strong> Real-time limb orientation from body-worn IMUs</li>
+                            <li><strong>Handheld camera stabilization:</strong> Gimbal controllers estimating camera attitude from 6-axis IMU</li>
+                            <li><strong>Underwater vehicles:</strong> Attitude estimation where GPS is unavailable and computational budget is tight</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'matched': {
+                title: 'Matched Filter',
+                content: `
+                    <p>The matched filter maximizes the output signal-to-noise ratio (SNR) when detecting a known signal (pulse, waveform) buried in additive white Gaussian noise. The filter's impulse response is the time-reversed, conjugated version of the signal you are looking for.</p>
+
+                    <p><strong>Impulse response:</strong></p>
+                    <div class="formula-block">
+                        $$h[n] = s^*[N - 1 - n]$$
+                    </div>
+                    <p>where s[n] is the known signal template and * denotes complex conjugation. This is equivalent to cross-correlating the input with the template.</p>
+
+                    <p><strong>Maximum output SNR:</strong></p>
+                    <div class="formula-block">
+                        $$\\text{SNR}_{\\text{max}} = \\frac{2E}{N_0}$$
+                    </div>
+                    <p>where E is the signal energy and N<sub>0</sub>/2 is the noise power spectral density. This is the theoretical upper bound &mdash; no other linear filter can do better.</p>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Maximizes output SNR (provably optimal detector)</li>
+                                <li>Equivalent to correlation &mdash; simple to implement via FFT</li>
+                                <li>Foundation of optimal detection theory</li>
+                                <li>Works for any known waveform shape</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires exact knowledge of the signal waveform</li>
+                                <li>Optimal only for white Gaussian noise (must pre-whiten for colored noise)</li>
+                                <li>Sensitive to Doppler shift if target is moving</li>
+                                <li>Range resolution limited by signal bandwidth</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Radar:</strong> Detecting returns from known transmitted pulses (pulse compression)</li>
+                            <li><strong>Sonar:</strong> Detecting echoes from underwater objects</li>
+                            <li><strong>Digital communications:</strong> Optimal receiver for PAM, QAM, and spread-spectrum signals</li>
+                            <li><strong>Gravitational wave detection:</strong> LIGO uses matched filtering to find black hole mergers in noise</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'fir': {
+                title: 'FIR (Finite Impulse Response) Filters',
+                content: `
+                    <p>An FIR filter computes its output as a weighted sum of the current and past N input samples. The impulse response is finite &mdash; it is exactly the coefficient vector itself, and it dies to zero after N samples.</p>
+
+                    <p><strong>General form:</strong></p>
+                    <div class="formula-block">
+                        $$y[n] = \\sum_{k=0}^{N-1} b_k \\, x[n-k] = \\mathbf{b}^T \\mathbf{x}[n]$$
+                    </div>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$H(z) = \\sum_{k=0}^{N-1} b_k \\, z^{-k}$$
+                    </div>
+
+                    <p>All N zeros, no poles (other than at z=0). This means FIR filters are <strong>always stable</strong> regardless of coefficient values.</p>
+
+                    <p><strong>Linear phase condition:</strong> If the coefficients are symmetric (b<sub>k</sub> = b<sub>N&minus;1&minus;k</sub>) or antisymmetric, the filter has exactly linear phase, meaning all frequencies are delayed by the same amount. This is impossible for IIR filters.</p>
+
+                    <p><strong>Design methods:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li><strong>Window method:</strong> Start from ideal (sinc) response, multiply by a window (Hamming, Kaiser, etc.)</li>
+                        <li><strong>Parks-McClellan (Remez):</strong> Optimal equiripple design minimizing the maximum error</li>
+                        <li><strong>Frequency sampling:</strong> Specify desired values at DFT frequencies and inverse-transform</li>
+                        <li><strong>Least-squares:</strong> Minimize integrated squared error over the frequency band</li>
+                    </ul>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Always stable (no feedback)</li>
+                                <li>Can achieve exactly linear phase</li>
+                                <li>No limit cycle oscillations or overflow issues</li>
+                                <li>Easy to implement on FPGAs and DSPs (MAC operations)</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Requires many more coefficients than IIR for sharp transitions</li>
+                                <li>Higher computational cost per sample</li>
+                                <li>Longer group delay for equivalent frequency selectivity</li>
+                                <li>Cannot efficiently implement very low cutoff frequencies</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Audio/music:</strong> Linear-phase EQ in mastering to avoid phase coloration</li>
+                            <li><strong>Communications:</strong> Pulse-shaping filters (raised cosine) in digital modems</li>
+                            <li><strong>Multirate DSP:</strong> Decimation and interpolation filters in sample-rate converters</li>
+                            <li><strong>Image processing:</strong> 2D convolution kernels for blurring, sharpening, edge detection</li>
+                        </ul>
+                    </div>
+                `
+            },
+            'iir': {
+                title: 'IIR (Infinite Impulse Response) Filters',
+                content: `
+                    <p>An IIR filter uses feedback: the output depends on both the current/past inputs <em>and</em> past outputs. This recursion means the impulse response is theoretically infinite in duration, decaying exponentially (when stable).</p>
+
+                    <p><strong>General form (Direct Form I):</strong></p>
+                    <div class="formula-block">
+                        $$y[n] = \\sum_{k=0}^{M} b_k \\, x[n-k] - \\sum_{k=1}^{N} a_k \\, y[n-k]$$
+                    </div>
+
+                    <p><strong>Transfer function:</strong></p>
+                    <div class="formula-block">
+                        $$H(z) = \\frac{\\sum_{k=0}^{M} b_k z^{-k}}{1 + \\sum_{k=1}^{N} a_k z^{-k}} = \\frac{B(z)}{A(z)}$$
+                    </div>
+
+                    <p><strong>Stability:</strong> An IIR filter is stable if and only if all poles of H(z) lie strictly inside the unit circle. This must be verified during design and can be compromised by coefficient quantization in fixed-point implementations.</p>
+
+                    <p><strong>Common structures:</strong></p>
+                    <ul style="margin: 10px 0 10px 20px;">
+                        <li><strong>Direct Form II Transposed:</strong> Minimizes delay elements, most common in practice</li>
+                        <li><strong>Cascaded second-order sections (biquads):</strong> Factors H(z) into 2nd-order stages for numerical robustness</li>
+                        <li><strong>Lattice structure:</strong> Better quantization properties, used in speech coding</li>
+                    </ul>
+
+                    <div class="pros-cons">
+                        <div class="pros">
+                            <h4>Pros</h4>
+                            <ul>
+                                <li>Much fewer coefficients than FIR for equivalent selectivity</li>
+                                <li>Lower computational cost for sharp frequency transitions</li>
+                                <li>Direct analog-to-digital conversion via bilinear transform</li>
+                                <li>Low group delay relative to steepness of roll-off</li>
+                            </ul>
+                        </div>
+                        <div class="cons">
+                            <h4>Cons</h4>
+                            <ul>
+                                <li>Can be unstable if poles drift outside unit circle</li>
+                                <li>Cannot achieve linear phase (always introduces phase distortion)</li>
+                                <li>Susceptible to limit cycles in fixed-point arithmetic</li>
+                                <li>Sensitive to coefficient quantization (especially high-order)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="examples">
+                        <h4>Real-World Applications</h4>
+                        <ul>
+                            <li><strong>Audio effects:</strong> Parametric EQ, wah-wah, resonant filters in synthesizers</li>
+                            <li><strong>Control systems:</strong> PID controllers are IIR filters in disguise</li>
+                            <li><strong>Telephony:</strong> DTMF tone detection using Goertzel algorithm (IIR)</li>
+                            <li><strong>Biomedical:</strong> Real-time ECG/EEG filtering with low latency requirements</li>
+                        </ul>
+                    </div>
+                `
+            }
+        };
+
+        const modal = document.getElementById('modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalBody = document.getElementById('modal-body');
+        const closeBtn = document.querySelector('.close');
+
+        document.querySelectorAll('.filter-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const key = this.getAttribute('data-filter');
+                const info = filters[key];
+                if (info) {
+                    modalTitle.textContent = info.title;
+                    modalBody.innerHTML = info.content;
+                    modal.style.display = 'block';
+                    // Re-render MathJax in the modal
+                    if (window.MathJax) {
+                        MathJax.Hub.Queue(["Typeset", MathJax.Hub, modalBody]);
+                    }
+                }
+            });
+        });
+
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && modal.style.display === 'block') {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+
+</html>
